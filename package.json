@@ -1,0 +1,14 @@
+{
+  "name": "promotion-agent",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Local marketing workspace for founders with multiple projects",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "check": "npm test"
+  }
+}
