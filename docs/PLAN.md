@@ -50,11 +50,11 @@ Implemented task-linked, no-overwrite evidence records in the selected project's
 
 ## Release validation in progress
 
-### P07 — reusable distribution/release (local distribution complete; live gates open)
+### P07 — reusable distribution/release (local distribution and public source complete; live gates open)
 
 Dependencies: P04–P06. Verify clean-machine skill/command installation and native invocation in Codex, Claude Code and OpenCode, supported hosts/OS versions, license/provenance, removal/upgrade behavior and an outside founder's first useful draft. Keep npm publication and remote pushes explicit separate actions.
 
-The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. This is macOS 14.5 arm64/Node 22.14.0 evidence only. Native menu invocation in all three hosts, other OS/version checks, an outside founder's first useful draft, public source provenance and actual publication remain open release gates. Follow the concrete sequence in docs/RELEASE.md; do not mark P07 fully complete from local helper tests.
+The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. Public source is at `https://github.com/apsquared/promotion-agent`; the initial Ubuntu/macOS GitHub Actions check passed on Node 22.14.0. That CI run adds automated coverage, while the end-to-end install evidence remains macOS 14.5 arm64/Node 22.14.0 only. Native menu invocation in all three hosts, an outside founder's first useful draft, broader host/OS acceptance and npm publication remain open release gates. Follow the concrete sequence in docs/RELEASE.md; do not mark P07 fully complete from local helper tests or the source push.
 
 ## Deferred unless separately requested
 
