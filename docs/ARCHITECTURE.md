@@ -1,55 +1,37 @@
 # Architecture decisions
 
-## Delivery
+## Execution: the current interactive session
 
-One local TypeScript application: React UI, Node HTTP server, SQLite, and CLI entry point. Use a small UI build (proposed: Vite) with static assets served by the local process. No hosted database, Docker requirement, or separate frontend deployment. Dependency versions and SQLite driver portability must be checked during implementation. Target macOS, Linux, and Windows; avoid symlink-only installation and shell-specific scripts.
+Codex, Claude Code or OpenCode is already running under the user's control. A repo-local skill or command loads one provider-neutral workflow from `templates/WORKFLOW.md`. The active agent reads the selected project, uses available tools, prepares artifacts and reports/reviews them with the user in that conversation.
 
-## Ownership and data model
+The application does not start, authenticate, choose models for, monitor, cancel or resume an AI process. The removed P03 headless adapter experiment is superseded by this architecture. Host permissions and existing user authorization govern actions. Skill text is guidance, not a security sandbox.
 
-Project files own product context, task content and completion, ledgers, and project-specific workflow overrides. Preserve the existing marketing/AGENT.md, TASKS.md, and logs layout for migration.
+Provider-specific files are thin invocation wrappers. They contain no model override, tool permission grants, nested agent calls or shell interpolation. Marketing behavior lives only in the shared workflow. Capabilities are observed in the current session; missing browser/media/publishing tools yield drafts or manual handoff.
 
-SQLite owns the local project registry, absolute checkout paths, agent preferences, execution records, schedule state, review metadata, assignment, and snoozing. Imported task content is a rebuildable projection, not a second authority. Backup must include non-rebuildable local data; rebuilding a task index must not erase schedules or reviews.
+## Local commands
 
-Stable IDs: project UUID + legacy task ID, independent of display-name changes. Run IDs and artifact revisions must be unique. Reviews bind to a specific artifact revision, destination/account, and intended action; edits invalidate stale approval.
+`src/interactive/tasks.ts` and `scripts/promotion.mjs` provide deterministic inspect, prepare and explicit completion commands. They never spawn an AI CLI. Inspect/prepare are read-only and use one explicitly selected project; no portfolio scan or model account is needed. Completion reuses P02 storage locks and content-hash preconditions. It does not itself prove an external task was completed.
 
-Keep portable product settings separate from machine paths and credentials. Configuration needs a schema version and explicit migration history. Product facts should retain source references and verification dates; uncertain facts are excluded from generated claims until reviewed.
+P06 adds immutable, task-linked evidence accounts under `marketing/logs/promotion-agent/`. Draft records need no database; local artifact references are content-hashed and completion requires the exact reviewed `verified-complete` record hash bound to the task revision. The interactive agent still verifies the underlying action; a URL or claim in a record is not self-proving. Skipped/snoozed/active dispositions use the optional SQLite registry and do not alter source task completion. Existing product ledgers remain project-owned.
 
-## Task import and write-back
+P04 onboarding creates a reviewable plan for one canonical project path, then applies it only with the plan's review hash and unchanged before-images. A manifest records hashes of installer-owned files. Upgrades replace only unmodified managed files; product context, tasks, logs, config and customized wrappers remain owned by the product. Installed `.promotion-agent/` contains compiled JavaScript, the shared workflow, schemas, templates and guidance, with relative links from the host wrappers. The source checkout has a pinned TypeScript build/typecheck; installed products only need Node 22.14+ for local helpers.
 
-The extracted parser is legacy-compatible and intentionally permissive. Use parseTaskSnapshot diagnostics before reconciliation, and add stronger format/round-trip validation before enabling write-back. Snapshot validation is a baseline, not a full Markdown parser.
+There is no required server, React app, app-owned publishing connector, or scheduler. These are deferred optional products, not prerequisites for the useful interactive workflow. Do not reintroduce them without a new user request.
 
-Write-back must preserve all unrelated bytes, use a file revision/hash precondition, take a project lock, and replace files atomically. Changed-on-disk files create a conflict to resolve rather than a last-writer-wins overwrite. Only successful, validated imports may archive removed tasks. Checked tasks under Open count as done. Done and Open sections and tasks without Prompt remain supported.
+## State ownership
 
-Skipped/snoozed is initially local review state; it does not falsely tick a repo task as completed. Generated run context includes these dispositions so the agent does not repeatedly recommend skipped work. Decide and document a portable skip representation before expanding the file format.
+Project files own product context, task content and completion, ledgers and project-specific instructions. Preserve the marketing/AGENT.md, TASKS.md and logs layout. Portable settings retain the project UUID across rename/relocation. Unknown facts remain unknown.
 
-## Agent boundary
+The P01/P02 contracts and SQLite library remain available for optional local registry/history/review/disposition state and safe completion. Task projections are rebuildable; local metadata is not. The interactive workflow can prepare drafts without registration or a database. Old Run/Schedule/AdapterCapabilities types remain compatible for stored data; they do not activate execution or scheduling and are not discovery prerequisites.
 
-Canonical run input: project ID, activity, context references, policy, budget, output directory, run ID. Canonical output: summary, artifacts, task proposals, changed files, verification evidence, errors, session reference, available usage. Unknown cost remains unknown.
+## Task write-back
 
-Adapters: detect/version, capabilities, start, normalize events, cancel, collect result. Resume only when the installed tool supports it. Use argument arrays/stdin, never interpolate user content into a shell string. Validate agent output before displaying completion or initiating further actions.
+The permissive legacy parser is unchanged; strictTaskSnapshot gates reconciliation and completion. Missing/unreadable/invalid imports cannot archive tasks. Skipped/snoozed is independent of repo completion. Only successful validated snapshots reconcile absent tasks.
 
-The application should remain usable with prompt export and a later file rescan. It must not depend on controlling an existing desktop chat or assume browser tooling. Store supported-version smoke-test evidence per adapter.
+Completion changes one checkbox while preserving multiline content and all unrelated bytes. It requires the reviewed hash, takes a cooperative per-project lock, stages and atomically replaces the file, and verifies read-back. Conflicts require rescan/review. Never overwrite a stale snapshot. Symlink task paths are rejected. Registry deletion never removes repo files. See docs/STORAGE.md for recovery and the residual external-editor race.
 
-Start with one active run per project and a small global concurrency limit. Never silently switch agents or models on failure. Agent CLI authentication remains owned by that tool; do not scrape or copy token files.
+## Actions and evidence
 
-## Actions and permissions
+Default to draft/review. Respect prior user authorization; when an external action is not authorized, show exact content/destination before executing. Changes invalidate stale approval. Use only available integrations in the current interactive host; never copy credentials into project files or model prompts.
 
-Draft/review is the default. Separate research/preparation from application of code changes and external publication. For modifying runs, choose a documented isolated worktree or controlled patch approach, preserve the original checkout, and validate changed paths and project checks before applying.
-
-Prompt instructions are not enforcement. Native agent tool permissions, restricted working directories where supported, and app-owned action gates must prevent unapproved publication. Do not launch a full-access agent with publishing secrets and assume a prompt will contain it. If an adapter cannot enforce the selected mode, downgrade to a supported handoff mode with an explanation.
-
-Publishing connectors own credentials and external writes. Require current approval, action IDs, and read-back verification. Persist an attempt before dispatch; on an ambiguous response reconcile with the provider before retrying. If a provider cannot establish whether a write succeeded, mark uncertain and request review instead of retrying blindly.
-
-## Local web boundary
-
-Bind loopback by default. Enforce allowed Host/Origin values and protect mutations with a local session token/CSRF strategy. Do not expose arbitrary shell execution or unrestricted file reads. Validate registered project paths, including symlink escapes. Escape Markdown/HTML and proxy/serve only allowed artifact paths. Redact sensitive values from logs and exports. Do not expose provider credentials to browser JavaScript.
-
-## Scheduling and shared accounts
-
-Persist scheduled runs in SQLite. Browser closure must not stop an already-running server job; process shutdown/sleep does. Show scheduler health and missed runs. Default recovery skips stale windows or asks for a new run rather than replaying a backlog.
-
-Use IANA timezones and daylight-saving aware date calculations. Account reservations and rate/cadence limits apply across all projects sharing an account. Distinguish generating tomorrow's drafts from actually scheduling provider posts.
-
-## Measurement
-
-Retain one-activity rotation plus seasonal priority. Let founders adjust channel priorities. Record published URLs, UTM values, manual outcome notes, and optional analytics references. Do not present output volume as evidence of conversion lift.
+Log actual artifacts, checks, verified URLs/provider confirmations and unresolved limitations. Distinguish drafted, submitted, scheduled, published and uncertain. Do not infer a result from intent or a generated summary. No implicit commit, push, spending or outreach. Product-specific extensions remain owned by their project; do not bake another product's generator or database into this repo.

@@ -4,10 +4,10 @@ Read README.md, docs/HANDOFF.md, docs/PLAN.md, and docs/ARCHITECTURE.md before i
 
 - Preserve unrelated edits. Do not modify or scan other product repos unless the user explicitly adds them for the task.
 - Work through the plan in dependency order. Update its status and the handoff with evidence when a milestone is completed.
-- Keep all three agents on one workflow contract. Agent-specific behavior belongs in adapters and generated entry points.
+- Keep all three agents on one workflow contract. Agent-specific invocation belongs in thin skills/commands referencing templates/WORKFLOW.md. Do not spawn AI CLIs or check provider authentication.
 - Do not claim the web app, an integration, or a publishing action works until verified.
 - Default new projects to draft/review mode. No automatic commit, push, external posting, or spending.
-- CLI permission settings and deterministic gates enforce boundaries; prompt text alone is not a sandbox.
+- The active session permissions and deterministic file-write gates enforce boundaries; prompt text alone is not a sandbox.
 - Keep secrets, machine-specific paths, real task queues, customer information, and account IDs out of fixtures and commits.
 - A failed or invalid task import must never authorize archival or deletion.
 - Use stable project IDs, not mutable display-name slugs, for identity.

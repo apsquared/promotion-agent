@@ -8,3 +8,11 @@ coverage/
 *.db-*
 .DS_Store
 .local/
+
+# Machine-local SQLite state and lock directories
+*.sqlite
+*.sqlite-*
+*.sqlite.locks/
+*.db.locks/
+# Interrupted task write-back staging files
+.promotion-agent-*.tmp

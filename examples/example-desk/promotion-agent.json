@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "12345678-1234-4123-8123-123456789abc",
+  "displayName": "Example Desk",
+  "contextPath": "marketing/AGENT.md",
+  "tasksPath": "marketing/TASKS.md",
+  "facts": [
+    { "key": "customerCount", "status": "unknown", "value": null, "sources": [], "verifiedAt": null }
+  ],
+  "policy": {
+    "mode": "draft",
+    "allowedWritePaths": ["marketing/drafts"],
+    "validationCommands": [],
+    "commit": "deny",
+    "push": "deny",
+    "publish": "deny",
+    "spending": "deny"
+  },
+  "timezone": "America/New_York",
+  "cadence": { "kind": "manual", "localTime": null, "weekdays": [] }
+}

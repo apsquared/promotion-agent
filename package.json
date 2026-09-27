@@ -3,12 +3,37 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Local marketing workspace for founders with multiple projects",
+  "bin": {
+    "promotion-agent": "./dist/scripts/promotion.mjs"
+  },
+  "description": "Interactive marketing skills and local task helpers",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apsquared/promotion-agent.git"
+  },
+  "homepage": "https://github.com/apsquared/promotion-agent#readme",
+  "bugs": "https://github.com/apsquared/promotion-agent/issues",
   "engines": {
     "node": ">=22.14.0"
   },
   "scripts": {
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "check": "npm test"
+    "check": "npm run typecheck && npm test",
+    "promotion": "node --experimental-strip-types scripts/promotion.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "prepack": "npm run build",
+    "pretest": "npm run build"
+  },
+  "files": [
+    "assets/opengraph.png",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/node": "22.14.0",
+    "typescript": "5.9.3"
   }
 }

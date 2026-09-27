@@ -35,3 +35,7 @@ Only user-owned source material was selected; no third-party skill packs or depe
 ## Limits
 
 The extracted parser is not yet a format-preserving writer. Snapshot diagnostics are a starter gate, not complete Markdown validation. The UI reference is not runnable. Prompts express policy but do not enforce it. CLI compatibility references are design inputs, not evidence of live integration tests. All of these have explicit implementation tasks.
+
+## Interactive architecture revision
+
+The user replaced the headless execution design with skills/commands in the current agent session. P01/P02 remain optional local infrastructure; P03 subprocess code and probes were removed. The active roadmap is docs/PLAN.md and the shared marketing contract remains templates/WORKFLOW.md. No original product checkout was changed.

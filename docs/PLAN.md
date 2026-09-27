@@ -1,121 +1,65 @@
 # Implementation plan
 
-Status: source extraction complete; application implementation has not started.
+## Product goal and revised direction
 
-## Product goal
+The user opens promotion-agent in an existing interactive Codex, Claude Code or OpenCode session and invokes a skill/command for one explicitly selected product. That agent performs the work and reviews it with the user. No nested AI CLI, authentication probing, mandatory web app or scheduler.
 
-A founder adds multiple local projects, uses Codex/Claude Code/OpenCode to perform focused marketing work, and reviews outcomes from a self-contained localhost UI. First useful result in under ten minutes for someone whose chosen agent is already installed and authenticated.
+The headless P03 experiment has been removed at the user's request. Existing P01/P02 work is retained as optional deterministic infrastructure. Work through the revised plan below in order.
 
-## Milestone 0 — extraction (completed)
+## Completed foundation
 
-- [x] Record source architecture and migration hazards.
-- [x] Extract legacy task parsing without database dependencies.
-- [x] Extract and generalize task prompts.
-- [x] Supply provider-neutral workflow and project/task/log templates.
-- [x] Preserve a sanitized task-board reference.
-- [x] Add fictional fixtures and regression tests.
-- [x] Create a plan, architecture decisions, and self-contained handoff.
+### P00 — extraction (completed)
 
-This does not mean runtime integration, full reconciliation, or secure execution is implemented.
+Legacy-compatible task parser/prompts, fictional product fixture, shared workflow, project/log templates, provenance and regression tests. No real portfolio imported.
 
-## Milestone 1 — data foundation and risk checks
+### P01 — typed contracts/configuration (completed)
 
-### P01: Typed contracts and configuration (next)
+Strict portable/local configuration schemas, stable UUID/task identity, fact provenance, default draft policy and structured record types. Runtime validation and the pinned TypeScript typecheck are verified. Retain existing stored-data compatibility, including unused historical capability/schedule types.
 
-Dependencies: milestone 0. Files: src/core/, schemas/, examples/.
+### P02 — safe local storage/write-back (completed)
 
-Define Project, Policy, Run, Artifact, Review, TaskDisposition, Schedule, and AdapterCapabilities. Define project UUID mapping, portable vs machine-specific configuration, validation command arrays, allowed paths, timezone/cadence, and schema migration versions. Keep the legacy import contract.
+Transactional SQLite schema and backup/export, strict task read classification, safe reconciliation, byte-preserving checkbox completion, hash checks and cooperative locks, explicit selected-file portfolio import previews. See docs/STORAGE.md for evidence and limits. This library is optional for drafting.
 
-Acceptance: valid/invalid config tests; relocation and display-name rename retain task identity; no credential values in portable config. Mark unknown product facts rather than filling them in.
+### P03 — interactive skills and commands (completed)
 
-### P02: Safe task storage and write-back
+- Repo-local Codex `promotion-agent` skill; Claude Code/OpenCode `/promote` wrappers.
+- One canonical workflow in templates/WORKFLOW.md, executed by the current agent.
+- Read-only inspect/prepare helpers and explicit hash-checked completion using P02.
+- Removed AI subprocess adapters, CLI probes, synthetic model runner fixtures and live CLI smoke command.
+- Reframed architecture/docs around native session tools and conversation review.
 
-Dependencies: P01. Files: src/core/, src/storage/, tests/.
+Acceptance: helper tests preserve valid task context/legacy behavior, reject malformed/completed/unknown tasks, preserve files during preparation, conflict on stale completion, and do not depend on installed AI CLIs. Validate skill metadata/reference paths. Native host menu invocation remains separately unverified; do not recreate a CLI runner to test it.
 
-Implement SQLite migrations and backup/export for local operational data. Add read classification, strict snapshot diagnostics, format-preserving task edits, hash preconditions, atomic write, per-project locks, and safe reconciliation. Import legacy project-table rows from a user-selected file; do not ship a real portfolio list. Preview mappings before recording selected projects.
+### P04 — portable onboarding and packaging (completed)
 
-Acceptance: multiline materials and prompts survive round trips; old tasks without Prompt work; concurrent edits conflict; malformed/unreadable snapshots cannot archive tasks; skipped and completed are distinct; project deletion from the app does not delete repo files; re-import is idempotent.
+Dependencies: P01–P03. Let a user explicitly add a selected project/config and install the shared workflow/entry points with previews, no overwrite of custom instructions, and no writes to unrelated repos. Add and lock a minimal TypeScript typecheck/build pipeline. Keep a direct read-the-workflow fallback. Test relocation and upgrades using fictional directories. Do not build a server/UI.
 
-### P03: Prove the three execution adapters
+Implemented a review-hash-gated plan/apply installer for one selected project, with a self-contained compiled runtime, shared workflow, Codex/Claude/OpenCode entry points, conservative ownership manifest, and product-owned starter files created only when absent. Locally customized or unmanaged content is preserved. The pinned TypeScript build/typecheck and fictional relocation/upgrade tests pass. Native host discovery and an outside founder's experience remain P05/P07 verification work.
 
-Dependencies: P01. Files: src/adapters/, tests/adapters/, docs/COMPATIBILITY.md.
+### P05 — interactive workflow coverage (Codex exercise completed)
 
-Verify current official CLI interfaces and installed versions. Run the same tiny fictional, non-publishing fixture through all three adapters. Normalize lifecycle events and failures. Establish which permission modes can actually enforce draft-only execution. Prototype cancel/restart handling and missing-auth reporting before building a large runner UI.
+Dependencies: P04. Exercise directory kits, social drafts, engagement research and content proposals in real interactive hosts using fictional inputs. Check host discovery, useful fallback for missing tools, project-context separation, duplicate prevention and exact-content review. Record observed artifacts and distinguish real interactive evidence from automated helper tests.
 
-Acceptance: offline contract tests for each adapter plus separately recorded live smoke evidence; missing agent/auth produces actionable diagnostics; no fabricated success; no permission-bypass flags. When credentials are unavailable, mark the live test unverified and retain prompt handoff.
+The current Codex desktop session produced and reviewed fictional artifacts for all four activities, exercised a missing-directory fallback, used real public-thread research without posting, avoided logged duplicates, and kept two product contexts separate. See docs/P05-VERIFICATION.md. The skill was visible in this session's catalog, but native menu selection was not tested. Claude Code and OpenCode were unavailable as active sessions; their native command invocation remains P07 release verification. Do not describe those hosts as live-verified from file-layout tests.
 
-## Milestone 2 — local portfolio interface
+### P06 — completion, logs and optional local history (completed)
 
-### P04: Local server and distributable shell
+Dependencies: P02, P05. Make verified completion/evidence logging and skipped/snoozed state convenient to the interactive agent without requiring a database for drafts. Preserve file formatting, source ownership and conflict behavior. Add artifact/review helpers only where they improve a concrete workflow.
 
-Dependencies: P01–P02. Files: src/server/, src/cli/, ui/, package.json.
+Implemented task-linked, no-overwrite evidence records in the selected project's marketing logs. Draft records need no database; local artifact references are hashed. The interactive `complete` command requires a matching reviewed `verified-complete` record hash and rejects skipped/snoozed tasks until reactivated, while P02 still owns the byte-preserving checkbox write. Optional `state`/`disposition` commands expose skipped/snoozed/active status in one chosen local registry without changing source task files. The helper validates evidence structure and revision, not the truth of a provider action. Existing project ledgers remain project-owned; no generic artifact approval or publishing helper was added.
 
-Create the Node server, React app, local-session protection, static asset serving, health endpoint, and one-command startup. Add a fictional demo mode requiring no AI credentials. Select and lock supported dependency versions.
+## Release validation in progress
 
-Acceptance: clean checkout starts via documented commands; binds loopback; hostile-origin requests and traversal attempts fail; built package includes UI assets; no cloud database needed. npm distribution stays private until P10.
+### P07 — reusable distribution/release (local distribution complete; live gates open)
 
-### P05: Onboarding, projects, and task review
+Dependencies: P04–P06. Verify clean-machine skill/command installation and native invocation in Codex, Claude Code and OpenCode, supported hosts/OS versions, license/provenance, removal/upgrade behavior and an outside founder's first useful draft. Keep npm publication and remote pushes explicit separate actions.
 
-Dependencies: P04. Files: ui/, src/server/, templates/.
+The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. This is macOS 14.5 arm64/Node 22.14.0 evidence only. Native menu invocation in all three hosts, other OS/version checks, an outside founder's first useful draft, public source provenance and actual publication remain open release gates. Follow the concrete sequence in docs/RELEASE.md; do not mark P07 fully complete from local helper tests.
 
-Add registered paths through a local folder picker or path input, import previews, context review, and per-project agent choices. Build Today, Projects, Review queue, and History. Port useful behavior from reference/legacy-task-board.tsx.txt. Generate managed agent entry points that reference one canonical workflow; never overwrite existing user instructions.
+## Deferred unless separately requested
 
-Acceptance: add two fictional projects, filter tasks, inspect materials, copy a prompt, mark one task done with verified write-back, resolve a conflict, restart with state intact. Template updates preview a diff and preserve local overrides. No manual JSON editing needed for normal onboarding.
+Localhost dashboard/server, AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
 
-## Milestone 3 — useful end-to-end runs
+## Verification
 
-### P06: Coordinator and directory-preparation vertical slice
-
-Dependencies: P02, P03, P05. Files: src/runner/, src/server/, ui/, tests/.
-
-Connect run initiation, context assembly, streaming, cancellation, artifacts, review, and logging. One active modifying run per project. The first workflow prepares a directory submission kit with exact materials and a task; it submits nothing. Offer manual prompt export/rescan alongside integrated execution.
-
-Acceptance: each supported agent produces a reviewable fictional submission kit; no mixed-project facts; cancellation retains partial artifacts; failure remains failure; output validates against the contract; Today explains why an activity was selected.
-
-### P07: Expand workflows and content changes
-
-Dependencies: P06. Files: templates/, src/core/, src/runner/.
-
-Add social drafts, engagement research, blog and pSEO preparation, then project-configured content changes. Provide capability checks and explicit extension hooks for product media or database-backed content; do not bake in one application's generator. Use isolated changes, changed-path checks, and configured validation. Commits and pushes remain explicit opt-ins.
-
-Acceptance: missing research/browser/media capabilities degrade usefully; no duplicate task/slug; unrelated dirty files remain intact; failing project validation blocks application; reviewed diff matches the applied change.
-
-## Milestone 4 — verified external actions and recurrence
-
-### P08: Publishing connector and exact-content review
-
-Dependencies: P06. Files: src/connectors/, src/runner/, ui/.
-
-Start with optional Post Bridge behind a generic connector contract; keep manual export. Bind review to text/media/account/time revision. Persist action attempts, verify results, and handle uncertain network outcomes without blind retries. Add shared-account reservations.
-
-Acceptance: mocked timeout-after-success does not double-post; changed copy invalidates approval; wrong-project account fails; provider read-back supports scheduled/published claims; no real public posts in automated tests.
-
-### P09: Recurring runs and basic outcome tracking
-
-Dependencies: P06; P08 for publishing schedules. Files: src/scheduler/, ui/, src/storage/.
-
-Persist cadence, timezone, budgets, next run, missed-run policy, and process health. Add manual outcome notes and optional analytics references. Default recurring runs create reviewable drafts; clearly distinguish run scheduling from external post scheduling.
-
-Acceptance: daylight-saving fixtures, sleep/restart recovery, shared account limits, no backlog burst, no duplicate run dispatch. Stop/restart behavior is visible to founders.
-
-## Milestone 5 — public release
-
-### P10: Package, docs, external pilot, and release
-
-Dependencies: P01–P09. Files: README.md, docs/, .github/, package.json.
-
-Add CI on supported operating systems, locked dependencies, install/uninstall instructions, migration/backup docs, contributor templates, security reporting, and a short demo. Verify package/repository availability and copied-code rights. Keep third-party skills optional unless licensed redistribution is verified. Replace private package setting only when releasing.
-
-Acceptance: clean-machine install; full workflow without source checkout; outside founder adds two projects and produces a useful artifact within ten minutes after agent authentication. Publish a truthful feature/agent capability matrix and limitations. Verify remote/commit/publish state independently.
-
-## Pilot migration
-
-Use opt-in imports of three contrasting existing products: custom media, different social cadence, and database-backed content. No source repo is required for development; fictional fixtures cover those variations. Preview import before any writes. Back up original files. Avoid duplicate schedulers: disable an old scheduler only when the replacement is verified and the owner authorizes the switch. Keep the old system available until new completion/write-back behavior is reliable.
-
-## Deferred
-
-Hosted SaaS, team authentication, autonomous paid advertising, auto-sending cold outreach, arbitrary plugins with unrestricted execution, agent/model auto-routing, multi-machine synchronization, and comprehensive attribution analytics.
-
-## Definition of release success
-
-Local-first operation; no product-context mixing; truthful run outcomes; useful manual mode; all three agent adapters verified or limitations explicitly stated; no duplicate publishing on retries; existing project customizations preserved; an external founder can onboard without maintainer help.
+Run `npm test` for code changes and record current results in docs/HANDOFF.md. Skill metadata checks and native syntax documentation do not establish native menu execution. Helpers run locally on Node 22.14+, use fictional tests, and do not need model credentials or external services.

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "8f89d611-c608-4f07-bf50-275225664322",
+  "displayName": "Fieldbook Notes",
+  "contextPath": "marketing/AGENT.md",
+  "tasksPath": "marketing/TASKS.md",
+  "facts": [],
+  "policy": {
+    "mode": "draft",
+    "allowedWritePaths": ["marketing/drafts"],
+    "validationCommands": [],
+    "commit": "deny",
+    "push": "deny",
+    "publish": "deny",
+    "spending": "deny"
+  },
+  "timezone": "UTC",
+  "cadence": { "kind": "manual", "localTime": null, "weekdays": [] }
+}
