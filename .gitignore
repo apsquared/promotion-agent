@@ -16,3 +16,9 @@ coverage/
 *.db.locks/
 # Interrupted task write-back staging files
 .promotion-agent-*.tmp
+
+# Next.js review app
+.next/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts

@@ -35,6 +35,7 @@ export type PromptCategory =
   | 'directory'
   | 'outreach'
   | 'search'
+  | 'competitor'
   | 'account'
   | 'other';
 
@@ -47,6 +48,7 @@ export function promptCategory(category: string): PromptCategory {
   const c = (category || '').trim().toLowerCase();
   if (c === 'directory' || c === 'backlink' || c === 'launch') return 'directory';
   if (c === 'outreach' || c === 'engagement') return 'outreach';
+  if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
   if (c === 'search') return 'search';
   if (c === 'account') return 'account';
   return 'other';
@@ -131,6 +133,14 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 3. Build a shortlist of 3–6 real targets. For each: URL, how old the post is, how many replies it already has, roughly how big the account is, and one line on why it fits.
 4. Draft a reply for each one, in the voice the materials describe.
 5. **Post nothing.** Come back with the shortlist and the drafts for approval.`,
+
+  competitor: `## How to work this task
+
+1. Follow the competitor research activity linked from the shared WORKFLOW.md. Resolve the named competitors or verify a small relevant comparison set from the product's audience and problem.
+2. Compare current official sources, then search for public discussions mentioning those competitors. Open the original sources and verify identity, context and visible dates; keep inaccessible/snippet-only leads separate.
+3. Check prior reports and task/thread history for duplicates. Save a sourced comparison and mention shortlist with URLs, evidence, relevance, and prioritized next steps in the product's permitted paths.
+4. Prepare useful reply drafts only where a contribution fits. Do not post, contact anyone, create a recurring monitor, or treat mentions as buying intent.
+5. Record the task-linked report for review using the local evidence helper when available. Verify research completion separately from any recommended engagement action.`,
 
   account: `## How to work this task
 

@@ -22,4 +22,5 @@ jobs:
           package-manager-cache: false
       - run: npm ci
       - run: npm run check
+      - run: npm run review:build
       - run: npm pack --dry-run --json

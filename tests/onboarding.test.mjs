@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync, rmSync, readdirSync, cpSync, renameSync, symlinkSync, existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { previewInstall, applyInstall, reviewHash, previewRemoval, applyRemoval, removalHash } from '../src/onboarding/install.ts';
@@ -158,6 +158,15 @@ test('a project relocates with stable UUID and compiled helpers run without orig
   const id = inspectProject(project).project.id;
   rmSync(source, { recursive: true });
   const relocated = join(dir, 'relocated'); renameSync(project, relocated);
+  // The conversational setup route and guide must travel with the installed bundle.
+  for (const relative of ['templates/WORKFLOW.md', 'templates/SETUP.md', 'docs/INTERACTIVE.md', 'docs/MANUAL-SMOKE-TEST.md']) {
+    const resource = join(relocated, '.promotion-agent', relative);
+    const content = readFileSync(resource, 'utf8');
+    for (const [, href] of content.matchAll(/\]\(([^)]+)\)/g)) {
+      if (/^https?:/.test(href) || href.startsWith('#')) continue;
+      assert.ok(existsSync(resolve(dirname(resource), href.split('#')[0])), `Missing installed reference: ${relative} -> ${href}`);
+    }
+  }
   const inspected = spawnSync(process.execPath, [join(relocated, '.promotion-agent/scripts/promotion.mjs'), 'inspect', '--project', '.'], { cwd: relocated, encoding: 'utf8', env: { ...process.env, PATH: dir } });
   assert.equal(inspected.status, 0, inspected.stderr);
   assert.equal(JSON.parse(inspected.stdout).project.id, id);

@@ -48,6 +48,12 @@ Dependencies: P02, P05. Make verified completion/evidence logging and skipped/sn
 
 Implemented task-linked, no-overwrite evidence records in the selected project's marketing logs. Draft records need no database; local artifact references are hashed. The interactive `complete` command requires a matching reviewed `verified-complete` record hash and rejects skipped/snoozed tasks until reactivated, while P02 still owns the byte-preserving checkbox write. Optional `state`/`disposition` commands expose skipped/snoozed/active status in one chosen local registry without changing source task files. The helper validates evidence structure and revision, not the truth of a provider action. Existing project ledgers remain project-owned; no generic artifact approval or publishing helper was added.
 
+### Conversational onboarding refinement (implemented; live acceptance pending)
+
+Setup, drafting, revisions, and status now share conversational routes in `templates/WORKFLOW.md`. `templates/SETUP.md` directs the active agent to handle builds, preview/review/apply, and returned hashes using the existing guarded installer. Source instructions and installed wrappers route to that contract. README and the BarGPT smoke test use natural-language prompts; a draft alone needs no installation. No runner, dependencies, database requirement, or installer bypass was added.
+
+Validation: `npm run check` passed 55/55 tests, including installed resource/link checks after relocation and removal of the original bundle. The package dry run includes the new setup procedure and smoke guide. This verifies packaging/helpers; real conversational setup and native menu invocation remain acceptance work.
+
 ## Release validation in progress
 
 ### P07 — reusable distribution/release (local distribution and public source complete; live gates open)
@@ -56,9 +62,21 @@ Dependencies: P04–P06. Verify clean-machine skill/command installation and nat
 
 The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. Public source is at `https://github.com/apsquared/promotion-agent`; the initial Ubuntu/macOS GitHub Actions check passed on Node 22.14.0. That CI run adds automated coverage, while the end-to-end install evidence remains macOS 14.5 arm64/Node 22.14.0 only. Native menu invocation in all three hosts, an outside founder's first useful draft, broader host/OS acceptance and npm publication remain open release gates. Follow the concrete sequence in docs/RELEASE.md; do not mark P07 fully complete from local helper tests or the source push.
 
+## P08 — optional local Next.js review desk (completed locally)
+
+User-requested addition on 2026-09-28, after the P01–P06 foundations. P07's external host/release gates remain open independently. Conversation stays primary; a compact inbox shows current project tasks, saved draft/evidence previews and selected SQLite registry state/history. Copyable prepare/revise/action/verify prompts are the primary action. No AI runner, database-only completion, browser mutation API or automatic publishing.
+
+The app uses Next.js App Router/React, an authenticated server read route, and a loopback launcher. Review consumes files and SQLite without reconciling or changing them. Vercel build configuration is included; hosted data delivery and authentication remain separate future work. Validation: `npm run check` passed both typechecks and 61/61 tests; `npm run review:build` passed. A production server was exercised in the browser with a temporary fictional product/registry: draft preview, real clipboard contents, review notes, status/search filters, database history, completed-task verification, anchor navigation/refresh and desktop/mobile layout. No real product, provider or hosted deployment was exercised.
+
+## P09 — competitor research activity (completed; live research acceptance not exercised)
+
+User-requested marketing activity on 2026-09-29, using the P03 shared workflow, P04 portable installation, P06 evidence helpers and P08 review handoff. Add a sourced competitor comparison and verified mention discovery, with channel/source context, duplicate handling and ranked opportunities. Dedicated Codex skill and Claude Code/OpenCode commands must point to one canonical research procedure. Reports and optional reply drafts do not authorize posting or recurring monitoring.
+
+Acceptance: source/installed entrypoints resolve after relocation, upgrades preserve customizations and removal respects ownership; a `competitor` task can prepare, record a draft report, and surface its contents and evidence in the review handoff while remaining open. Validation: Skill Creator reports `Skill is valid!`; `npm run check` passed both typechecks, the helper build and 63/63 tests, including portable entrypoint ownership/link coverage and a task-to-report-to-review handoff. Package dry-run includes the activity resource. Live search quality and native host invocation remain separate from these deterministic checks.
+
 ## Deferred unless separately requested
 
-Localhost dashboard/server, AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
+AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
 
 ## Verification
 

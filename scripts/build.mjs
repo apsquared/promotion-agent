@@ -7,7 +7,7 @@ const compiled = spawnSync(process.execPath, [fileURLToPath(new URL('../node_mod
 if (compiled.status !== 0) process.exit(compiled.status ?? 1);
 cpSync(new URL('../templates/', import.meta.url), new URL('../dist/templates/', import.meta.url), { recursive: true });
 mkdirSync(new URL('../dist/docs/', import.meta.url));
-for (const name of ['ARCHITECTURE.md', 'COMPATIBILITY.md', 'INTERACTIVE.md', 'STORAGE.md'])
+for (const name of ['ARCHITECTURE.md', 'COMPATIBILITY.md', 'INTERACTIVE.md', 'MANUAL-SMOKE-TEST.md', 'REVIEW-UI.md', 'STORAGE.md'])
   cpSync(new URL(`../docs/${name}`, import.meta.url), new URL(`../dist/docs/${name}`, import.meta.url));
 writeFileSync(new URL('../dist/package.json', import.meta.url), JSON.stringify({ type: 'module', private: true }) + '\n');
 cpSync(new URL('../LICENSE', import.meta.url), new URL('../dist/LICENSE', import.meta.url));

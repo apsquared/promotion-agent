@@ -1,5 +1,7 @@
 # Working in promotion-agent
 
+For conversational product requests such as "Set up my product for promotion", "Draft a post", or "What's the status?", read and follow `templates/WORKFLOW.md` in the current session. Handle local helper commands yourself; do not hand the user a terminal checklist. Ask for one explicit product path only when it is not already known. The implementation instructions below apply when changing promotion-agent itself.
+
 Read README.md, docs/HANDOFF.md, docs/PLAN.md, and docs/ARCHITECTURE.md before implementation. This repository is self-contained; do not require another project checkout to build or test it.
 
 - Preserve unrelated edits. Do not modify or scan other product repos unless the user explicitly adds them for the task.

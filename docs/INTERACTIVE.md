@@ -2,6 +2,14 @@
 
 Open this promotion-agent checkout in your existing Codex, Claude Code, or OpenCode session. The session owns the model, login, tools and permissions. This project supplies workflow instructions and local file helpers; it never launches an AI CLI.
 
+## Talk to the agent
+
+In this repository, say “Set up my product for promotion. Its repo is at /path/to/product.” Then “Draft one X post,” “Make it shorter,” or “What's the status?” The agent follows `templates/WORKFLOW.md`, keeps the selected product through the conversation, and runs necessary local commands itself. Follow [the conversational smoke test](MANUAL-SMOKE-TEST.md) for a real-product walkthrough.
+
+For setup, the agent follows `templates/SETUP.md`: it resolves one project, reads the actual installation plan, explains the changes, and applies it with the returned hash when installation is authorized. A preview-only request stops for review. The user does not need to operate JSON plans or copy hashes. Existing deterministic ownership and conflict checks still apply. A draft request alone needs no installation or database. Missing or incompatible helper configuration must not trigger replacement of existing product data.
+
+The command examples below are a reference for agents and developers, not required user steps.
+
 ## Start work
 
 In Codex:

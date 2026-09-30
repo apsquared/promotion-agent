@@ -8,38 +8,36 @@ Source: [github.com/apsquared/promotion-agent](https://github.com/apsquared/prom
 
 The **current agent does the work in your conversation**. There is no AI CLI runner, authentication probe, required web app, or background scheduler.
 
-## Use it
+## How it works
 
-Codex:
+Open this repository in Codex, Claude Code, or OpenCode and talk to your agent:
 
-```text
-$promotion-agent Prepare a directory kit for examples/example-desk. Draft only.
-```
+1. **“Set up BarGPT for promotion. Its repo is at /path/to/bargpt.”** The agent reads your product's instructions and marketing history, handles local setup, and summarizes the facts it will use. It preserves existing work and asks only for missing information that matters.
+2. **“Draft one X post. Keep it as a draft.”** It chooses an angle using your product facts and recent posts, saves the draft, and shows you the exact copy and sources.
+3. **“Make it shorter and focus on this benefit.”** Review and revise in the same conversation. Your agent handles the files and local helpers.
+4. **“What's the status?”** It reports saved drafts, actual outcomes, pending work, and a useful next step.
 
-Claude Code / OpenCode:
+You can also ask for a directory submission kit, relevant threads with draft replies, a blog proposal, SEO page proposals, or competitor analysis with a shortlist of verified public mentions. A draft request can run without installation; setup adds a portable workflow and local helpers to your selected product. Drafts remain drafts until a separately authorized action is actually verified.
 
-```text
-/promote examples/example-desk directory draft only
-```
+No terminal checklist, database setup, or hash copying is needed from you. The agent runs available local tools and explains any environment limitation. Setup uses Node 22.14+ for the helpers; the agent handles the source build when needed. A preview-only request stops before installation, and existing custom files remain yours.
 
-Any agent can also read `templates/WORKFLOW.md` and follow it directly. See [interactive use](docs/INTERACTIVE.md) for entry points and optional task helpers. Native command-menu execution across all three hosts has not been verified.
+For an explicit entry point, use `$promotion-agent` in Codex or `/promote` in Claude Code/OpenCode, followed by the same conversational request. If discovery has not refreshed, ask the current agent to read `templates/WORKFLOW.md` directly. In an installed product, that path is `.promotion-agent/templates/WORKFLOW.md`.
 
-## Add one selected product
+**Try it:** [a conversational smoke test with BarGPT](docs/MANUAL-SMOKE-TEST.md). Native menu invocation and this new conversational setup flow still need live host acceptance; helper tests alone do not verify the conversation.
 
-Build this checkout, preview installation into one explicit product directory, review the plan file and summary, then apply the exact review hash printed by `onboard`:
+## Competitor analysis and mention discovery
 
-```sh
-git clone https://github.com/apsquared/promotion-agent.git
-cd promotion-agent
-npm ci
-npm run build
-npm run promotion -- onboard --project /path/to/product --name "Product name" --plan /private/tmp/product-install-plan.json
-npm run promotion -- install --project /path/to/product --plan /private/tmp/product-install-plan.json --review-hash REVIEW_HASH
-```
+Ask **“Analyze our competitors and find where people are talking about them.”** The agent compares relevant competitors, searches public discussions and reviews, verifies source URLs, and ranks opportunities to engage or improve positioning. Reports distinguish independent discussion from vendor promotion, verified mentions from inaccessible leads, and observations from inference. Optional reply drafts stay drafts.
 
-The plan contains before/after file contents and the selected absolute path; keep it private. Installation creates a portable `.promotion-agent/` runtime and repo-local skill/commands. Existing project instructions, facts, tasks, logs, and customized entry points are preserved. Repeating this process with a newer bundle upgrades only unmodified managed files. The installed product can move with its runtime and use `node .promotion-agent/scripts/promotion.mjs ...` without this source checkout. See [interactive use](docs/INTERACTIVE.md) for details.
+Use `$promotion-competitors` in Codex or `/promote-competitors` in Claude Code/OpenCode, with a selected product and any competitors or date range you want to focus on. The main promotion workflow also recognizes this activity. [Research instructions](templates/activities/competitor-analysis.md) travel with installed projects; task-linked reports appear in the local review desk for prompt handoff. No automatic posting or recurring monitoring is started.
 
-## Local helpers and tests
+## Optional local review desk
+
+A Next.js frontend provides a compact task inbox with side-by-side materials and saved draft previews. Search/filter tasks, inspect SQLite state and history, add review notes, then **copy a prompt back to your agent** to prepare, revise, act or verify. Refresh to see newly saved results.
+
+Ask the agent to open the review desk for one selected product and optional local database. It handles the launcher and opens the private local session. The app reads existing data; copying a prompt does not execute an action or record approval. See [review desk setup and deployment limits](docs/REVIEW-UI.md). Next.js/Vercel build configuration is included; hosted access to local data requires a separate data adapter.
+
+## Developer reference
 
 Requires Node 22.14+. Building/onboarding this source checkout uses its pinned development dependencies; an installed product needs no package install, model credentials or external database for drafting.
 
@@ -60,6 +58,7 @@ Task-linked `record` writes a local evidence account without SQLite; `state` and
 - [Architecture](docs/ARCHITECTURE.md): interactive host and local data boundaries.
 - [Storage](docs/STORAGE.md) and [contracts](schemas/README.md): optional infrastructure already implemented.
 - [Invocation compatibility](docs/COMPATIBILITY.md): native entry points and verification limits.
+- [Manual smoke test](docs/MANUAL-SMOKE-TEST.md): install into an existing BarGPT checkout, invoke the agent, and review one draft.
 - [P05 interactive evidence](docs/P05-VERIFICATION.md): fictional Codex-session drafts, duplicate checks and host limits.
 - [Extraction record](docs/EXTRACTION.md), [contributing](CONTRIBUTING.md), and [license](LICENSE).
 

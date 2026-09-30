@@ -19,12 +19,16 @@
   },
   "scripts": {
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
-    "check": "npm run typecheck && npm test",
+    "check": "npm run typecheck && npm run typecheck:review && npm test",
     "promotion": "node --experimental-strip-types scripts/promotion.mjs",
     "typecheck": "tsc --noEmit",
     "build": "node scripts/build.mjs",
     "prepack": "npm run build",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "review": "node scripts/review.mjs",
+    "review:build": "next build",
+    "review:start": "next start",
+    "typecheck:review": "tsc --project tsconfig.next.json --noEmit"
   },
   "files": [
     "assets/opengraph.png",
@@ -34,6 +38,13 @@
   ],
   "devDependencies": {
     "@types/node": "22.14.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "typescript": "5.9.3"
+  },
+  "dependencies": {
+    "next": "^16.3.6",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

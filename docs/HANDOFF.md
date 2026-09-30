@@ -20,6 +20,47 @@ Open this repository in the user's existing Codex, Claude Code or OpenCode sessi
 
 Removed the superseded P03 subprocess/protocol adapter files, CLI smoke script, synthetic CLI test fixture and obsolete probe evidence. The earlier CLI failures were not repaired; they are no longer prerequisites for this design. No global skills were installed, no other product repo was modified, and no model login or external account change was made.
 
+## Conversational setup refinement — 2026-09-27
+
+The user requested a launch-agent-style “open the repo and talk to it” experience. `AGENTS.md`, the source skill/commands, and generated installed wrappers now route setup, drafting, revisions, and status through `templates/WORKFLOW.md` v0.3. `templates/SETUP.md` tells the current agent to run local setup tools itself, inspect the actual plan, summarize changes, and apply the exact returned hash when authorized. Preview-only requests still stop for review; ordinary draft requests do not install infrastructure. No deterministic installer gates were changed.
+
+README now leads with conversational prompts. `docs/MANUAL-SMOKE-TEST.md` walks through setup, a BarGPT draft, revision, and status without user-run terminal commands. The build ships that guide and the setup procedure. The relocation integration test checks their availability and relative links after the original bundle is removed. No real BarGPT checkout was read or modified for this change.
+
+Validation: `npm run check` passed typecheck, build, and 55/55 tests. Package dry-run verification includes the new resources (33 files). `git diff --check` passed. Skill Creator's Python validator could not run because PyYAML is absent in both available Python environments; no dependency was added to the repository. Source skill metadata and reference paths were inspected, and existing wrapper reference tests pass. The new conversational behavior and native host invocation still require the manual smoke test; do not claim those were exercised by helper tests.
+
+## P08 — optional Next.js review desk — 2026-09-28
+
+The user requested a persistent local frontend while keeping conversation first, chose a compact inbox with side-by-side review, and specified Next.js as the core technology with future Vercel deployment in mind. This explicitly adds the previously deferred local UI; it does not restore the headless runner or hosted admin behavior.
+
+Implemented:
+
+- Next.js App Router/React in `app/`, with responsive task search/status/activity filters, current materials, task-linked evidence/text previews and a separate SQLite history view.
+- Prominent copy-prompt handoff plus notes and prepare/revise/action/verify intent selection. Prompts include selected product/task identity, task-file revision, materials, destination, source steps, evidence paths/hashes and project policy. Completed tasks offer verification only. Copying does not record approval, execute actions or complete tasks.
+- `src/review/data.ts` reads only the explicitly selected project and optional SQLite registry. SQLite is opened read-only, without migration/reconciliation. Missing or corrupt registries fall back to the file view; changed artifacts and stale imports are labeled. File previews reject symlinks and render supported text formats inertly, capped at 256 KiB.
+- `scripts/review.mjs` launches Next.js on loopback with a random session token. The server route requires that token, validates local host/origin, accepts no browser-supplied paths and has no write methods. The token fragment is removed into session storage; ordinary anchors are not mistaken for tokens.
+- `npm run review`, `review:build`, `review:start`, separate frontend typecheck, and Vercel Next.js build configuration. The helper build and portable installation still work independently. Next/React runtime dependencies and React development types were added for this explicitly requested UI.
+- `docs/REVIEW-UI.md` documents launch, handoff, data ownership, source-only UI distribution and hosted deployment limits. README and architecture/plan now describe the optional frontend.
+
+Verification on Node 22.14.0/macOS:
+
+- Final `npm run check`: helper/frontend typechecks, helper build and **61/61 tests passed**. Six new tests cover read-only data behavior, evidence/reference changes and symlinks, selected-project isolation, corrupt registry fallback, prompt payloads and API session/origin enforcement.
+- Final `npm run review:build`: optimized Next.js 16.3.6 build passed; root UI is static and `/api/review` is dynamic Node runtime. No build warnings other than Node's experimental SQLite notice.
+- Browser-tested the production server against a temporary copy of the fictional Example Desk fixture, with one saved text draft and a snoozed task in a temporary SQLite registry. Verified actual clipboard content contains the selected task, evidence hashes and review notes; top and lower copy buttons both work. Checked database snapshot view, snoozed/completed filters, empty search, anchor navigation then refresh, notes surviving data refresh, and reload with session authentication intact. Desktop preview checked at the default viewport and mobile at 390 × 844; document content width was 390px, with no horizontal overflow. Temporary viewport override was reset.
+- Browser testing found and fixed Next.js internal request URL mismatch in local host checks, and an anchor/session-fragment collision on refresh. The initial new API test assumed macOS temporary paths were already canonical; it now compares real paths. Final checks above passed after these corrections.
+- A fictional local demo was left open for review. No real product checkout was read or changed, no external action occurred, and no commit, push, or deployment was performed. Existing uncommitted onboarding changes were preserved.
+
+Limits: media/binary references are not visual previews; unlinked draft files are not scanned; notes are page-session state; the local registry/history view is read-only. Vercel build configuration does not make laptop files remotely accessible. A hosted read model or explicit snapshot delivery and hosted authentication are still needed for useful remote deployment, and no Vercel runtime was verified. P07's native host/outside-founder gates remain open independently of P08.
+
+## P09 — competitor research and mention discovery — 2026-09-29
+
+Added user-requested activity `competitor`. `templates/activities/competitor-analysis.md` is the shared procedure for sourced competitor comparisons, verified public mention discovery, duplicate handling, channel/source classification, ranked opportunities and optional reply drafts. The default scope is 3–5 competitors and up to 5–10 verified mentions, starting with the last 30 days for timely engagement; older sources and unverified leads remain distinct. Research does not authorize posting or recurring monitoring and does not treat mentions as buying intent.
+
+The new repo-local `promotion-competitors` Codex skill and `/promote-competitors` Claude Code/OpenCode commands reference the same workflow/activity. Portable onboarding generates all three entrypoints, tracks ownership, preserves customizations and includes the shared activity. WORKFLOW v0.4 routes ordinary competitor requests and lists the new activity; the starter marketing context has optional competitor fields. The task prompt builder adds a competitor-research fallback. Existing string categories, registry and review previews need no schema or UI change.
+
+Verification: `npm run check` passed helper/frontend typechecks, helper build and **63/63 tests**. Two new integration tests verify source and installed links after relocation, customized-entrypoint preservation on upgrade/removal, and a synthetic competitor task through preparation, draft evidence, report preview and prompt handoff without task completion. Skill Creator `quick_validate.py` reported **Skill is valid!** for the new source skill. `npm pack --dry-run --ignore-scripts` with a private temporary cache confirmed the research resource is distributed; the default cache was not writable and was left unchanged. `git diff --check` passed.
+
+No live competitor research, real-product installation, native host menu invocation, external posting, monitoring, commit or push was performed. Research quality remains to be exercised with a selected product and live sources. Existing uncommitted onboarding and Next.js review changes were preserved.
+
 ## Try the workflow
 
 In Codex: `$promotion-agent Prepare a directory kit for examples/example-desk. Draft only.`

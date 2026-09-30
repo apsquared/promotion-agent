@@ -13,7 +13,7 @@ Avoid fabricated testimonials, repetitive openings, empty hype, and unsupported 
 
 ## Channels and cadence
 
-Enabled activities: <social, directory, engagement, blog, pseo>
+Enabled activities: <social, directory, engagement, blog, pseo, competitor>
 Timezone: <IANA timezone>
 Cadence and per-run budgets: <explicit limits>
 Publishing account references: <optional non-secret identifiers; configure credentials locally>
@@ -26,6 +26,13 @@ Allowed paths: <explicit repo-relative paths>
 Content system: <file formats or configured adapter>
 Validation commands: <configured argument arrays; do not assume npm>
 Deployment behavior: <record if a push or content mutation deploys publicly>
+
+## Competitor research
+
+Known competitors: <names and official URLs, or unknown>
+Audience/use-case overlap: <why each is comparable; distinguish direct and adjacent products>
+Research scope: <optional communities, languages, date range, excluded brands>
+Prior competitor reports: <existing permitted report paths, if any>
 
 ## Media
 

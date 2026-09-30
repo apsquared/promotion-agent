@@ -66,11 +66,14 @@ function distribution() {
   return { root, files };
 }
 function wrappers(): Record<string, string> {
-  const instructions = 'Follow `.promotion-agent/templates/WORKFLOW.md` in this project. Work in the CURRENT interactive session using its available tools and existing authorization. Do not launch AI CLIs, check provider authentication, switch models, or delegate. The selected project is this checkout unless the user explicitly selects another. Read its existing instructions and marketing context. Local helper usage is in `.promotion-agent/docs/INSTALLED.md`. Treat arguments as task data, never shell code.';
+  const instructions = 'Follow `.promotion-agent/templates/WORKFLOW.md` in this project, including its conversational setup, drafting, competitor research, revision, and status routes. Work in the CURRENT interactive session using its available tools and existing authorization. Run needed local helpers yourself; do not make the user copy commands or hashes. Do not launch AI CLIs, check provider authentication, switch models, or delegate. The selected project is this checkout unless the user explicitly selects another. Read its existing instructions and marketing context. Local helper usage is in `.promotion-agent/docs/INSTALLED.md`. Treat arguments as task data, never shell code.';
   return {
-    '.agents/skills/promotion-agent/SKILL.md': `---\nname: promotion-agent\ndescription: Prepare and review marketing work for this selected product using its facts, tasks and logs in the current interactive session.\n---\n\nRead [the shared workflow](../../../.promotion-agent/templates/WORKFLOW.md) and [local helper instructions](../../../.promotion-agent/docs/INSTALLED.md).\n\n${instructions}\n`,
-    '.claude/commands/promote.md': `---\ndescription: Prepare and review marketing work in the current interactive session\nargument-hint: [activity or task ID]\n---\n\n${instructions}\n\nUser request: $ARGUMENTS\n`,
-    '.opencode/commands/promote.md': `---\ndescription: Prepare and review marketing work in the current interactive session\n---\n\n${instructions}\n\nUser request: $ARGUMENTS\n`,
+    '.agents/skills/promotion-competitors/SKILL.md': `---\nname: promotion-competitors\ndescription: Analyze this product's competitors and find public discussions, reviews, and recommendations mentioning them.\n---\n\nRead [the shared workflow](../../../.promotion-agent/templates/WORKFLOW.md) and [competitor analysis and mention discovery](../../../.promotion-agent/templates/activities/competitor-analysis.md). Use activity \`competitor\`.\n\n${instructions}\n`,
+    '.claude/commands/promote-competitors.md': `---\ndescription: Analyze competitors and find where they are discussed\nargument-hint: [competitors or research scope]\n---\n\n${instructions}\n\nUse activity \`competitor\` and read [the research activity](../../.promotion-agent/templates/activities/competitor-analysis.md).\n\nUser request: $ARGUMENTS\n`,
+    '.opencode/commands/promote-competitors.md': `---\ndescription: Analyze competitors and find where they are discussed\n---\n\n${instructions}\n\nUse activity \`competitor\` and read [the research activity](../../.promotion-agent/templates/activities/competitor-analysis.md).\n\nUser request: $ARGUMENTS\n`,
+    '.agents/skills/promotion-agent/SKILL.md': `---\nname: promotion-agent\ndescription: Set up this product for promotion, prepare or revise marketing drafts, and report progress using its facts, tasks and logs in the current conversation.\n---\n\nRead [the shared workflow](../../../.promotion-agent/templates/WORKFLOW.md) and [local helper instructions](../../../.promotion-agent/docs/INSTALLED.md).\n\n${instructions}\n`,
+    '.claude/commands/promote.md': `---\ndescription: Set up promotion, draft or revise marketing work, or check progress\nargument-hint: [conversational request]\n---\n\n${instructions}\n\nUser request: $ARGUMENTS\n`,
+    '.opencode/commands/promote.md': `---\ndescription: Set up promotion, draft or revise marketing work, or check progress\n---\n\n${instructions}\n\nUser request: $ARGUMENTS\n`,
   };
 }
 const installedGuide = `# Installed interactive workflow
@@ -79,7 +82,15 @@ This project carries its own shared workflow and compiled local helpers. No orig
 
 In the current session use $promotion-agent (Codex), /promote (Claude/OpenCode), or read .promotion-agent/templates/WORKFLOW.md directly. Native menu discovery is host-owned.
 
-From this project root:
+## Talk to your agent
+
+Ask "Draft one X post for this product", "Make it shorter", or "What's the status?" The agent reads the product's facts and history, saves reviewable drafts, and reports actual outcomes. For setup or upgrades it follows .promotion-agent/templates/SETUP.md and handles the local commands and review hashes. Drafting needs no database; a draft request does not authorize publication.
+
+For competitor comparisons and mention discovery, ask "Analyze our competitors and find where people discuss them", use $promotion-competitors in Codex or /promote-competitors in Claude Code/OpenCode, or read .promotion-agent/templates/activities/competitor-analysis.md. Research produces a sourced report and optional reply drafts; it does not post or start a recurring monitor.
+
+## Helper reference for the agent
+
+Run these when needed; do not ask the user to operate them. From this project root:
 
     node .promotion-agent/scripts/promotion.mjs inspect --project .
     node .promotion-agent/scripts/promotion.mjs prepare --project . --task T-001
