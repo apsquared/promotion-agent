@@ -4,6 +4,49 @@ An interactive marketing workflow for Codex, Claude Code, and OpenCode. Open thi
 
 Source: [github.com/apsquared/promotion-agent](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
+## Setup and installation
+
+**Requirements:** Git, Node.js 22.14 or newer with npm, and an existing Codex, Claude Code, or OpenCode session. Install from source; the npm package is not published yet.
+
+### 1. Clone and build
+
+```sh
+git clone https://github.com/apsquared/promotion-agent.git
+cd promotion-agent
+npm ci
+npm run build
+```
+
+You can also ask your agent to run these steps. Keep this checkout separate from the product or sandbox where you will test promotion.
+
+### 2. Install into your product or sandbox
+
+Open the cloned **promotion-agent** repository in your agent and say:
+
+```text
+Set up promotion-agent in my existing project at /absolute/path/to/my-project.
+Keep it in draft/review mode and preserve existing files.
+```
+
+Replace the path with your product repository or a separate sandbox repository. The agent reads the project, prepares and reviews the installation plan, installs the workflow, and verifies that the local helpers can read it. You do not need to run installer commands or copy review hashes yourself.
+
+Installation adds a portable `.promotion-agent/` runtime, agent skills/commands, and—where absent—`promotion-agent.json` and starter `marketing/` files. Existing project instructions and marketing content are preserved. No database, publishing account, or additional model API key is required for drafting through your existing agent session.
+
+### 3. Start using it
+
+Open the **product or sandbox repository** in your agent and ask:
+
+```text
+Read .promotion-agent/templates/WORKFLOW.md and draft one social post
+for this product. Keep it as a draft for review.
+```
+
+You can also use `$promotion-agent` in Codex or `/promote` in Claude Code/OpenCode when the host discovers the installed entrypoint. To review saved results in the optional Next.js frontend, ask the agent in the **promotion-agent source checkout** to open the review desk for your product path; see [local review setup](docs/REVIEW-UI.md).
+
+**Testing in a sandbox:** keep real credentials and private customer data out of test fixtures. Tell the sandbox agent to report defects without modifying the installed runtime or skills. Fix defects in the promotion-agent source checkout, rebuild, and ask the agent to upgrade the sandbox installation. Locally customized installed files are preserved during upgrades.
+
+For installer details and upgrades, see [interactive installation](docs/INTERACTIVE.md#install-into-one-product).
+
 ![Promotion-agent: marketing work inside your agent](assets/opengraph.png)
 
 The **current agent does the work in your conversation**. There is no AI CLI runner, authentication probe, required web app, or background scheduler.
