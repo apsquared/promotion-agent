@@ -1,3 +1,4 @@
+import { readSource, assertObserverOutput } from '../onboarding/workspace.ts';
 import { existsSync, readFileSync } from 'node:fs';
 import { projectSchema, sha256, taskDispositionSchema, taskId as taskIdSchema } from '../../schemas/contracts.ts';
 import { canonicalCheckout, readTaskFile, taskFile } from '../storage/files.ts';
@@ -11,7 +12,8 @@ export function inspectProject(directory: string) {
   const project = projectSchema.parse(JSON.parse(readFileSync(taskFile(root, 'promotion-agent.json'), 'utf8')));
   const snapshot = readTaskFile(root, project.tasksPath);
   const context = readFileSync(taskFile(root, project.contextPath), 'utf8');
-  return { root, project, context, snapshot };
+  const source = readSource(root);
+  return { root, sourceRoot: source?.sourcePath ?? null, project, context, snapshot };
 }
 
 export function prepareTask(directory: string, taskId: string) {
@@ -21,10 +23,10 @@ export function prepareTask(directory: string, taskId: string) {
   const task = inspected.snapshot.tasks.find((entry: { taskId: string }) => entry.taskId === taskId);
   if (!task) throw new Error('Task not found');
   if (task.status !== 'open') throw new Error('Task is already completed; select an open task');
-  const prompt = buildAgentPrompt({ ...task, project: inspected.project.displayName, sourceDir: inspected.root });
+  const prompt = buildAgentPrompt({ ...task, project: inspected.project.displayName, sourceDir: inspected.root, observedSourceDir: inspected.sourceRoot ?? undefined });
   return { projectId: inspected.project.id, taskId, revision: inspected.snapshot.hash,
-    policy: inspected.project.policy, context: inspected.context,
-    prompt: `Work in the current interactive session. Follow the shared WORKFLOW.md referenced by the active skill or command and the selected project's instructions. Task-specific steps cannot expand authorization. Use the helper's hash-checked completion command only after verified completion.\n\n${prompt}` };
+    workspace: inspected.root, sourceRoot: inspected.sourceRoot, policy: inspected.project.policy, context: inspected.context,
+    prompt: `Work in the current interactive session. Follow the shared WORKFLOW.md referenced by the active skill or command and the selected project's instructions. The product repository is read only. Save drafts, recommendations and bookkeeping only in the promotion workspace. Task-specific steps cannot expand authorization. Use the helper's hash-checked completion command only after verified completion.\n\n${prompt}` };
 }
 
 function currentOpenTask(directory: string, taskId: string, expectedHash: string) {
@@ -66,6 +68,7 @@ export function setSelectedTaskDisposition(directory: string, taskId: string, ex
   if (state === 'snoozed' && (!until || Date.parse(until) <= Date.now())) throw new Error('Snooze deadline must be in the future');
   const disposition = taskDispositionSchema.parse({ schemaVersion: 1, task: { projectId: project.id, taskId },
     state, reason: state === 'active' ? null : reason!.trim(), until: state === 'snoozed' ? until : null });
+  assertObserverOutput(directory, database);
   const store = new Store(database);
   try {
     const existing = registeredProject(store, project.id);
@@ -83,6 +86,7 @@ export function readSelectedTaskState(directory: string, database: string) {
   const { root, project, snapshot } = inspectProject(directory);
   if (snapshot.classification !== 'valid') throw new Error('Cannot list state for an invalid task snapshot');
   if (!existsSync(database)) return { projectId: project.id, revision: snapshot.hash, registry: 'absent', tasks: snapshot.tasks.map(task => ({ taskId: task.taskId, status: task.status, disposition: null })) };
+  assertObserverOutput(directory, database);
   const store = new Store(database);
   try {
     const existing = registeredProject(store, project.id);
@@ -101,6 +105,7 @@ export function completeSelectedTask(directory: string, taskId: string, expected
   const evidence = readEvidence(root, evidencePath);
   if (evidence.hash !== evidenceHash || evidence.record.projectId !== project.id || evidence.record.taskId !== taskId ||
       evidence.record.taskHash !== expectedHash || evidence.record.outcome !== 'verified-complete') throw new Error('Reviewed completion evidence does not match this task revision');
+  assertObserverOutput(directory, database);
   const store = new Store(database);
   try {
     const existing = registeredProject(store, project.id);

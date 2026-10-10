@@ -1,6 +1,8 @@
 # Release and live-use checklist
 
-Promotion-agent is an interactive skill/command plus local Node helpers. “Live” means a founder can install it into an explicitly selected product checkout, invoke it in their existing agent session, and get a useful reviewed draft. There is no web server or hosted deployment in this plan.
+Promotion-agent is an interactive skill/command plus local Node helpers. “Live” means a founder can register an explicitly selected read-only product checkout with a separate private promotion workspace, invoke it in their existing agent session, and get a useful reviewed draft. The optional local review desk is available; hosted deployment remains separate.
+
+Observer architecture supersedes the historical product-local distribution evidence below. Current setup uses source plus workspace; see INTERACTIVE.md and HANDOFF.md. Existing product-local installations are not automatically migrated.
 
 ## Public source on 2026-09-27
 
@@ -37,6 +39,6 @@ No npm publish, real product installation, external post, or spending has occurr
 
 ## Local upgrade and removal
 
-From a newer installed package or checkout outside the selected product, run `promotion-agent onboard --project <product> --name <display-name> --plan <private-new-plan.json>`, review the plan and apply with `promotion-agent install --project <product> --plan <private-new-plan.json> --review-hash <printed-hash>`. Only unchanged managed files update; locally edited and product-owned files remain.
+From a newer installed package or checkout outside the selected promotion workspace, run `promotion-agent onboard --project <product> --workspace <external-workspace> --name <display-name> --plan <private-new-plan.json>`, review the plan and apply with `promotion-agent install --project <external-workspace> --plan <private-new-plan.json> --review-hash <printed-hash>`. Only unchanged managed workspace files update; locally edited files and marketing data remain. The observed product repository stays untouched.
 
-For removal, run `promotion-agent remove-preview --project <product> --plan <private-new-plan.json>`, inspect the paths, then `promotion-agent remove --project <product> --plan <private-new-plan.json> --review-hash <printed-hash>`. The plan file contains before-images and an absolute selected path; keep it private. Removal deletes only unchanged installer-owned runtime/wrappers, preserving custom files, product configuration, marketing facts/tasks/logs, and any optional local SQLite registry. Use the package or checkout outside the product so the running helper does not delete its own code while executing.
+For removal, run `promotion-agent remove-preview --project <external-workspace> --plan <private-new-plan.json>`, inspect the paths, then `promotion-agent remove --project <external-workspace> --plan <private-new-plan.json> --review-hash <printed-hash>`. The plan file contains before-images and an absolute selected path; keep it private. Removal deletes only unchanged installer-owned runtime/wrappers, preserving custom files, product configuration, marketing facts/tasks/logs, and any optional local SQLite registry. Use the package or checkout outside the workspace so the running helper does not delete its own code while executing.

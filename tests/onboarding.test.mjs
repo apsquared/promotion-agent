@@ -76,8 +76,9 @@ test('a newer bundle updates only unmodified managed files after review', t => {
   const source = join(dir, 'new-bundle'); cpSync('dist', source, { recursive: true });
   writeFileSync(join(source, 'templates/WORKFLOW.md'), 'New bundled workflow\n');
   const script = join(source, 'scripts/promotion.mjs');
+  const observed = join(dir, 'observed-repo'); mkdirSync(observed);
   const planFile = join(dir, 'upgrade.json');
-  const preview = spawnSync(process.execPath, [script, 'onboard', '--project', project, '--name', 'Ignored', '--plan', planFile], { encoding: 'utf8' });
+  const preview = spawnSync(process.execPath, [script, 'onboard', '--project', observed, '--workspace', project, '--name', 'Ignored', '--plan', planFile], { encoding: 'utf8' });
   assert.equal(preview.status, 0, preview.stderr);
   const plan = JSON.parse(readFileSync(planFile, 'utf8'));
   assert.equal(plan.entries.find(e => e.path === '.promotion-agent/templates/WORKFLOW.md').action, 'update');
@@ -151,7 +152,8 @@ test('a project relocates with stable UUID and compiled helpers run without orig
   const source = join(dir, 'standalone-dist'); cpSync('dist', source, { recursive: true });
   const script = join(source, 'scripts/promotion.mjs'); const planFile = join(dir, 'plan.json');
   const command = args => spawnSync(process.execPath, [script, ...args], { cwd: dir, encoding: 'utf8', env: { ...process.env, PATH: dir } });
-  const preview = command(['onboard', '--project', project, '--name', 'Portable', '--plan', planFile]);
+  const observed = join(dir, 'observed'); mkdirSync(observed);
+  const preview = command(['onboard', '--project', observed, '--workspace', project, '--name', 'Portable', '--plan', planFile]);
   assert.equal(preview.status, 0, preview.stderr);
   const result = command(['install', '--project', project, '--plan', planFile, '--review-hash', JSON.parse(preview.stdout).reviewHash]);
   assert.equal(result.status, 0, result.stderr);

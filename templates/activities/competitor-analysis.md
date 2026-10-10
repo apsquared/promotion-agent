@@ -41,7 +41,7 @@ Recommend an appropriate next step for each strong finding: helpful reply, watch
 
 ## Save a reviewable report
 
-Write a dated Markdown report in an existing permitted draft/research location. Use `marketing/drafts/competitor-analysis-YYYY-MM-DD.md` only when that path is permitted, and preserve prior reports by choosing a new revision filename if needed. If no local write location is authorized, return the report in the conversation. Include:
+Write a dated Markdown report in the separate promotion workspace’s permitted draft/research location. The product repository stays read only. Use `marketing/drafts/competitor-analysis-YYYY-MM-DD.md` only when that path is permitted, and preserve prior reports by choosing a new revision filename if needed. If no local write location is authorized, return the report in the conversation. Include:
 
 1. Scope: product, selected competitors, research window, search coverage, and limitations.
 2. A sourced competitor comparison, with factual differences and explicitly labeled interpretations.

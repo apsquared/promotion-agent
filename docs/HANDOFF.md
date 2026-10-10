@@ -6,6 +6,16 @@ The user explicitly changed the design: **run as an agent interactively using sk
 
 Open this repository in the user's existing Codex, Claude Code or OpenCode session. A repo-local skill/command loads templates/WORKFLOW.md and the current agent performs the work with its available tools and conversation. There is no AI subprocess runner, authentication probe, model selection, required localhost UI, or scheduler.
 
+## Current observer boundary — 2026-10-09
+
+The user changed the ownership model: treat real product repos as read-only observed sources and keep promotion-agent’s internal bookkeeping outside them. P10 supersedes historical product-local installation and marketing storage described below.
+
+The supported CLI now onboards with --project <source> and --workspace <external-directory>; all subsequent commands select the workspace with --project. The workspace holds runtime, host wrappers, stable-ID config, promotion-source.json with the local canonical source mapping, and marketing facts/tasks/drafts/logs/evidence. Default workspace selection in conversational setup is ~/.local/share/promotion-agent/projects/<UUID>. Helpers require existing directories; the agent handles creation. Source/workspace overlap, aliases and plan/database outputs inside the source fail before writes. Completion updates only workspace tasks.
+
+Review data/UI/prompts now identify both locations and retain the observer boundary. All three host entrypoints and the shared workflow/setup/docs are aligned. Product changes stay recommendations until separately requested. Existing product-local installations and history are left untouched; import/cleanup are separate explicit tasks. Legacy low-level library APIs remain compatible for stored data/tests; host permissions and workflow govern raw agent tools.
+
+Validation: npm run check passed helper/frontend typechecks and 67/67 tests; npm run review:build passed the optimized Next.js build. Package dry-run confirmed the observer helper and setup resources are included; git diff --check passed. Observer tests exercise compiled CLI preview/install, evidence/read-model/prompt handoff, draft rejection for completion, validated local completion and upgrade with byte-identical source snapshots; overlap/symlink/source-output rejection; two isolated identities and workspace relocation; rejection of legacy product-local plans and changed canonical source mappings. Existing compiled standalone relocation and all core tests pass. No real product repos were read or changed. Revised UI browser interaction and native host conversation/menu invocation have not been live-tested in this task. No commit, push, deployment or public action occurred.
+
 ## Implemented
 
 - **P01 retained:** strict typed/runtime configuration and record contracts, stable UUID/task identity, portable/local settings, draft defaults and explicit unknown facts. Historical Run/Schedule/AdapterCapabilities shapes remain compatible but do not enable background execution.

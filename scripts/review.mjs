@@ -32,7 +32,8 @@ try {
   if (!options['--project']) throw new Error(help);
   const project = realpathSync(options['--project']);
   if (!existsSync(resolve(project, 'promotion-agent.json')))
-    throw new Error('Select a configured product with promotion-agent.json');
+    throw new Error('Select a configured promotion workspace with promotion-agent.json');
+  if (!existsSync(resolve(project, 'promotion-source.json'))) throw new Error('Select a registered observer workspace');
   const port = Number(options['--port'] ?? 4317);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port');
   const origin = `http://127.0.0.1:${port}`;
@@ -62,7 +63,7 @@ try {
     },
   );
   console.log(
-    `\nOpen your private review session: ${origin}/#${token}\nStop with Ctrl+C. Tasks and drafts remain in the product.\n`,
+    `\nOpen your private review session: ${origin}/#${token}\nStop with Ctrl+C. Tasks and drafts remain in the promotion workspace. The observed repository is read only.\n`,
   );
   child.on('error', (error) => {
     console.error(error.message);

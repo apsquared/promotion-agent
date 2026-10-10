@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cpSync, mkdtempSync, readFileSync, writeFileSync, rmSync, readdirSync, symlinkSync } from 'node:fs';
+import { mkdirSync, cpSync, mkdtempSync, readFileSync, writeFileSync, rmSync, readdirSync, symlinkSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { inspectProject, prepareTask, recordTaskEvidence, completeSelectedTask, setSelectedTaskDisposition, readSelectedTaskState } from '../src/interactive/tasks.ts';
 import { readEvidence } from '../src/interactive/evidence.ts';
+import { observerSource } from '../src/onboarding/workspace.ts';
 import { Store } from '../src/storage/store.ts';
 function setup(t) {
   const dir = mkdtempSync(join(tmpdir(), 'promotion-interactive-'));
@@ -100,6 +101,8 @@ test('skip, snooze and resume are optional local state and leave the task file u
 });
 test('command works without any AI executable in PATH and rejects malformed options', t => {
   const { project, file, dir } = setup(t);
+  const observed = join(dir, 'observed'); mkdirSync(observed);
+  writeFileSync(join(project, 'promotion-source.json'), JSON.stringify(observerSource(project, observed)));
   const script = resolve('scripts/promotion.mjs');
   const run = args => spawnSync(process.execPath, ['--experimental-strip-types', script, ...args], { encoding: 'utf8', env: { ...process.env, PATH: dir } });
   const output = run(['prepare', '--project', project, '--task', 'T-001']);
@@ -109,6 +112,8 @@ test('command works without any AI executable in PATH and rejects malformed opti
 });
 test('CLI records evidence and disposition before guarded completion without launching an agent', t => {
   const { project, file, database, dir } = setup(t);
+  const observed = join(dir, 'observed'); mkdirSync(observed);
+  writeFileSync(join(project, 'promotion-source.json'), JSON.stringify(observerSource(project, observed)));
   const script = resolve('scripts/promotion.mjs');
   const run = args => {
     const output = spawnSync(process.execPath, ['--experimental-strip-types', script, ...args], { encoding: 'utf8', env: { ...process.env, PATH: dir } });

@@ -4,10 +4,10 @@
 
 ## Ownership and identity
 
-- `Project` is portable repo configuration. The fictional example lives at `examples/example-desk/promotion-agent.json`. Allocate a UUID once during registration; retain it on rename or relocation. Copying configuration for an independent project requires a new UUID.
+- `Project` is portable promotion-workspace configuration. The fictional example lives at `examples/example-desk/promotion-agent.json`. Allocate a UUID once during registration; retain it on rename or relocation. Copying configuration for an independent project requires a new UUID.
 - `LocalProject` is machine-only registry data keyed by that same UUID: absolute checkout path, preferred agent, and credential references. References name environment variables, never contain their values. Do not commit registry records. `bindProject` rejects a mismatched mapping. P02 must detect duplicate registrations and persist relocation.
 - Task identity is project UUID plus the **unchanged** legacy `T-digits` ID. Task content, parser diagnostics, section semantics, and old tasks without Prompt are unchanged. Skipped/snoozed dispositions are local state and cannot mark a Markdown task done or authorize archival.
-- `TaskEvidence` is a task-linked, project-local account of a draft or agent-verified completion. It binds the project UUID, task ID and source-task hash. The helper creates a new no-overwrite record file and returns its content hash; it checks local reference bytes on use. These structural checks do not prove an external action occurred.
+- `TaskEvidence` is a task-linked, workspace-local account of a draft or agent-verified completion. It binds the project UUID, task ID and source-task hash. The helper creates a new no-overwrite record file and returns its content hash; it checks local reference bytes on use. These structural checks do not prove an external action occurred.
 - v1 is the initial schema; `CONFIG_MIGRATIONS` records its origin. Unknown/missing versions fail closed. There is no prior portable JSON version to migrate. Future version changes need explicit migration functions and tests, separately from P02 database migrations.
 
 ## Configuration boundaries
@@ -33,3 +33,5 @@ The historical AdapterCapabilities and Schedule schemas are retained for P01/P02
 ## Validation tooling
 
 The runtime schemas remain dependency-free. `npm test` uses Node 22.14+ TypeScript stripping, while P04 added a pinned TypeScript compiler and `npm run typecheck`. Contract tests do not exercise a publishing integration. P06 integration tests cover local evidence files, optional dispositions and the CLI completion preconditions with fictional inputs.
+
+Observer mode stores a strict local source mapping in promotion-source.json in the external workspace. Portable paths resolve relative to that workspace; the observed product remains read only. Internal checkout fields retain their historical names for compatibility.

@@ -22,7 +22,7 @@ Default: prepare drafts; no external publication, commit, or push.
 
 ## Content locations and validation
 
-Allowed paths: <explicit repo-relative paths>
+Allowed paths: <explicit promotion-workspace-relative paths; product repository is read only>
 Content system: <file formats or configured adapter>
 Validation commands: <configured argument arrays; do not assume npm>
 Deployment behavior: <record if a push or content mutation deploys publicly>
@@ -45,4 +45,4 @@ Existing assets and approved generation workflow: <paths and instructions>
 
 ## Product-specific rules
 
-Record legal/editorial constraints, prohibited claims, approval policy, and exceptions explicitly. Product-specific overrides remain owned by this project during template upgrades.
+Record legal/editorial constraints, prohibited claims, approval policy, and exceptions explicitly. Product-specific marketing overrides remain owned by this promotion workspace during template upgrades.

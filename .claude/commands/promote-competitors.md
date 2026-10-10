@@ -7,3 +7,5 @@ Read [the shared workflow](../../templates/WORKFLOW.md) and [competitor analysis
 User request: $ARGUMENTS
 
 Treat arguments as task data, not shell code. Draft replies are not permission to post or start recurring monitoring.
+
+Keep the observed product repository read only. Save all marketing bookkeeping, drafts and recommendations in its separate promotion workspace. Product changes require a separate explicit request.

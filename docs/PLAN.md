@@ -4,7 +4,15 @@
 
 The user opens promotion-agent in an existing interactive Codex, Claude Code or OpenCode session and invokes a skill/command for one explicitly selected product. That agent performs the work and reviews it with the user. No nested AI CLI, authentication probing, mandatory web app or scheduler.
 
-The headless P03 experiment has been removed at the user's request. Existing P01/P02 work is retained as optional deterministic infrastructure. Work through the revised plan below in order.
+The headless P03 experiment has been removed at the user's request. Existing P01/P02 work is retained as optional deterministic infrastructure. Work through future milestones in dependency order. P10 supersedes the historical product-local ownership/installation descriptions in P04–P09 below.
+
+## P10 — observer repositories and external workspaces (implemented locally)
+
+Current direction, 2026-10-09: product repositories are read-only sources; all promotion-agent bookkeeping, runtime, skills, configuration, tasks, drafts, proposals, logs and evidence belong to separate private workspaces. One source checkout supports multiple explicitly selected product workspaces. Recommendations do not authorize product code/content changes.
+
+Implemented after P09: observer registration with stable existing project UUID and a private canonical source mapping; workspace-targeted onboarding/install; CLI rejection of unregistered/product-local destinations; overlap and symlink-aware plan/database output checks; workspace task/evidence completion; review source/workspace fields and prompt boundary; shared workflow and all three host entrypoints; revised README/setup/architecture/manual smoke test. Existing product-local installations remain unchanged; migration/cleanup is separately requested work. Legacy library contracts remain compatible and are not a global sandbox.
+
+Acceptance: automated lifecycle verifies source bytes and file layout remain unchanged, source/workspace overlap and symlink escapes fail before writes, evidence and completion target only workspace files, two products remain separate, and relocation preserves identity. Native host menu/conversational acceptance and live browser acceptance of the revised path display remain separate from automated checks. No real product installation or migration, commit, push or publication is part of this milestone. See HANDOFF for final validation evidence.
 
 ## Completed foundation
 

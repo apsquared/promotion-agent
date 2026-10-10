@@ -3,8 +3,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { previewInstall, applyInstall, reviewHash, previewRemoval, applyRemoval, removalHash } from '../src/onboarding/install.ts';
 import { inspectProject, prepareTask, recordTaskEvidence, completeSelectedTask, setSelectedTaskDisposition, readSelectedTaskState } from '../src/interactive/tasks.ts';
 
+import { requireWorkspace, observerSource, assertObserverOutput, assertObserverOutputForSetup } from '../src/onboarding/workspace.ts';
+
 const help = `Local task helpers for the CURRENT interactive agent (no AI process is launched):
-  onboard --project <directory> --name <display-name> --plan <new-plan.json>
+  onboard --project <read-only-product-directory> --workspace <separate-workspace-directory> --name <display-name> --plan <new-plan.json>
   install --project <directory> --plan <reviewed-plan.json> --review-hash <sha256>
   remove-preview --project <directory> --plan <new-plan.json>
   remove --project <directory> --plan <reviewed-plan.json> --review-hash <sha256>
@@ -14,6 +16,7 @@ const help = `Local task helpers for the CURRENT interactive agent (no AI proces
   state --project <directory> --database <local.sqlite>
   disposition --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --state <active|skipped|snoozed> [--reason <text>] [--until <UTC timestamp>]
   complete --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --evidence <record-path> --evidence-hash <sha256>
+--project for all commands except onboard selects the promotion workspace, never the product repo.
 inspect/prepare are read-only. state reads optional registry state without changing product files.
 record stores an agent-supplied evidence account without SQLite.
 complete requires a matching reviewed verified-complete record; it does not verify an external action itself.
@@ -23,7 +26,7 @@ try {
   if (!command || command === '--help') { console.log(help); }
   else {
     const specs = {
-      onboard: { required: ['project', 'name', 'plan'] },
+      onboard: { required: ['project', 'workspace', 'name', 'plan'] },
       install: { required: ['project', 'plan', 'review-hash'] },
       'remove-preview': { required: ['project', 'plan'] },
       remove: { required: ['project', 'plan', 'review-hash'] },
@@ -45,18 +48,30 @@ try {
     }
     if (spec.required.some(key => !options[key])) throw new Error(`Required options: ${spec.required.map(key => '--' + key).join(', ')}`);
     if (command === 'onboard') {
-      const plan = previewInstall(options.project, options.name);
+      observerSource(options.workspace, options.project);
+      // Validate even the private preview destination before writing it.
+      const source = options.project;
+      assertObserverOutputForSetup(options.workspace, source, options.plan);
+      const plan = previewInstall(options.workspace, options.name, options.project);
       writeFileSync(options.plan, JSON.stringify(plan, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
       console.log(JSON.stringify({ plan: options.plan, reviewHash: reviewHash(plan), entries: plan.entries.map(({ path, action, reason }) => ({ path, action, reason })) }, null, 2));
     } else if (command === 'install') {
-      console.log(JSON.stringify(applyInstall(options.project, JSON.parse(readFileSync(options.plan, 'utf8')), options['review-hash']), null, 2));
+      const plan = JSON.parse(readFileSync(options.plan, 'utf8'));
+      const mapping = plan.entries?.find(entry => entry.path === 'promotion-source.json');
+      if (!mapping) throw new Error('Install requires an observer workspace plan');
+      observerSource(options.project, JSON.parse(mapping.after).sourcePath);
+      console.log(JSON.stringify(applyInstall(options.project, plan, options['review-hash']), null, 2));
     } else if (command === 'remove-preview') {
+      requireWorkspace(options.project);
+      assertObserverOutput(options.project, options.plan);
       const plan = previewRemoval(options.project);
       writeFileSync(options.plan, JSON.stringify(plan, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
       console.log(JSON.stringify({ plan: options.plan, reviewHash: removalHash(plan), entries: plan.entries.map(({ path, action, reason }) => ({ path, action, reason })) }, null, 2));
     } else if (command === 'remove') {
+      requireWorkspace(options.project);
       console.log(JSON.stringify(applyRemoval(options.project, JSON.parse(readFileSync(options.plan, 'utf8')), options['review-hash']), null, 2));
     } else {
+      requireWorkspace(options.project);
       const result = command === 'inspect' ? inspectProject(options.project) : command === 'prepare' ? prepareTask(options.project, options.task)
         : command === 'record' ? recordTaskEvidence(options.project, options.task, options['expected-hash'], options.outcome, options.reference, options.summary)
         : command === 'state' ? readSelectedTaskState(options.project, options.database)

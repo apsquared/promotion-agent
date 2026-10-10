@@ -1,26 +1,28 @@
 # Local review desk
 
-The optional Next.js App Router app complements the conversational workflow. It shows one explicitly selected product's current tasks, task-linked drafts and evidence, plus the selected SQLite registry's dispositions, assignments, imported tasks and operational records. The main action is copying a self-contained prompt back into Codex, Claude Code or OpenCode.
+The optional Next.js App Router app complements the conversational workflow. It shows one explicitly selected promotion workspace’s current tasks, task-linked drafts and evidence, plus the selected SQLite registry's dispositions, assignments, imported tasks and operational records. The main action is copying a self-contained prompt back into Codex, Claude Code or OpenCode.
 
 ## Start from the source checkout
 
-Ask the current agent to open the review desk for your selected product and optional registry. The agent runs the launcher and opens its printed private session link. The local app runs separately from the portable product helpers; installing the workflow into a product does not install Next.js into that product.
+Ask the current agent to open the review desk for your selected promotion workspace and optional registry. The agent runs the launcher and opens its printed private session link. The local app runs separately from the portable workspace helpers; registering a product does not install Next.js into either the product or workspace.
 
 Developer commands, run in the promotion-agent checkout:
 
 ```sh
 npm ci
-npm run review -- --project /path/to/selected-product --database /path/to/local.sqlite
+npm run review -- --project /path/to/promotion-workspace --database /path/to/local.sqlite
 ```
 
-The database flag is optional. The selected product needs its existing `promotion-agent.json`, configured context file and task file. The default port is 4317; override with `--port`. To use a production build:
+The database flag is optional. The selected workspace needs promotion-source.json and its existing `promotion-agent.json`, configured context file and task file. The default port is 4317; override with `--port`. To use a production build:
 
 ```sh
 npm run review:build
-npm run review -- --project /path/to/selected-product --database /path/to/local.sqlite --production
+npm run review -- --project /path/to/promotion-workspace --database /path/to/local.sqlite --production
 ```
 
 Stop the process with Ctrl+C. Restarting preserves task files, evidence and database state. Open the new private session link after restarting; the access token changes each run. The token is kept in browser session storage and removed from the visible URL. It is not a product or provider credential.
+
+The desk shows the read-only observed repository and the writable workspace. Copied prompts include both paths and the source-read-only boundary. Drafts and evidence previews come exclusively from the workspace.
 
 ## Review and handoff
 
@@ -32,7 +34,7 @@ Stop the process with Ctrl+C. Restarting preserves task files, evidence and data
 
 Copying does not execute or approve anything, complete a task, or write to the registry. Review notes live in the page session; copy them before closing or reloading. Text previews are capped at 256 KiB and displayed as inert text, including HTML. Binary/media artifacts show a reference and integrity status; visual media previews are not implemented. Evidence accounts are labeled separately from independently verified outcomes.
 
-The database/history view includes archived task projections and run/artifact/review/schedule records. It reads only the selected stable project ID and does not follow other registered checkout paths. Current project tasks are authoritative; an outdated database projection is shown separately. A missing database is not created, and invalid task imports never trigger reconciliation or archival. The app has no mutation API, background agent runner or scheduler.
+The database/history view includes archived task projections and run/artifact/review/schedule records. It reads only the selected stable project ID and does not follow other registered checkout paths. Current workspace tasks are authoritative; an outdated database projection is shown separately. A missing database is not created, and invalid task imports never trigger reconciliation or archival. The app has no mutation API, background agent runner or scheduler.
 
 ## Next.js and deployment
 
@@ -42,7 +44,7 @@ Local launching binds to 127.0.0.1 and creates a random session token. The API r
 
 For a separately managed Next.js server, configure these server-only variables:
 
-- `PROMOTION_REVIEW_PROJECT`: absolute path to the one selected product.
+- `PROMOTION_REVIEW_PROJECT`: absolute path to the one selected promotion workspace.
 - `PROMOTION_REVIEW_DATABASE`: optional path to its existing registry.
 - `PROMOTION_REVIEW_TOKEN`: a strong random access token, required even outside local mode.
 - `PROMOTION_REVIEW_ORIGIN`: exact local origin when binding a local service; leave unset behind a hosted platform proxy.

@@ -6,7 +6,7 @@
 | Claude Code | `.claude/commands/promote.md` | `/promote <project and request>` |
 | OpenCode | `.opencode/commands/promote.md` | `/promote <project and request>` |
 
-In this source checkout every wrapper references `templates/WORKFLOW.md`. In an onboarded product every wrapper references its bundled `.promotion-agent/templates/WORKFLOW.md`. There is no CLI detection, auth check, version allowlist, subprocess launch, model override or native resume logic. Installed AI command-line binary health is irrelevant to using this workflow in an already running session.
+In this source checkout every wrapper references `templates/WORKFLOW.md`. In a registered promotion workspace every wrapper references its bundled `.promotion-agent/templates/WORKFLOW.md`. There is no CLI detection, auth check, version allowlist, subprocess launch, model override or native resume logic. Installed AI command-line binary health is irrelevant to using this workflow in an already running session.
 
 Layouts were checked against official [Codex skill docs](https://learn.chatgpt.com/docs/build-skills), [Claude Code skill docs](https://code.claude.com/docs/en/skills) (which still support `.claude/commands/`) and [OpenCode command docs](https://opencode.ai/v2/docs/commands). Metadata, links and helper behavior are checked locally. Native menu selection across all three hosts has not been exercised. If discovery is unavailable, ask the current agent to read the shared workflow directly.
 

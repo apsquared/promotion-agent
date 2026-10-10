@@ -15,7 +15,8 @@
 export type PromptTask = {
   project: string;
   projectUrl?: string;
-  sourceDir?: string;
+  sourceDir?: string; // Marketing workspace, retained field name for compatibility.
+  observedSourceDir?: string;
   taskId: string;
   filedDate: string;
   priority: string;
@@ -138,7 +139,7 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 
 1. Follow the competitor research activity linked from the shared WORKFLOW.md. Resolve the named competitors or verify a small relevant comparison set from the product's audience and problem.
 2. Compare current official sources, then search for public discussions mentioning those competitors. Open the original sources and verify identity, context and visible dates; keep inaccessible/snippet-only leads separate.
-3. Check prior reports and task/thread history for duplicates. Save a sourced comparison and mention shortlist with URLs, evidence, relevance, and prioritized next steps in the product's permitted paths.
+3. Check prior reports and task/thread history for duplicates. Save a sourced comparison and mention shortlist with URLs, evidence, relevance, and prioritized next steps in the promotion workspace’s permitted paths.
 4. Prepare useful reply drafts only where a contribution fits. Do not post, contact anyone, create a recurring monitor, or treat mentions as buying intent.
 5. Record the task-linked report for review using the local evidence helper when available. Verify research completion separately from any recommended engagement action.`,
 
@@ -152,7 +153,7 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
   other: `## How to work this task
 
 1. Work out what "done" looks like from the title and materials, state it back in one line, then do it.
-2. If this is a repo change, work in the repo listed above: follow the existing patterns, keep the change scoped to what the task asks for, run the project's configured validation commands. Commit or push only when the project policy and user authorization permit it.
+2. If this calls for a product repo change, save a recommendation in the promotion workspace. Keep the observed repository read only unless the user separately and explicitly requests implementation of those changes. Then follow product instructions and applicable validation; commit/push still require authorization.
 3. If this is a web action, actually open the page with your browser tooling available in this session rather than answering from memory, and stop before anything irreversible.
 4. If the task turns out to be a judgment call rather than a scripted fix, lay out the options with a recommendation and let me pick.`,
 };
@@ -179,9 +180,10 @@ function contextBlock(task: PromptTask): string {
   lines.push(`- **Product:** ${task.project}${site}`);
   if (task.sourceDir) {
     lines.push(
-      `- **Repo:** \`${task.sourceDir}\` — read \`marketing/AGENT.md\` there first for product facts, voice, and channel rules before you write anything in the product's voice. Assets referenced below live in that checkout.`
+      `- **Promotion workspace:** \`${task.sourceDir}\` — read \`marketing/AGENT.md\` there first for product facts, voice, and channel rules before you write anything in the product's voice. Local evidence/artifact references resolve in this workspace; source assets can be read from the observed repository.`
     );
   }
+  if (task.observedSourceDir) lines.push(`- **Observed repository (read only):** \`${task.observedSourceDir}\` — read product documentation for facts; save all bookkeeping and change proposals in the workspace.`);
   lines.push(
     `- **Task:** ${task.taskId} · filed ${task.filedDate} · ${task.priority} · ${task.category}`
   );
@@ -191,7 +193,7 @@ function contextBlock(task: PromptTask): string {
 
 function doneBlock(task: PromptTask): string {
   const tick = task.sourceDir
-    ? `\n3. If it's genuinely finished, tick the box in \`${task.sourceDir}/marketing/TASKS.md\` (\`- [ ] ${task.taskId}\` → \`- [x] ${task.taskId}\`) and add the live URL on the task's materials line. Don't touch any other task in that file.`
+    ? `\n3. After independently verifying completion, use the reviewed evidence and hash-checked completion helper to update the task in the promotion workspace. Never edit the observed product's task files or mark a draft complete.`
     : '';
   return `## When you're done
 

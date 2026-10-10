@@ -8,31 +8,31 @@ The application does not start, authenticate, choose models for, monitor, cancel
 
 Provider-specific files are thin invocation wrappers. They contain no model override, tool permission grants, nested agent calls or shell interpolation. Marketing behavior lives only in the shared workflow. Capabilities are observed in the current session; missing browser/media/publishing tools yield drafts or manual handoff.
 
+## Observer source and separate workspaces — current architecture
+
+The product repository is an observed, read-only source. A separate private promotion workspace owns runtime, skills, configuration, context, tasks, drafts, recommendations, logs and evidence. One source checkout supports multiple product workspaces; each invocation explicitly selects one, with no portfolio scan. Marketing bookkeeping is never written into the observed repo. Product changes require a separate explicit implementation request; ordinary setup/promotion requests authorize external marketing work only.
+
+`promotion-agent.json` retains the stable project UUID and workspace-relative settings. `promotion-source.json` is a private local mapping with version 1, mode observer and the canonical source path. Display-name changes or workspace relocation do not change identity. Source and workspace must be non-overlapping canonical directories. Machine-specific mappings and real marketing records do not belong in public fixtures or commits.
+
 ## Conversational setup
 
-Ordinary setup, draft, revision and status requests route through the same shared workflow. `templates/SETUP.md` tells the active agent how to build if needed, review a private installation plan, and use the existing hash-gated installer under the user's authorization. The agent handles commands and hashes; no new runner or installer API is introduced. Preview-only requests still stop for review. Drafting does not require installing anything. Installed wrappers reference the same conversational routes, and existing customized wrappers remain preserved on upgrade.
+`templates/SETUP.md` selects the source and a separate workspace, normally a UUID directory under ~/.local/share/promotion-agent/projects/. The agent creates the workspace, reads source documentation and handles helper commands. `onboard` takes both paths; the hash-reviewed install plan targets only the workspace. Every other CLI command takes the workspace as --project and requires observer registration. Product-local legacy plans cannot be applied through the active CLI.
 
-## Local commands
+The existing conservative installer is reused inside the workspace. It ships compiled helpers, shared workflow, schemas, templates, docs and thin host wrappers, preserving local customizations and marketing data. No skills, config, runtime, locks or starter marketing files are installed into the observed product. Drafting can run without installation by returning work in chat. Existing product-local installations are not migrated or removed automatically; explicit import and cleanup are separate work.
 
-`src/interactive/tasks.ts` and `scripts/promotion.mjs` provide deterministic inspect, prepare and explicit completion commands. They never spawn an AI CLI. Inspect/prepare are read-only and use one explicitly selected project; no portfolio scan or model account is needed. Completion reuses P02 storage locks and content-hash preconditions. It does not itself prove an external task was completed.
+## Local helpers and state ownership
 
-P06 adds immutable, task-linked evidence accounts under `marketing/logs/promotion-agent/`. Draft records need no database; local artifact references are content-hashed and completion requires the exact reviewed `verified-complete` record hash bound to the task revision. The interactive agent still verifies the underlying action; a URL or claim in a record is not self-proving. Skipped/snoozed/active dispositions use the optional SQLite registry and do not alter source task completion. Existing product ledgers remain project-owned.
+Inspect/prepare read workspace context/tasks. Evidence records and artifact references resolve within the workspace; symlinks are rejected. Complete updates the workspace task checkbox using reviewed evidence and P02 hashes/locks. Optional SQLite stores workspace registrations and dispositions; database output paths inside the observed repo, including symlink aliases, are rejected before opening it. Private preview-plan output paths have the same source boundary check.
 
-P04 onboarding creates a reviewable plan for one canonical project path, then applies it only with the plan's review hash and unchanged before-images. A manifest records hashes of installer-owned files. Upgrades replace only unmodified managed files; product context, tasks, logs, config and customized wrappers remain owned by the product. Installed `.promotion-agent/` contains compiled JavaScript, the shared workflow, schemas, templates and guidance, with relative links from the host wrappers. The source checkout has a pinned TypeScript build/typecheck; installed products only need Node 22.14+ for local helpers.
+Legacy parser/storage APIs remain compatible for existing records and tests. Their checkout fields denote the marketing workspace in observer mode, not the observed source repo. The supported CLI requires a workspace mapping; raw library callers and agent file tools are not a global security sandbox. Host permissions still govern raw agent tools, and the shared workflow explicitly prohibits unrequested product writes.
 
-There is no required server, app-owned publishing connector, or scheduler. The user requested an optional Next.js review frontend on 2026-09-28; conversation remains the primary execution interface.
-
-## State ownership
-
-Project files own product context, task content and completion, ledgers and project-specific instructions. Preserve the marketing/AGENT.md, TASKS.md and logs layout. Portable settings retain the project UUID across rename/relocation. Unknown facts remain unknown.
-
-The P01/P02 contracts and SQLite library remain available for optional local registry/history/review/disposition state and safe completion. Task projections are rebuildable; local metadata is not. The interactive workflow can prepare drafts without registration or a database. Old Run/Schedule/AdapterCapabilities types remain compatible for stored data; they do not activate execution or scheduling and are not discovery prerequisites.
+No AI CLI, authentication probe, required database, publishing connector, server or scheduler is introduced. Context comes from product documentation and existing read-only marketing history, with provenance and unknown facts retained.
 
 ## Task write-back
 
 The permissive legacy parser is unchanged; strictTaskSnapshot gates reconciliation and completion. Missing/unreadable/invalid imports cannot archive tasks. Skipped/snoozed is independent of repo completion. Only successful validated snapshots reconcile absent tasks.
 
-Completion changes one checkbox while preserving multiline content and all unrelated bytes. It requires the reviewed hash, takes a cooperative per-project lock, stages and atomically replaces the file, and verifies read-back. Conflicts require rescan/review. Never overwrite a stale snapshot. Symlink task paths are rejected. Registry deletion never removes repo files. See docs/STORAGE.md for recovery and the residual external-editor race.
+Completion changes one checkbox while preserving multiline content and all unrelated bytes. It requires the reviewed hash, takes a cooperative per-project lock, stages and atomically replaces the file, and verifies read-back. Conflicts require rescan/review. Never overwrite a stale snapshot. Symlink task paths are rejected. Registry deletion never removes workspace files. See docs/STORAGE.md for recovery and the residual external-editor race.
 
 ## Actions and evidence
 
@@ -50,6 +50,6 @@ The Next.js build and `vercel.json` support the chosen deployment technology. Th
 
 ## Competitor research activity
 
-`templates/activities/competitor-analysis.md` defines competitor comparison and verified public mention discovery under activity `competitor`. The shared workflow routes conversational requests to it. The `promotion-competitors` Codex skill and `/promote-competitors` commands are thin entrypoints; the installer carries the same procedure and relative references into a selected product, preserving customized files. No provider-specific research code or background monitor is added.
+`templates/activities/competitor-analysis.md` defines competitor comparison and verified public mention discovery under activity `competitor`. The shared workflow routes conversational requests to it. The `promotion-competitors` Codex skill and `/promote-competitors` commands are thin entrypoints; the installer carries the same procedure and relative references into a selected promotion workspace, preserving customized files. No provider-specific research code or background monitor is added.
 
 The existing string-valued task categories and records support this activity without schema changes. Task-linked Markdown research reports use the evidence helper and the review desk's existing previews/copyable prompts. The task prompt builder supplies a research-specific fallback for tasks without custom steps. Finding a mention is not an engagement action or confirmed buying intent; report completion and recommended follow-up actions remain separate.

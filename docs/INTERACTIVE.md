@@ -1,83 +1,48 @@
 # Interactive use
 
-Open this promotion-agent checkout in your existing Codex, Claude Code, or OpenCode session. The session owns the model, login, tools and permissions. This project supplies workflow instructions and local file helpers; it never launches an AI CLI.
+Open promotion-agent in your existing Codex, Claude Code or OpenCode session. The session owns tools, permissions and the model. This project supplies instructions and deterministic local helpers, never an AI subprocess.
 
-## Talk to the agent
+## Everyday use
 
-In this repository, say “Set up my product for promotion. Its repo is at /path/to/product.” Then “Draft one X post,” “Make it shorter,” or “What's the status?” The agent follows `templates/WORKFLOW.md`, keeps the selected product through the conversation, and runs necessary local commands itself. Follow [the conversational smoke test](MANUAL-SMOKE-TEST.md) for a real-product walkthrough.
+1. Open the promotion-agent checkout in your agent and say: “Set up promotion for my project at /absolute/path/to/my-project.” The agent handles building and setup, then reports the separate promotion workspace. Your product repo stays read only.
+2. Continue in the same chat: “Draft one X post,” “Prepare a directory submission kit,” or “Analyze our competitors.”
+3. Review with “Make it shorter” or check progress with “What's the status?” Drafts stay drafts until a separately authorized action is verified.
 
-For setup, the agent follows `templates/SETUP.md`: it resolves one project, reads the actual installation plan, explains the changes, and applies it with the returned hash when installation is authorized. A preview-only request stops for review. The user does not need to operate JSON plans or copy hashes. Existing deterministic ownership and conflict checks still apply. A draft request alone needs no installation or database. Missing or incompatible helper configuration must not trigger replacement of existing product data.
+For future chats, open the **promotion workspace** containing your saved work. If workflow discovery is unavailable, ask the agent to read .promotion-agent/templates/WORKFLOW.md. No slash command, database, publishing account or extra model API key is required for drafting.
 
-The command examples below are a reference for agents and developers, not required user steps.
+To add another product, repeat setup with its local path. Each product has its own private workspace; one conversation selects one product at a time. You may specify an external workspace location; otherwise the agent chooses a UUID directory under ~/.local/share/promotion-agent/projects/. Existing product-local installations stay untouched.
 
-## Start work
+For setup details, the agent follows templates/SETUP.md. A preview-only request stops before installation. Product changes remain recommendations unless you separately request implementation. An unregistered draft request can return useful copy in chat without installation.
 
-In Codex:
+## Helper reference for agents
 
-```text
-$promotion-agent Prepare a directory submission kit for examples/example-desk. Draft only.
-```
-
-In Claude Code or OpenCode:
-
-```text
-/promote examples/example-desk directory draft only
-```
-
-Or in any agent, including when native discovery has not refreshed:
-
-```text
-Read templates/WORKFLOW.md and perform it interactively for examples/example-desk, task T-001. Draft only.
-```
-
-Supply an explicit project path when working beyond this fictional example. Opening this repository is not permission to scan other product repos. The agent reads the selected project's own instructions and facts, chooses or follows one activity, produces reviewable materials, and reports verified results in the conversation. A prepared submission kit does not mean a listing was submitted.
-
-The native entry points are `.agents/skills/promotion-agent/SKILL.md`, `.claude/commands/promote.md`, and `.opencode/commands/promote.md`. All reference `templates/WORKFLOW.md`; they do not maintain separate marketing logic, force a model, change tool permissions, or create subagents. The P04 installer can place a complete, portable copy in one explicitly selected product. No global installation or changes to real product checkouts were performed.
-
-Native discovery locations are documented by [Codex](https://learn.chatgpt.com/docs/build-skills), [Claude Code](https://code.claude.com/docs/en/slash-commands), and [OpenCode](https://opencode.ai/docs/commands/). The layouts and helper behavior are checked locally; invoking the native menu in all three applications is not claimed as verified.
-
-## Optional local task helpers
-
-Run these from this checkout, using Node 22.14+. They are deterministic local programs, not agent CLIs. They need no model account, provider credentials, paid service or running server.
+Run helpers yourself. Node 22.14+ is required. Build the source checkout with npm run build; installed workspaces use node .promotion-agent/scripts/promotion.mjs without dependencies or the original checkout.
 
 ```sh
-npm run promotion -- inspect --project examples/example-desk
-npm run promotion -- prepare --project examples/example-desk --task T-001
+npm run promotion -- onboard --project /read-only/product --workspace /private/promotion/workspace --name "Product" --plan /private/tmp/new-plan.json
+npm run promotion -- install --project /private/promotion/workspace --plan /private/tmp/new-plan.json --review-hash REVIEWED_HASH
+npm run promotion -- inspect --project /private/promotion/workspace
+npm run promotion -- prepare --project /private/promotion/workspace --task T-001
 ```
 
-`inspect` reads the selected project's `promotion-agent.json`, configured context file and task snapshot. It returns the strict diagnostics and current content hash. `prepare` returns context, policy and the existing task's prompt for the current agent; it rejects invalid snapshots and completed/unknown tasks. Both are read-only and create no database.
+Both directories must exist before preview. `onboard` uses the product only to resolve its canonical mapping; the agent reads documentation separately. Every other command's `--project` selects the **workspace**, never the source repo. The CLI requires an observer registration and rejects legacy product-local installation plans. Inspect/prepare read context/tasks in the workspace. promotion-agent.json retains a stable UUID; promotion-source.json stores the private machine-specific source path. Installation plans are private, hash-reviewed and checked against unchanged before-images.
 
-Projects using these helpers need the P01 config format shown in `examples/example-desk/promotion-agent.json`. Without that config, the skill can still draft from explicitly supplied project instructions/facts. The P04 installer previews a new config and starter files only when absent; it never overwrites existing project instructions, facts, tasks, or logs.
+## Evidence, state and completion
 
-## Install into one product
+`record --project <workspace> --task <id> --expected-hash <task-hash> --outcome draft --reference marketing/drafts/example.md --summary <text>` saves immutable evidence in the workspace, without SQLite. Artifact references must be contained regular workspace files, with symlinks rejected.
 
-From a built promotion-agent checkout, run `onboard --project <selected-directory> --name <display-name> --plan <new-private-plan.json>`. It writes a review plan without touching the product. Read its entries and before/after content. Run `install --project <same-directory> --plan <reviewed-plan.json> --review-hash <hash-from-onboard>` to apply that exact plan. A changed file, path substitution, invalid plan, or symlink target fails closed. Keep plan files private because they may contain existing product text. The installer does not add instructions to an existing `AGENTS.md` or `CLAUDE.md`.
+`state` and `disposition` use an optional private SQLite registry. Use one registry per portfolio for shared locks; the registered checkout path is the workspace. Database destinations inside the observed repo, including symlink aliases, are rejected. Snoozing requires a reason and future UTC timestamp.
 
-Inside the installed product, use `$promotion-agent`, `/promote`, or read `.promotion-agent/templates/WORKFLOW.md` directly. The installed `.promotion-agent/docs/INSTALLED.md` explains local helper commands. The bundle is relative to the product root, so it moves with the project. Re-run preview/install from a newer source bundle to upgrade; unmodified managed files update, while edits to a local workflow or command are preserved for manual review. Native host discovery still needs interactive verification.
+After independently verifying actual completion, record `verified-complete`, review the returned evidence path/hash, then use `complete --project <workspace> --task <id> --expected-hash <task-hash> --database <external.sqlite> --evidence <record-path> --evidence-hash <record-hash>`. Completion changes only the workspace task checkbox; it never changes the product's task files. A record is an agent-supplied evidence account, not independent proof of publication. Drafts stay open until their actual task criteria are met.
 
-## Evidence, local state and completion
+## Upgrade, relocation and removal
 
-For a configured, open task, `record` stores a task-linked evidence account in `marketing/logs/promotion-agent/` without SQLite. Use the current task hash returned by `inspect` or `prepare`. A `draft` outcome may reference an existing project-relative artifact; its bytes are hashed so later edits are detected. Record the artifact in the project's normal activity/content ledger as its instructions require.
+Re-preview onboarding from a newer bundle with the same source and workspace, then apply the reviewed hash. Unmodified managed files update; customized files and workspace-owned marketing data are preserved. Move the entire workspace to relocate it without changing its UUID; optional database registration relocation remains explicit. Moving the source requires reviewing and updating its local mapping separately; the helper refuses a changed canonical mapping or inaccessible source.
 
-```sh
-npm run promotion -- record --project examples/example-desk --task T-001 --expected-hash <reviewed-task-sha256> --outcome draft --reference marketing/drafts/kit.md --summary "Kit prepared for review"
-```
+`remove-preview --project <workspace> --plan <private-plan>` and `remove --project <workspace> --plan <plan> --review-hash <hash>` remove unchanged managed runtime/entrypoints only. Context, tasks, logs, source mapping and customized files remain. There is no automatic product-local migration, archival or deletion.
 
-Optional `state --project <directory> --database <local.sqlite>` shows current task status and stored dispositions. It reports an absent or unregistered registry without creating a database for an absent path. `disposition --project <directory> --task <T-NNN> --expected-hash <reviewed-task-sha256> --database <local.sqlite> --state skipped --reason <reason>` records a skip without checking the task off. `--state snoozed` additionally needs `--until <future-canonical-UTC-timestamp>`; `--state active` clears the reason and deadline. Completion refuses skipped/snoozed tasks until they are explicitly reactivated. These use the existing project UUID, registry lock and strict task snapshot. They do not change TASKS.md. Use one database per portfolio for shared locks.
+## Boundaries
 
-Only after an interactive agent has **actually verified** completion and applicable authorization, record `verified-complete` with an external receipt URL or a validated local artifact, review the returned record and hash, and complete the task:
+Product instructions and documentation inform marketing facts. They do not authorize bookkeeping writes into the product. Product changes are proposals saved in the workspace until separately requested. Default work stays draft/review: no automatic publishing, scheduling, spending, outreach, commit or push. Raw agent file tools remain governed by host permissions and the shared workflow; helper checks are not a sandbox for the entire conversation.
 
-```sh
-npm run promotion -- record --project <directory> --task T-001 --expected-hash <reviewed-task-sha256> --outcome verified-complete --reference <verified-https-url-or-local-path> --summary "What was checked"
-npm run promotion -- complete --project <directory> --task T-001 --expected-hash <reviewed-task-sha256> --database <private-local.sqlite> --evidence <returned-record-path> --evidence-hash <returned-record-sha256>
-```
-
-These commands are illustrative mutations; do not run them merely to try the demo. `record` validates the selected project, open task and current hash, writes a new immutable record file, and returns its SHA-256. For HTTPS references it rejects credentials, query strings and fragments to avoid storing token-bearing URLs. A URL is a pointer, not a network verification by the helper. The agent must inspect the actual provider confirmation, destination or local validation before choosing `verified-complete`. `complete` checks the exact record hash, task/project/revision binding and local-reference hash, then uses P02's lock/hash/atomic-write/read-back path. It changes only the checkbox, retains existing local preferences, and refuses implicit relocation. Append the verified outcome to the selected project's existing ledger separately when required.
-
-A draft record, stale task hash, changed local artifact, mismatched record hash or invalid task snapshot blocks completion. Review the current source before retrying. The evidence record is an agent-supplied account, not independent proof of an external action. Raw file edits from an agent would bypass these helper checks: the skill is guidance, not a sandbox. The interactive host's permissions and the user's authorization still govern file changes and external tools.
-
-## Review and tools
-
-Use available browser, media, or publishing integrations when they are relevant and already authorized. Missing tools yield useful drafts or a manual handoff. Never diagnose installed agent CLIs as a prerequisite to doing the work. Do not infer publication from generated text, mark draft-only preparation as a completed submission, or store passwords/tokens in context, tasks or logs.
-
-No mandatory localhost UI, scheduler, background runner, or publishing service is part of the interactive workflow. The retained storage library is optional infrastructure for local state and guarded completion.
+Internal legacy storage/parser APIs remain for compatibility tests and explicit future migration work. Their historical checkout fields refer to the marketing workspace in observer mode; they are not the supported product-local setup route.

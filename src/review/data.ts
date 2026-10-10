@@ -43,7 +43,7 @@ function preview(root: string, path: string, expectedHash: string | null) {
 
 /** Read a single selected project. Never reconcile, migrate, or discover other checkouts. */
 export function reviewData(directory: string, database?: string) {
-  const { root, project, snapshot } = inspectProject(directory);
+  const { root, sourceRoot, project, snapshot } = inspectProject(directory);
   const warnings: string[] = [];
   const registry: {
     status: string;
@@ -173,6 +173,7 @@ export function reviewData(directory: string, database?: string) {
       id: project.id,
       displayName: project.displayName,
       root,
+      sourceRoot,
       tasksPath: project.tasksPath,
       policy: project.policy,
     },

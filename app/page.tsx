@@ -139,6 +139,12 @@ export default function ReviewPage() {
                 : 'Review tasks, saved results, and your next move.'}
             </p>
           </div>
+          {data?.project.sourceRoot && (
+            <div>
+              <p>Observed repository (read only): {data.project.sourceRoot}</p>
+              <p>Promotion workspace: {data.project.root}</p>
+            </div>
+          )}
           <div className="handoff">
             <strong>Review here. Continue in your agent.</strong>
             <p>Choose a task, add your notes, and copy a ready-to-paste prompt.</p>

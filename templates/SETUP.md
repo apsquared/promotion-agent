@@ -1,35 +1,28 @@
-# Conversational product setup
+# Observer workspace setup
 
-Use this procedure for a request to set up, install, or upgrade promotion-agent in one selected local product. The current agent does the work with its existing tools. The user supplies the product and reviews meaningful choices; they do not operate the helper CLI.
+Set up promotion-agent for one explicitly selected local product. The current agent performs setup; do not give the user a helper-command checklist.
 
-## Select and inspect
+## Select source and workspace
 
-Resolve the explicit local checkout from the conversation. If only a product name or site URL was supplied, ask for its local repo path; do not search sibling repos. Read its project instructions, existing marketing context, tasks and recent logs, plus relevant product documentation. Note pre-existing changes. Treat a URL as a source of facts, not a filesystem destination.
+Resolve the product's local repository path from the conversation. Ask only when missing; do not scan sibling repositories. Read its instructions, documentation and any existing marketing history as source material. The product repository stays read only: no runtime, skills, config, task updates, drafts, logs, install locks or databases belong there.
 
-Explain the concrete scope briefly: install local workflow/helper files, preserve existing instructions and marketing work, and keep work in draft mode. A request to set up/install authorizes this local scope; a preview-only request does not authorize applying it. Respect explicit review stops and active session permissions. If setup is already authorized, do not add a second permission step merely to copy a hash.
+Choose a separate private promotion workspace for this product. Honor an explicit workspace path. Otherwise use a new UUID directory under `~/.local/share/promotion-agent/projects/` and report that choice. Handle directory creation yourself within session permissions. The source and workspace must be non-overlapping canonical directories. Keep private workspaces outside public repositories; never commit source mappings, credentials or customer data. Each product has its own workspace and stable UUID in promotion-agent.json; the local source path lives in promotion-source.json. Reuse the selected workspace for follow-ups and upgrades. A new chat must resolve the workspace explicitly; do not scan all products.
 
-## Run the existing installer
+## Preview and install into the workspace
 
-Resolve the helper relative to the workflow you are reading:
+Build the source checkout with Node 22.14+ and `npm run build`; use `npm ci` only if pinned dependencies are missing. Never execute the product's install/build scripts for setup. A compiled bundle uses its existing scripts/promotion.mjs.
 
-- In a source checkout, check Node 22.14+ and build with `npm run build`; run `npm ci` first if its pinned development dependencies are missing. Execute commands in the promotion-agent source, not in the product. Never run the product's install/build scripts just to install this workflow.
-- In a compiled or installed bundle, use its existing `scripts/promotion.mjs` with Node. No package install or original source checkout is required.
+1. Run `onboard --project <read-only-source> --workspace <workspace> --name <display-name> --plan <new-private-plan.json>`. The destination directory must already exist. The preview reads the source directory mapping and writes only the external private plan.
+2. Read the plan's root, files, before/after contents and preservation decisions. Explain both locations and the files being added to the workspace. Verify the plan and any optional database path are outside the source repository.
+3. Setup authorization covers local installation in the separate workspace. Run `install --project <workspace> --plan <plan> --review-hash <returned-hash>`. A preview-only request stops before applying. Handle commands/hashes yourself. Changed before-images require a new preview; never bypass conflict checks.
+4. Fill only newly created workspace marketing context with sourced product facts and source-relative document references; mark unknowns. Preserve existing context, tasks and logs. Run the workspace's `inspect` helper and report any task-tracking limits.
 
-Use the CLI reference in `docs/INTERACTIVE.md` (relative to this workflow's parent directory) or the helper's `--help`. Create a uniquely named private temporary plan outside the product. Quote paths safely and treat all product names and arguments as data.
+Future chats can open the promotion workspace, use its installed skill/command, or read `.promotion-agent/templates/WORKFLOW.md`. The current chat can continue immediately. Native host discovery remains separately unverified. No database, server, publishing account or additional model credential is required.
 
-1. Run `onboard` with the selected project, display name, and new plan filename.
-2. Read the actual plan's root, before/after contents, and preservation decisions. Summarize the files being added or upgraded and any customizations being preserved. Keep the full plan available locally for review; do not copy private product contents into public output.
-3. If installation is authorized, run `install` using that exact plan and the returned `reviewHash` yourself. If the user asked to review first, show the summary and wait for their approval of that plan. A changed project or plan requires a fresh preview and review; do not bypass hash, ownership, path, or conflict checks.
-4. Inspect changed paths and confirm product-owned files and unrelated edits were preserved. Report conflicts or invalid configuration honestly; do not silently replace a config or task queue to get past a failure.
+## Existing product-local installations
 
-Do not create an extra installer, weaken deterministic checks, launch AI subprocesses, or configure accounts or a database for drafting.
+Do not remove or upgrade files in a product repository as part of observer setup. Existing product marketing history is read-only input. Offer an explicit copy/import into the separate workspace if requested; preserve provenance and review imported tasks before completion. Do not infer that a copied draft was published. Cleanup of old product-local installations requires a separate request and reviewed file list; invalid imports never authorize deletion.
 
-## Ground the context and finish
+## Finish
 
-If the installer created a new marketing context template, fill that newly created file with facts supported by the selected project's documentation and include source paths. Mark unknowns. Read existing context as-is; propose substantive corrections instead of replacing it. Do not manufacture tasks or rewrite an existing queue as part of setup. Product-specific allowed paths and user scope still govern these edits.
-
-Where configuration is valid, run the installed `inspect` helper to check context and task readability. Report an invalid or unsupported task format as a tracking limitation; leave it intact. Drafting can still use the available facts without task completion helpers.
-
-Return a short setup result: selected project, files installed/preserved, product facts and gaps, and any blocked capability. Keep the conversation on the same product. If the user also requested a draft, continue straight into that activity using WORKFLOW.md. Otherwise invite a simple next request such as "Draft one X post."
-
-The current conversation can read the installed workflow directly; no chat switch or native menu refresh is required to produce the first draft. For future sessions opened in the product, the installed skill/command is available subject to host discovery. Do not claim native menu discovery was verified just because the wrapper file exists.
+Report the product source, writable workspace, installed/preserved files, supported facts and unresolved gaps. Keep all marketing bookkeeping and recommendations in the workspace. Product code/content edits require a separate explicit request specifying the changes; a request to draft or promote does not authorize them. Continue into a requested activity without an extra permission step.
