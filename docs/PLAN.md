@@ -20,6 +20,8 @@ Depends on P10. The shared workflow v0.6 resolves a named product through sessio
 
 Source skills/commands, generated installed entrypoints, setup, README, architecture and smoke guidance are aligned across Codex, Claude Code and OpenCode. CLI paths remain internal resolved arguments; installer write/review gates are unchanged. Validation: `npm run check` passed both typechecks, build and 67/67 tests. A fictional built installation preview includes the discovery procedure, linked setup and all six aligned entrypoints. Live name discovery and native host conversation remain manual acceptance work; see HANDOFF.
 
+P11 follow-up: WORKFLOW v0.7 checks bounded candidate identity metadata even without a directory-name match and setup retains the product display name separately from repository/package names. `npm run check` passed 68/68 tests and both typechecks. The new CLI regression verifies differing names through registration, review and upgrade with stable identity and unchanged source bytes; live metadata discovery remains unverified.
+
 ## Completed foundation
 
 ### P00 — extraction (completed)

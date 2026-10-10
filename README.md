@@ -28,7 +28,7 @@ In that chat, say:
 Set up promotion for my project Example Desk.
 ```
 
-The agent finds your local project by name, verifies the match, creates a separate promotion workspace, and tells you where it saved it. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. Nothing is installed into your product repository. Setup keeps work in draft/review mode.
+The agent finds your local project by name, verifies the match, creates a separate promotion workspace, and tells you where it saved it. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. The product name can differ from its folder, Git repository or package name; the agent checks identifying project metadata. Nothing is installed into your product repository. Setup keeps work in draft/review mode.
 
 ### 3. Ask for marketing work
 

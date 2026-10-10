@@ -127,3 +127,27 @@ test('legacy product-local plans and changed canonical source mappings fail clos
   assert.equal(denied.status, 1);
   assert.deepEqual(snapshot(source), before);
 });
+
+
+test('a product display name differs from source folder and package name across registration and upgrade', t => {
+  const { root, source, workspace } = fixture(t);
+  const checkout = join(root, 'legacy-console');
+  renameSync(source, checkout);
+  writeFileSync(join(checkout, 'README.md'), '# Beacon Desk\n\nBeacon Desk is a fictional support product.');
+  writeFileSync(join(checkout, 'package.json'), JSON.stringify({ name: 'legacy-console', private: true }));
+  const before = snapshot(checkout);
+  const planPath = join(root, 'brand-plan.json');
+  const preview = cli('onboard', '--project', checkout, '--workspace', workspace, '--name', 'Beacon Desk', '--plan', planPath);
+  assert.equal(preview.status, 0, preview.stderr);
+  const applied = cli('install', '--project', workspace, '--plan', planPath, '--review-hash', JSON.parse(preview.stdout).reviewHash);
+  assert.equal(applied.status, 0, applied.stderr);
+  const inspected = inspectProject(workspace);
+  assert.equal(inspected.project.displayName, 'Beacon Desk');
+  assert.equal(requireWorkspace(workspace).sourcePath, observerSource(workspace, checkout).sourcePath);
+  assert.equal(reviewData(workspace).project.displayName, 'Beacon Desk');
+  const upgrade = previewInstall(workspace, 'legacy-console', checkout);
+  applyInstall(workspace, upgrade, reviewHash(upgrade));
+  assert.equal(inspectProject(workspace).project.displayName, 'Beacon Desk');
+  assert.equal(inspectProject(workspace).project.id, inspected.project.id);
+  assert.deepEqual(snapshot(checkout), before);
+});

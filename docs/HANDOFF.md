@@ -6,6 +6,12 @@ The user explicitly changed the design: **run as an agent interactively using sk
 
 Open this repository in the user's existing Codex, Claude Code or OpenCode session. A repo-local skill/command loads templates/WORKFLOW.md and the current agent performs the work with its available tools and conversation. There is no AI subprocess runner, authentication probe, model selection, required localhost UI, or scheduler.
 
+## Different product and repository names — 2026-10-09
+
+Follow-up to P11: WORKFLOW v0.7 explicitly falls back to minimal README/package identity metadata in bounded development roots even when directory names do not match the requested product. Incidental competitor/dependency/example mentions are insufficient identity evidence. SETUP preserves the verified product display name in `--name` and workspace context independently of the source basename; README documents the distinction.
+
+Validation: `npm run check` passed both typechecks, build and **68/68 tests**. The new fictional CLI regression registers Beacon Desk from a legacy-console folder/package, checks the stored and review display names and canonical source mapping, then upgrades with the repo name and verifies the original display name/UUID and byte-identical source are retained. This verifies registration/name separation; live agent metadata discovery remains manual acceptance work. No real product repository was read or changed, and this follow-up has not been committed or pushed.
+
 ## Project registration by name — 2026-10-09
 
 Implemented P11 at the user's request. WORKFLOW v0.6 accepts a product name and directs the active agent to find its checkout using session selections, available host saved-project inventories, private registration metadata and bounded directory-name discovery. Verify minimal candidate identity, canonicalize/deduplicate aliases, reuse matching workspace UUIDs, and honor a newly named product over earlier chat selection. The agent never asks for a filesystem path: ambiguous candidates get named choices; unavailable sources prompt opening/selecting the product or making the checkout accessible.
