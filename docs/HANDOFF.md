@@ -1,5 +1,11 @@
 # Continue here
 
+## X Growth Mentor — 2026-10-10
+
+The requested X growth skill is now included in this repository. Thin Codex/Claude Code/OpenCode entrypoints load templates/WORKFLOW.md v0.8 and templates/activities/x-growth/WORKFLOW.md. Supporting references cover account diagnosis, plan persistence with stable identity, time budgets, draft coaching, experiment reviews and a sourced critique of the supplied article. Account records stay in private user data or a selected promotion workspace; personal accounts require no unrelated product registration. Public actions and recurring checks retain applicable explicit authorization.
+
+Verification: Skill Creator returned “Skill is valid!”; all local activity/skill reference links resolve; UI metadata and host entrypoints passed checks; no machine-specific absolute paths or unfinished scaffold markers were found in the skill/activity files. npm test rebuilt the helpers and passed 68/68 tests; git diff --check passed. These are checkout resources, matching the existing search-skill boundary: portable onboarding is unchanged. Live account auditing, native invocation and actual growth performance were not exercised. No account actions, analytics/customer records, dependencies or provider credentials were added.
+
 ## Current direction
 
 The user explicitly changed the design: **run as an agent interactively using skills and commands**, rather than starting agent CLIs from an application. Do not resume the old headless adapter/server roadmap.

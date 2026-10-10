@@ -1,0 +1,4 @@
+interface:
+  display_name: "X Growth Mentor"
+  short_description: "Audit, plan, and coach sustainable X account growth"
+  default_prompt: "Use $x-growth to review my X account, build a tailored growth plan, and coach me through weekly progress reviews."

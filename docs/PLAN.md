@@ -94,6 +94,12 @@ Acceptance: source/installed entrypoints resolve after relocation, upgrades pres
 
 Copied the local `reddit-thread-search` and `x-post-search` folders into `.agents/skills/`, including the Reddit query reference, skill UI metadata and X search script. Added shared-workflow guidance and replaced machine-specific script paths with skill-relative paths. These are checkout resources; portable onboarding remains unchanged. Script syntax/help and reference checks passed; live search and native skill invocation were not exercised.
 
+## X Growth Mentor — 2026-10-10 (implemented as checkout resources)
+
+Added account audits, customized growth plans, persistent account/task/metric records and ongoing mentorship. Codex, Claude Code and OpenCode entrypoints route through WORKFLOW v0.8 to one canonical activity under templates/activities/x-growth/. Personal accounts need no product registration; product accounts retain the existing observer workspace boundary. Research notes review the requested Paul article against primary X ranking, policy and analytics sources. Planning remains interactive with applicable authorization for public actions or reminders.
+
+Validation: Skill Creator validation, local reference/UI metadata/portability checks and git diff checks passed; npm test rebuilt the helpers and passed 68/68 tests. No core helper or installer changes. Portable onboarding does not install the new entrypoints; native host invocation, live account auditing and growth outcomes remain unverified.
+
 ## Deferred unless separately requested
 
 AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.

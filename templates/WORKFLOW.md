@@ -1,6 +1,8 @@
-# Marketing workflow contract — version 0.7
+# Marketing workflow contract — version 0.8
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
+
+For X account audits, growth plans, plan management and mentorship, follow [X Growth Mentor](activities/x-growth/WORKFLOW.md). Identify the account first. Personal accounts do not require product discovery or registration; use their private account plan records. For a product account, resolve the selected product and keep its source/workspace boundary. This route supports ongoing plan reviews across conversations; each session has a bounded requested scope.
 
 Use the project name/activity/task from the request. Resolve the selected local product using the discovery procedure below; never ask the user for a filesystem path. Do not require setup of a server, database, or another agent session to prepare useful work. Use the helper documentation linked from the active skill or command.
 
