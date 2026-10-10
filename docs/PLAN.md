@@ -14,6 +14,12 @@ Implemented after P09: observer registration with stable existing project UUID a
 
 Acceptance: automated lifecycle verifies source bytes and file layout remain unchanged, source/workspace overlap and symlink escapes fail before writes, evidence and completion target only workspace files, two products remain separate, and relocation preserves identity. Native host menu/conversational acceptance and live browser acceptance of the revised path display remain separate from automated checks. No real product installation or migration, commit, push or publication is part of this milestone. See HANDOFF for final validation evidence.
 
+## P11 — project registration by name (implemented locally)
+
+Depends on P10. The shared workflow v0.6 resolves a named product through session context, host inventories when available, existing registration metadata and bounded local directory discovery. Verify candidate identity and canonical paths before registering; reuse matching workspaces and stable UUIDs. Never ask for a filesystem path. Clarify ambiguous matches with named choices; unavailable checkouts require opening/selecting the product or making it accessible. Product data reads remain limited to the resolved selection.
+
+Source skills/commands, generated installed entrypoints, setup, README, architecture and smoke guidance are aligned across Codex, Claude Code and OpenCode. CLI paths remain internal resolved arguments; installer write/review gates are unchanged. Validation: `npm run check` passed both typechecks, build and 67/67 tests. A fictional built installation preview includes the discovery procedure, linked setup and all six aligned entrypoints. Live name discovery and native host conversation remain manual acceptance work; see HANDOFF.
+
 ## Completed foundation
 
 ### P00 — extraction (completed)

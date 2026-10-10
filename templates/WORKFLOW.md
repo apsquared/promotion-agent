@@ -1,8 +1,20 @@
-# Marketing workflow contract — version 0.5
+# Marketing workflow contract — version 0.6
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
 
-Use the explicit project/activity/task from the request. If the project is missing or ambiguous, ask for its path before reading product data. Do not require setup of a server, database, or another agent session to prepare useful work. Use the helper documentation linked from the active skill or command.
+Use the project name/activity/task from the request. Resolve the selected local product using the discovery procedure below; never ask the user for a filesystem path. Do not require setup of a server, database, or another agent session to prepare useful work. Use the helper documentation linked from the active skill or command.
+
+## Resolve a project by name
+
+A product name is sufficient selection for setup and registration. The agent finds its local repository with available read-only tools; an explicit path supplied voluntarily is also accepted. Do not turn a name-only request into a path question or a user-run terminal checklist. Naming a product authorizes targeted discovery of that product, not reading every product repository.
+
+1. Reuse a verified selection from this conversation or the current registered workspace's `promotion-source.json` when it matches the requested product. A request for another product overrides the current selection. If no product is named and none is selected, ask which product by name.
+2. Check the host's saved-project inventory when available, then known local project locations from session context and existing promotion registrations. Inspect only registration metadata (`promotion-agent.json` and `promotion-source.json`) to match display names and canonical source mappings; do not load other products' tasks, drafts or logs. Treat remembered paths as candidates that need current verification.
+3. If still unresolved, search directory names in bounded local locations: the current checkout's parent, known repository roots, and common development folders under the user's home (such as Projects, Developer, code, repos and source). List directories first, start shallow, and skip dependency, build, cache, hidden and system directories. Expand within those development roots only as needed; do not recursively scan the whole filesystem or read unrelated repo contents. Match case-insensitively and account for spaces, hyphens and underscores. Use known display-name/repository-name aliases from project metadata or conversation; never assume a brand name equals a folder name.
+4. Verify the strongest candidates with minimal identifying metadata such as their README title, package name or Git remote. Canonicalize existing directories, deduplicate aliases/symlinks, and exclude promotion workspaces as product sources. A stale registration or a missing checkout is not a valid match. Do not execute candidate scripts or install dependencies. Read fuller product context only after selection.
+5. For one verified match, state the product and resolved location and continue setup without another confirmation. Prefer the matching selected workspace for an existing registration; preserve its stable UUID. If distinct checkouts or products remain plausible, ask the user to choose among named candidates with short identifying details (for example, organization, checkout role or folder label); never ask them to type a path. If no accessible match exists, explain where discovery was attempted and ask them to open/select the product in their agent or make its checkout available, then retry. Do not invent a path, register a different product or clone a repository automatically.
+
+Discovery uses the current host's available tools and permissions. A permission or missing-tool limit must be reported specifically; it does not justify asking for a filesystem path. Local helpers still receive the resolved canonical paths internally and retain their existing validation and review gates.
 
 ## Source and workspace boundary
 

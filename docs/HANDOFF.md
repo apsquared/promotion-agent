@@ -6,6 +6,14 @@ The user explicitly changed the design: **run as an agent interactively using sk
 
 Open this repository in the user's existing Codex, Claude Code or OpenCode session. A repo-local skill/command loads templates/WORKFLOW.md and the current agent performs the work with its available tools and conversation. There is no AI subprocess runner, authentication probe, model selection, required localhost UI, or scheduler.
 
+## Project registration by name — 2026-10-09
+
+Implemented P11 at the user's request. WORKFLOW v0.6 accepts a product name and directs the active agent to find its checkout using session selections, available host saved-project inventories, private registration metadata and bounded directory-name discovery. Verify minimal candidate identity, canonicalize/deduplicate aliases, reuse matching workspace UUIDs, and honor a newly named product over earlier chat selection. The agent never asks for a filesystem path: ambiguous candidates get named choices; unavailable sources prompt opening/selecting the product or making the checkout accessible.
+
+Updated AGENTS.md, both source Codex skills, Claude Code/OpenCode promotion and competitor commands, generated installed wrappers, setup and user/developer documentation. Discovery allows targeted identity metadata reads without loading unrelated marketing records. Registration still passes resolved paths to existing guarded helpers; no discovery service, dependency or installer bypass was added. Existing installed workspaces require a reviewed upgrade to receive this workflow; no real workspace was upgraded here.
+
+Validation: `npm run check` passed helper/frontend typechecks, build and **67/67 tests**. A temporary fictional installation preview verified the built workflow/setup link and all six generated host entrypoints carry name discovery. `git diff --check` passed. Manual smoke guidance covers brand/folder aliases, ambiguous checkouts, stale registrations, unavailable sources, selection changes and UUID reuse. Live discovery across native hosts has not been exercised. No other product repo was scanned or modified, and no commit, push or external action occurred.
+
 ## Repository search skills — 2026-10-09
 
 Copied `reddit-thread-search` and `x-post-search` from the user's local skill collection into `.agents/skills/` at their explicit request; the `.agents` and `.codex` source copies were identical. Included the Reddit reference, both UI metadata files and the X script. Added guidance to follow the shared workflow, select queries for the actual product and retain draft/review boundaries. X command examples now use paths relative to the skill directory instead of a machine-specific path. README identifies these as checkout resources; the portable installer is unchanged.

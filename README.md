@@ -25,10 +25,10 @@ Keep it separate from your product repositories. The agent handles dependency in
 In that chat, say:
 
 ```text
-Set up promotion for my project at /absolute/path/to/my-project.
+Set up promotion for my project Example Desk.
 ```
 
-The agent reads your project, creates a separate promotion workspace, and tells you where it saved it. Nothing is installed into your product repository. Setup keeps work in draft/review mode.
+The agent finds your local project by name, verifies the match, creates a separate promotion workspace, and tells you where it saved it. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. Nothing is installed into your product repository. Setup keeps work in draft/review mode.
 
 ### 3. Ask for marketing work
 
@@ -67,7 +67,7 @@ The agent uses your product documentation and marketing history to support its c
 
 ## Multiple projects
 
-Repeat the setup request with another product's local path. Each product gets its own workspace, context, tasks, drafts, and logs. One chat works on one selected product at a time.
+Repeat the setup request with another product's name. Each product gets its own workspace, context, tasks, drafts, and logs. One chat works on one selected product at a time.
 
 Workspaces default to `~/.local/share/promotion-agent/projects/<UUID>/`. You can request a different location outside your product repositories. Keep workspaces private: they contain local paths and product-specific marketing records.
 

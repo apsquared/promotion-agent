@@ -4,13 +4,13 @@ Open promotion-agent in your existing Codex, Claude Code or OpenCode session. Th
 
 ## Everyday use
 
-1. Open the promotion-agent checkout in your agent and say: “Set up promotion for my project at /absolute/path/to/my-project.” The agent handles building and setup, then reports the separate promotion workspace. Your product repo stays read only.
+1. Open the promotion-agent checkout in your agent and say: “Set up promotion for my project Example Desk.” The agent discovers and verifies your local project by name, handles building and setup, then reports the separate promotion workspace. Your product repo stays read only.
 2. Continue in the same chat: “Draft one X post,” “Prepare a directory submission kit,” or “Analyze our competitors.”
 3. Review with “Make it shorter” or check progress with “What's the status?” Drafts stay drafts until a separately authorized action is verified.
 
 For future chats, open the **promotion workspace** containing your saved work. If workflow discovery is unavailable, ask the agent to read .promotion-agent/templates/WORKFLOW.md. No slash command, database, publishing account or extra model API key is required for drafting.
 
-To add another product, repeat setup with its local path. Each product has its own private workspace; one conversation selects one product at a time. You may specify an external workspace location; otherwise the agent chooses a UUID directory under ~/.local/share/promotion-agent/projects/. Existing product-local installations stay untouched.
+To add another product, repeat setup with its name. The agent resolves the folder; ambiguous matches are presented as named choices, and an unavailable checkout requires opening/selecting it in the host rather than typing a path. Each product has its own private workspace; one conversation selects one product at a time. You may specify an external workspace location; otherwise the agent chooses a UUID directory under ~/.local/share/promotion-agent/projects/. Existing product-local installations stay untouched.
 
 For setup details, the agent follows templates/SETUP.md. A preview-only request stops before installation. Product changes remain recommendations unless you separately request implementation. An unregistered draft request can return useful copy in chat without installation.
 
