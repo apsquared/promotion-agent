@@ -22,7 +22,8 @@ import {
   setSelectedTaskDisposition,
 } from '../src/interactive/tasks.ts';
 import { Store } from '../src/storage/store.ts';
-import { GET } from '../app/api/review/route.ts';
+import { applyReviewAction, parseReviewAction } from '../src/review/actions.ts';
+import { GET, POST } from '../app/api/review/route.ts';
 function fixture(t) {
   const dir = mkdtempSync(join(tmpdir(), 'promotion-review-'));
   const project = join(dir, 'fictional');
@@ -223,4 +224,84 @@ test('Next route requires a session token, rejects cross-origin requests, and ac
   assert.equal((await response.json()).project.root, realpathSync(f.project));
   delete process.env.PROMOTION_REVIEW_TOKEN;
   assert.equal(GET(request({ authorization: 'Bearer test-session-token' })).status, 401);
+});
+test('the desk marks a task skipped, resumes it, and marks it complete with a recorded result', (t) => {
+  const f = fixture(t);
+  const revision = () => reviewData(f.project, f.database).revision;
+  const act = (action, taskId, note) =>
+    applyReviewAction(f.project, f.database, parseReviewAction({ action, taskId, revision: revision(), note }));
+  assert.throws(
+    () => applyReviewAction(f.project, undefined, { action: 'skip', taskId: 'T-001', revision: revision() }),
+    /needs a registry/,
+  );
+  assert.throws(() => parseReviewAction({ action: 'delete', taskId: 'T-001', revision: 'x' }), /Unknown action/);
+  assert.throws(
+    () => applyReviewAction(f.project, f.database, { action: 'complete', taskId: 'T-001', revision: 'a'.repeat(64) }),
+    /Task file changed/,
+  );
+  act('skip', 'T-002');
+  assert.equal(reviewData(f.project, f.database).tasks[1].disposition.reason, 'Skipped in the review desk.');
+  act('skip', 'T-001', 'Directory is closed');
+  let task = reviewData(f.project, f.database).tasks[0];
+  assert.deepEqual([task.disposition.state, task.disposition.reason], ['skipped', 'Directory is closed']);
+  assert.throws(() => act('complete', 'T-001'), /Resume this task/);
+  assert.equal(reviewData(f.project, f.database).tasks[0].drafts.length, 0);
+  act('resume', 'T-001');
+  assert.equal(reviewData(f.project, f.database).tasks[0].disposition.state, 'active');
+  act('complete', 'T-001', 'Submitted the listing myself');
+  task = reviewData(f.project, f.database).tasks[0];
+  assert.equal(task.status, 'done');
+  assert.match(readFileSync(f.file, 'utf8'), /- \[x\] T-001/);
+  assert.equal(task.completion.reference, 'marketing/TASKS.md');
+  assert.deepEqual(completionReport(task.completion.summary).sections[0], {
+    label: 'Outputs',
+    text: 'Submitted the listing myself (marked complete by hand in the review desk)',
+  });
+  assert.throws(() => act('complete', 'T-001'), /already completed/);
+});
+test('the action route requires the session token and JSON, and returns the fresh task list', async (t) => {
+  const f = fixture(t);
+  const keys = [
+    'PROMOTION_REVIEW_PROJECT',
+    'PROMOTION_REVIEW_DATABASE',
+    'PROMOTION_REVIEW_TOKEN',
+    'PROMOTION_REVIEW_ORIGIN',
+  ];
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  t.after(() => {
+    for (const key of keys)
+      saved[key] === undefined ? delete process.env[key] : (process.env[key] = saved[key]);
+  });
+  Object.assign(process.env, {
+    PROMOTION_REVIEW_PROJECT: f.project,
+    PROMOTION_REVIEW_DATABASE: f.database,
+    PROMOTION_REVIEW_TOKEN: 'test-session-token',
+    PROMOTION_REVIEW_ORIGIN: 'http://127.0.0.1:4317',
+  });
+  const revision = reviewData(f.project).revision;
+  const post = (headers, body) =>
+    POST(
+      new Request('http://127.0.0.1:4317/api/review', {
+        method: 'POST',
+        headers: { host: '127.0.0.1:4317', 'content-type': 'application/json', ...headers },
+        body: JSON.stringify(body),
+      }),
+    );
+  const body = { action: 'skip', taskId: 'T-001', revision, note: 'Not a fit' };
+  assert.equal((await post({}, body)).status, 401);
+  assert.equal(
+    (await post({ authorization: 'Bearer test-session-token', origin: 'https://outside.example' }, body)).status,
+    403,
+  );
+  assert.equal(
+    (await post({ authorization: 'Bearer test-session-token', 'content-type': 'text/plain' }, body)).status,
+    415,
+  );
+  assert.equal(existsSync(f.database), false);
+  const response = await post({ authorization: 'Bearer test-session-token' }, body);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).tasks[0].disposition.reason, 'Not a fit');
+  const stale = await post({ authorization: 'Bearer test-session-token' }, { ...body, revision: 'b'.repeat(64) });
+  assert.equal(stale.status, 409);
+  assert.match((await stale.json()).error, /Task file changed/);
 });

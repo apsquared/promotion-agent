@@ -56,21 +56,27 @@ export default function ReviewPage() {
   const [view, setView] = useState<'todo' | 'done'>('todo');
   const [selected, setSelected] = useState('');
   const [copied, setCopied] = useState('');
+  const [note, setNote] = useState('');
+  const [acting, setActing] = useState(false);
   const detail = useRef<HTMLElement>(null);
+  const request = (init: RequestInit = {}) => {
+    const fragment = window.location.hash.slice(1);
+    if (/^[a-f0-9]{64}$/.test(fragment)) {
+      sessionStorage.setItem('promotion-review-token', fragment);
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+    const token = sessionStorage.getItem('promotion-review-token') ?? '';
+    return fetch('/api/review', {
+      ...init,
+      headers: { ...init.headers, Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+  };
   const refresh = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const fragment = window.location.hash.slice(1);
-      if (/^[a-f0-9]{64}$/.test(fragment)) {
-        sessionStorage.setItem('promotion-review-token', fragment);
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-      const token = sessionStorage.getItem('promotion-review-token') ?? '';
-      const response = await fetch('/api/review', {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: 'no-store',
-      });
+      const response = await request();
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Unable to load tasks');
       setData(result);
@@ -95,6 +101,32 @@ export default function ReviewPage() {
   const task = tasks.find((t) => t.taskId === selected) ?? tasks[0];
   const prompt = data && task && task.status !== 'done' ? reviewPrompt(data, task) : null;
   const valid = data?.classification === 'valid';
+  const canMark = valid && !!data?.registry.path && data.registry.status !== 'unavailable';
+  const act = async (action: 'complete' | 'skip' | 'resume') => {
+    if (!data || !task) return;
+    if (action === 'complete' && !window.confirm(`Mark ${task.taskId} complete? This checks its box in the task file.`))
+      return;
+    setActing(true);
+    setError('');
+    try {
+      const response = await request({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, taskId: task.taskId, revision: data.revision, note }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Unable to update the task');
+      setData(result);
+      setNote('');
+      // Keep the task in view: skipped tasks sink in To do, completed ones move to Done.
+      setSelected(task.taskId);
+      if (action === 'complete') setView('done');
+    } catch (err) {
+      setError(`${(err as Error).message}. Refresh and try again.`);
+    } finally {
+      setActing(false);
+    }
+  };
   const copy = async () => {
     if (!prompt || !task) return;
     try {
@@ -115,6 +147,7 @@ export default function ReviewPage() {
   const choose = (taskId: string) => {
     setSelected(taskId);
     setCopied('');
+    setNote('');
     if (window.matchMedia('(max-width: 800px)').matches)
       detail.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -223,6 +256,51 @@ export default function ReviewPage() {
                 </section>
               ) : (
                 <Completion task={task} />
+              )}
+              {task.status !== 'done' && (
+                <section className="mark" aria-label="Mark this task">
+                  <h3>Did it yourself, or not doing it?</h3>
+                  {canMark ? (
+                    <>
+                      {!parked(task) && (
+                        <>
+                          <label htmlFor="note">
+                            Note (optional) — what was done, or why you're skipping it
+                          </label>
+                          <textarea
+                            id="note"
+                            rows={2}
+                            maxLength={2000}
+                            value={note}
+                            onChange={(event) => setNote(event.target.value)}
+                          />
+                        </>
+                      )}
+                      <div className="mark-buttons">
+                        {parked(task) ? (
+                          <button disabled={acting || loading} onClick={() => act('resume')}>
+                            Resume task
+                          </button>
+                        ) : (
+                          <>
+                            <button disabled={acting || loading} onClick={() => act('complete')}>
+                              Mark complete ✓
+                            </button>
+                            <button disabled={acting || loading} onClick={() => act('skip')}>
+                              Skip
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <p>
+                      {valid
+                        ? 'To mark tasks here, ask your agent to reopen the review desk with your registry (--database).'
+                        : 'Fix the task file before marking tasks.'}
+                    </p>
+                  )}
+                </section>
               )}
             </>
           ) : (

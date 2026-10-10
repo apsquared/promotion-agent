@@ -291,3 +291,35 @@ pre {
     transition: background 0.12s ease;
   }
 }
+.mark {
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+  padding-top: 4px;
+}
+.mark label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.mark textarea {
+  display: block;
+  width: 100%;
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  resize: vertical;
+}
+.mark textarea:focus-visible {
+  outline: 3px solid #ae680e;
+  outline-offset: 1px;
+}
+.mark-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}

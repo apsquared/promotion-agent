@@ -112,6 +112,10 @@ User request: one description and one prompt per task, clearly labeled for the p
 
 User request: tasks know they can create follow-up tasks so the agent is always acting or queuing the next action, and task prompts ask for an Outputs / Impact / Next steps completion summary that the review desk shows for done tasks. WORKFLOW v0.9. See HANDOFF for validation.
 
+## Mark tasks from the review desk — 2026-10-10 (implemented)
+
+User request: manually mark a task complete or skipped in the review desk. Adds a session-token POST route that reuses the hash-checked record/complete/disposition helpers (needs `--database`). Supersedes the "no browser mutation API" line above for these three actions only. See HANDOFF for validation.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.
