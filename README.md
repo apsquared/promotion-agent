@@ -87,7 +87,7 @@ From a chat in this promotion-agent checkout, ask:
 Open the review desk for my promotion workspace at /absolute/path/to/workspace.
 ```
 
-The local web app shows tasks and saved drafts. Add notes and copy a prompt back into your agent to continue. It does not execute actions or approve publication. See [review desk details](docs/REVIEW-UI.md).
+The local web app lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. It does not execute actions or approve publication. See [review desk details](docs/REVIEW-UI.md).
 
 ## Development and details
 

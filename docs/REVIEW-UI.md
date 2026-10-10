@@ -1,6 +1,6 @@
 # Local review desk
 
-The optional Next.js App Router app complements the conversational workflow. It shows one explicitly selected promotion workspace’s current tasks, task-linked drafts and evidence, plus the selected SQLite registry's dispositions, assignments, imported tasks and operational records. The main action is copying a self-contained prompt back into Codex, Claude Code or OpenCode.
+The optional Next.js App Router app complements the conversational workflow. It lists one explicitly selected promotion workspace's tasks. Each task has a description and one prompt to copy, labeled with where to paste it.
 
 ## Start from the source checkout
 
@@ -22,23 +22,24 @@ npm run review -- --project /path/to/promotion-workspace --database /path/to/loc
 
 Stop the process with Ctrl+C. Restarting preserves task files, evidence and database state. Open the new private session link after restarting; the access token changes each run. The token is kept in browser session storage and removed from the visible URL. It is not a product or provider credential.
 
-The desk shows the read-only observed repository and the writable workspace. Copied prompts include both paths and the source-read-only boundary. Drafts and evidence previews come exclusively from the workspace.
+Copied prompts include the workspace path and, where relevant, the read-only product repository path.
 
-## Review and handoff
+## Using the desk
 
-1. Filter by task status or activity, or search titles/materials/task IDs.
-2. Select a task and read its materials, saved text drafts and evidence accounts. Changed artifacts and task revisions are identified explicitly. Only task-linked evidence appears in the inbox; unlinked files are not discovered by scanning a product.
-3. Choose prepare, revise, review/action, or verify. Add review notes and copy the prompt. Completed tasks use verification prompts.
-4. Paste it into the active agent. It includes project identity, task-file revision, destination, materials, suggested steps, evidence paths/hashes, policy and notes. The agent rechecks current state and handles applicable authorization.
-5. Refresh after the agent saves work. The server rereads files and the database on every refresh.
+1. Pick a task under **To do**. Skipped or snoozed tasks (from the optional registry) sink to the bottom with a label.
+2. Read its description (the task's Materials).
+3. Check the **Paste into** label and click **Copy prompt**:
+   - **Promotion agent** — paste into your Codex, Claude Code or OpenCode session in the promotion-agent repo. The prompt names the workspace, lists the task steps and any saved drafts, and asks the agent to continue from the first unfinished step.
+   - **Product repo** — shown for tasks with category `product`. Paste into an agent session opened in the product repository. The prompt includes the full description and steps, says where workspace files under `marketing/` live, and asks for no commit, push or deploy without approval.
+4. Click **Refresh** after the agent saves work. The server rereads files on every refresh.
 
-Copying does not execute or approve anything, complete a task, or write to the registry. Review notes live in the page session; copy them before closing or reloading. Text previews are capped at 256 KiB and displayed as inert text, including HTML. Binary/media artifacts show a reference and integrity status; visual media previews are not implemented. Evidence accounts are labeled separately from independently verified outcomes.
+Done tasks are listed under **Done** with no prompt. Copying does not execute or approve anything, complete a task, or write to the registry. The desk shows task text as inert text and does not open referenced draft files; the agent reads them.
 
-The database/history view includes archived task projections and run/artifact/review/schedule records. It reads only the selected stable project ID and does not follow other registered checkout paths. Current workspace tasks are authoritative; an outdated database projection is shown separately. A missing database is not created, and invalid task imports never trigger reconciliation or archival. The app has no mutation API, background agent runner or scheduler.
+The app reads only the selected stable project ID from the registry and does not follow other registered checkout paths. A missing database is not created. The app has no mutation API, background agent runner or scheduler.
 
 ## Next.js and deployment
 
-The root `app/` directory contains React UI and a Node-runtime route at `/api/review`. `src/review/data.ts` owns the local file/SQLite read model. `src/review/prompts.js` holds the browser/test handoff contract. The existing helper build remains `npm run build`; the Next.js build is `npm run review:build`. `vercel.json` selects Next.js and the correct build/output directory.
+The root `app/` directory contains React UI and a Node-runtime route at `/api/review`. `src/review/data.ts` owns the local file/SQLite read model. `src/review/prompts.js` builds the one prompt per task and decides its target (`product` category → product repo, otherwise promotion agent). The existing helper build remains `npm run build`; the Next.js build is `npm run review:build`. `vercel.json` selects Next.js and the correct build/output directory.
 
 Local launching binds to 127.0.0.1 and creates a random session token. The API requires that token and rejects mismatched local hosts and cross-origin requests. Project and database paths are server configuration, never browser request parameters. No browser code receives filesystem or database access.
 
@@ -53,4 +54,4 @@ The app can be built as a standard Next.js project for Vercel. **The current dat
 
 ## Verification
 
-`npm run check` checks helper and frontend types and runs the core/integration suite, including read-only database behavior, evidence previews, changed/symlinked artifacts, isolation by project ID, prompt contents and route authentication. `npm run review:build` validates the optimized Next.js build. Browser acceptance evidence is recorded in `docs/HANDOFF.md`; a build alone does not verify clipboard or visual behavior.
+`npm run check` checks helper and frontend types and runs the core/integration suite, including read-only database behavior, task-linked draft references, isolation by project ID, prompt contents and targets, and route authentication. `npm run review:build` validates the optimized Next.js build. Browser acceptance evidence is recorded in `docs/HANDOFF.md`; a build alone does not verify clipboard or visual behavior. Copy falls back to `document.execCommand('copy')` when the Clipboard API is blocked.

@@ -1,5 +1,11 @@
 # Continue here
 
+## Simpler review desk — 2026-10-10
+
+The user found the desk too complex (saved drafts, evidence, intents, notes, history). It is now a task list with **To do / Done** tabs; each task shows its description (Materials) and one prompt to copy, labeled **Paste into: Promotion agent** or **Paste into: Product repo**. Tasks with category `product` target the product repository; every other category targets the promotion agent. WORKFLOW.md and the TASKS.md template document the `product` convention. Removed: intent selector, review notes, evidence/draft previews, record hashes, the database & history view and their read model. `src/review/data.ts` now reads tasks, task-linked record references (not the referenced files) and optional skipped/snoozed state. Prompts list saved draft paths so the agent resumes at the first unfinished step. `next.config.mjs` sets `agentRules: false` because `next dev` was appending a block to AGENTS.md on every launch.
+
+Validation: `npm run check` passed both typechecks and 68/68 tests (review tests rewritten for the new read model and prompt targets). Browser-checked a dev server against the BuyerCue workspace (read only) and a scratch copy with one task relabeled `product`: both prompt variants render, copy shows "Copied ✓" (the Clipboard API is blocked in the in-app browser; the new `execCommand` fallback copied), mobile at 375px has no horizontal overflow. Installed workspaces keep their older WORKFLOW/TASKS template copies until a reviewed upgrade.
+
 ## Commit-all script — 2026-10-10
 
 Added scripts/commit-all-main.sh: optional commit message, repository-relative execution, main-branch check before staging, origin availability check, all non-ignored changes staged, commit only when needed, and ordinary origin main push. Errors stop execution; no automatic branch switching or force push. Validation: bash -n and git diff --check passed. The script was not executed against this repository, and no commit or push occurred.

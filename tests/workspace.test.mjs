@@ -54,10 +54,9 @@ test('observer CLI lifecycle keeps source byte-identical and reviews workspace e
   const draft = recordTaskEvidence(workspace, 'T-001', prepared.revision, 'draft', 'marketing/drafts/report.md', 'Prepared report');
   const data = reviewData(workspace);
   assert.equal(data.project.sourceRoot, sourceRoot);
-  assert.equal(data.tasks[0].evidence[0].preview.text, 'Fictional report prepared and checked.');
-  const prompt = reviewPrompt(data, data.tasks[0], 'prepare');
-  assert.match(prompt, /observed repository read only/);
-  assert.match(prompt, /observedRepository/);
+  assert.equal(data.tasks[0].drafts[0].reference, 'marketing/drafts/report.md');
+  const prompt = reviewPrompt(data, data.tasks[0]).text;
+  assert.ok(prompt.includes(`product repository (${sourceRoot}) read only`));
   assert.throws(() => completeSelectedTask(workspace, 'T-001', prepared.revision, join(root, 'state.sqlite'), draft.path, draft.hash), /completion evidence/);
   const evidence = recordTaskEvidence(workspace, 'T-001', prepared.revision, 'verified-complete', 'marketing/drafts/report.md', 'Validated local report');
   completeSelectedTask(workspace, 'T-001', prepared.revision, join(root, 'state.sqlite'), evidence.path, evidence.hash);

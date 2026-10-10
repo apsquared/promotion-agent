@@ -52,8 +52,8 @@ test('review reads current files and optional database without creating or recon
   );
   const beforeDB = readFileSync(f.database);
   let result = reviewData(f.project, f.database);
+  assert.equal(result.registry.status, 'registered');
   assert.equal(result.tasks[0].disposition.state, 'skipped');
-  assert.equal(result.registry.tasks.length, 4);
   assert.deepEqual(readFileSync(f.database), beforeDB);
   assert.deepEqual(readFileSync(f.file), original);
   writeFileSync(
@@ -62,20 +62,17 @@ test('review reads current files and optional database without creating or recon
   );
   result = reviewData(f.project, f.database);
   assert.equal(result.tasks[0].title, 'Changed task title');
-  assert.match(result.warnings.join(' '), /out of date/);
   assert.deepEqual(readFileSync(f.database), beforeDB);
   writeFileSync(f.file, '# Invalid tasks');
   result = reviewData(f.project, f.database);
   assert.equal(result.classification, 'invalid');
-  assert.equal(result.registry.tasks.length, 4);
   assert.deepEqual(readFileSync(f.database), beforeDB);
 });
-test('review includes task evidence and safe text previews, marks changed files, rejects symlinks', (t) => {
+test('saved records are linked to their task without reading referenced files', (t) => {
   const f = fixture(t);
   const revision = inspectProject(f.project).snapshot.hash;
   mkdirSync(join(f.project, 'marketing/drafts'), { recursive: true });
-  const draft = join(f.project, 'marketing/drafts/post.md');
-  writeFileSync(draft, '<script>alert("untrusted")</script>\nDraft copy');
+  writeFileSync(join(f.project, 'marketing/drafts/post.md'), 'Private draft body');
   recordTaskEvidence(
     f.project,
     'T-001',
@@ -84,22 +81,14 @@ test('review includes task evidence and safe text previews, marks changed files,
     'marketing/drafts/post.md',
     'Prepared draft',
   );
-  let data = reviewData(f.project);
-  assert.equal(data.tasks[0].evidence[0].preview.text, readFileSync(draft, 'utf8'));
-  assert.equal(data.tasks[0].evidence[0].preview.status, 'Matches recorded hash');
-  writeFileSync(draft, 'New revision');
-  data = reviewData(f.project);
-  assert.match(data.tasks[0].evidence[0].preview.status, /Changed/);
-  rmSync(draft);
-  writeFileSync(join(f.dir, 'private.md'), 'outside private data');
-  symlinkSync(join(f.dir, 'private.md'), draft);
-  data = reviewData(f.project);
-  assert.equal(data.tasks[0].evidence[0].preview.text, null);
-  assert.doesNotMatch(JSON.stringify(data), /outside private data/);
+  const data = reviewData(f.project);
+  assert.equal(data.tasks[0].drafts[0].reference, 'marketing/drafts/post.md');
+  assert.equal(data.tasks[1].drafts.length, 0);
+  assert.doesNotMatch(JSON.stringify(data), /Private draft body/);
   writeFileSync(join(f.project, 'marketing/logs/promotion-agent/invalid.json'), '{}');
-  assert.match(reviewData(f.project).warnings.join(' '), /Cannot review evidence/);
+  assert.match(reviewData(f.project).warnings.join(' '), /Cannot read saved record/);
 });
-test('registry records are selected by stable project ID without reading other checkouts', (t) => {
+test('dispositions are selected by stable project ID', (t) => {
   const f = fixture(t);
   const first = inspectProject(f.project);
   const store = new Store(f.database);
@@ -118,45 +107,12 @@ test('registry records are selected by stable project ID without reading other c
     { ...first.project, id: otherId, displayName: 'Other' },
     { ...local, projectId: otherId, checkoutPath: otherRoot },
   );
-  const runId = randomUUID();
-  const run = (id) => ({
-    input: {
-      schemaVersion: 1,
-      id: randomUUID(),
-      projectId: id,
-      agent: 'codex',
-      activity: 'social',
-      context: [],
-      policy: first.project.policy,
-      budget: { maxSeconds: 60, maxCostUsd: null },
-      outputDirectory: 'marketing/drafts',
-    },
-    status: 'queued',
-    startedAt: null,
-    endedAt: null,
-    output: null,
-  });
-  store.saveRecord('run', run(first.project.id));
-  store.saveRecord('run', run(otherId));
-  store.saveRecord('artifact', {
-    schemaVersion: 1,
-    id: randomUUID(),
-    revision: randomUUID(),
-    projectId: first.project.id,
-    runId,
-    path: 'marketing/AGENT.md',
-    mediaType: 'text/markdown',
-    sha256: '0'.repeat(64),
-  });
   store.close();
+  setSelectedTaskDisposition(f.project, 'T-002', first.snapshot.hash, f.database, 'skipped', 'Later', null);
   rmSync(otherRoot, { recursive: true });
   const data = reviewData(f.project, f.database);
-  assert.equal(data.registry.records.length, 2);
-  assert.equal(
-    data.registry.records.find((r) => r.kind === 'run').value.input.projectId,
-    first.project.id,
-  );
-  assert.match(data.registry.records.find((r) => r.kind === 'artifact').preview.status, /Changed/);
+  assert.equal(data.tasks.find((task) => task.taskId === 'T-002').disposition.state, 'skipped');
+  assert.equal(data.tasks.find((task) => task.taskId === 'T-001').disposition, null);
 });
 test('missing, incompatible and corrupt registries remain readable as file-only views', (t) => {
   const f = fixture(t);
@@ -166,20 +122,30 @@ test('missing, incompatible and corrupt registries remain readable as file-only 
   assert.equal(data.tasks.length, 4);
   assert.ok(data.warnings.length);
 });
-test('all handoff intents include exact task, evidence, hashes and notes without claiming approval', (t) => {
+test('one prompt per task, labeled for the promotion agent or the product repo', (t) => {
   const f = fixture(t);
-  const data = reviewData(f.project);
-  for (const intent of ['prepare', 'revise', 'action', 'verify']) {
-    const prompt = reviewPrompt(data, data.tasks[0], intent, 'Make it shorter.');
-    assert.ok(prompt.includes(data.revision));
-    assert.ok(prompt.includes(data.tasks[0].materials.replaceAll('\n', '\\n')));
-    assert.match(prompt, /Make it shorter/);
-    assert.match(prompt, /Never mark a task complete solely/);
-    assert.match(prompt, /Re-read the task/);
-  }
-  assert.match(reviewPrompt(data, data.tasks[0], 'action'), /does not itself approve publishing/);
-  assert.match(reviewPrompt(data, data.tasks[0], 'prepare'), /Do not publish or schedule/);
-  assert.throws(() => reviewPrompt(data, data.tasks[0], 'unknown'), /Unknown/);
+  const revision = inspectProject(f.project).snapshot.hash;
+  recordTaskEvidence(f.project, 'T-001', revision, 'draft', 'marketing/AGENT.md', 'Prepared');
+  let data = reviewData(f.project);
+  const promotion = reviewPrompt(data, data.tasks[0]);
+  assert.equal(promotion.target, 'promotion');
+  assert.match(promotion.text, /^Continue Example Desk promotion task T-001/);
+  assert.ok(promotion.text.includes(data.tasks[0].agentPrompt));
+  assert.ok(promotion.text.includes(data.project.root));
+  assert.match(promotion.text, /- marketing\/AGENT\.md/);
+  assert.match(promotion.text, /ask before publishing/);
+  const original = readFileSync(f.file, 'utf8');
+  writeFileSync(
+    f.file,
+    original.replace('| P2 | engagement | Review a relevant discussion', '| P2 | product | Fix the pricing copy'),
+  );
+  data = reviewData(f.project);
+  const product = reviewPrompt(data, data.tasks[1]);
+  assert.equal(product.target, 'product');
+  assert.match(product.text, /^Implement this change in the Example Desk product repository/);
+  assert.ok(product.text.includes(data.tasks[1].materials));
+  assert.ok(product.text.includes(`promotion workspace at ${data.project.root}`));
+  assert.match(product.text, /Don't commit, push or deploy until I approve/);
 });
 test('Next route requires a session token, rejects cross-origin requests, and accepts no path parameters', async (t) => {
   const f = fixture(t);

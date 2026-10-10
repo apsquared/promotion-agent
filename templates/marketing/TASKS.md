@@ -13,7 +13,7 @@ Format example (outside Open/Done, so it is not a real task):
         3. Record confirmation evidence only after authorized submission.
 ```
 
-Prompt comes last, with 3–8 task-specific steps. Do not put field markers URL: or Materials:, task headers, or ## headings inside continuation blocks. Shared execution policy is added by the prompt builder; it is not a substitute for enforced runtime permissions.
+Materials is the task description shown in the review desk. Use category `product` for work implemented in the product repository; all other categories run in the promotion agent. Prompt comes last, with 3–8 task-specific steps. Do not put field markers URL: or Materials:, task headers, or ## headings inside continuation blocks. Shared execution policy is added by the prompt builder; it is not a substitute for enforced runtime permissions.
 
 ## Open
 

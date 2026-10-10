@@ -71,7 +71,7 @@ Draft/review is the default. Public actions, code application, commit, and push 
 
 Use the project timezone and cadence. Future-only social scheduling is the template default, but creating a draft is not scheduling it. Check known shared-account plans before proposing times; do not claim to reserve a slot without a real scheduling tool. Do not spend money, create accounts, or send outreach as part of the default workflow; prepare a human task.
 
-For product code/content recommendations: save a proposal in the workspace with the intended destination and validation plan. Only a separate explicit implementation request authorizes product changes; then respect product instructions, preserve unrelated edits, run applicable validation, and present the diff. Database-backed publishing requires a separately configured adapter and review policy.
+For product code/content recommendations: save a proposal in the workspace with the intended destination and validation plan. To track implementation as a task, file it with category `product`; the review desk labels its prompt for pasting into an agent session in the product repository, and every other category is labeled for the promotion agent. Only a separate explicit implementation request authorizes product changes; then respect product instructions, preserve unrelated edits, run applicable validation, and present the diff. Database-backed publishing requires a separately configured adapter and review policy.
 
 ## Tasks and evidence
 

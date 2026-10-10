@@ -104,6 +104,10 @@ Validation: Skill Creator validation, local reference/UI metadata/portability ch
 
 The shared workflow now asks a brief contextual question when giving actionable recommendations: offer to save the recommendation as a persistent task or open the review desk when reviewing saved work would help. Accepted offers are handled by the agent, with duplicate checks, existing selection/setup boundaries and no repeated confirmation for already requested work. Applies across activities, including X growth coaching. Documentation-only change; validation and limits are recorded in HANDOFF.
 
+## Simpler review desk — 2026-10-10 (implemented)
+
+User request: one description and one prompt per task, clearly labeled for the promotion agent or the product repo (category `product`). Drafts/evidence previews, intents, notes and the history view were removed. See HANDOFF for validation.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.

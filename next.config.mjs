@@ -2,6 +2,8 @@
 const nextConfig = {
   typescript: { tsconfigPath: 'tsconfig.next.json' },
   poweredByHeader: false,
+  // `next dev` otherwise appends its own block to AGENTS.md on every launch.
+  agentRules: false,
   async headers() {
     return [
       {
