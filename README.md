@@ -61,6 +61,8 @@ No database, publishing account, or additional model API key is needed for draft
 - “Recommend SEO improvements.”
 - “Show me our drafts and pending work.”
 
+This checkout also includes `reddit-thread-search` and `x-post-search` in `.agents/skills/`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
+
 The agent uses your product documentation and marketing history to support its claims. Drafts and recommendations remain available for review; preparing them does not publish anything.
 
 ## Multiple projects

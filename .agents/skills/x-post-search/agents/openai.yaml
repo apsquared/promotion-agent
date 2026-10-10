@@ -1,0 +1,4 @@
+interface:
+  display_name: "X Post Search"
+  short_description: "Find timely X posts worth replying to"
+  default_prompt: "Use $x-post-search to find recent X posts worth replying to for my marketing work."

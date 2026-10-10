@@ -6,6 +6,12 @@ The user explicitly changed the design: **run as an agent interactively using sk
 
 Open this repository in the user's existing Codex, Claude Code or OpenCode session. A repo-local skill/command loads templates/WORKFLOW.md and the current agent performs the work with its available tools and conversation. There is no AI subprocess runner, authentication probe, model selection, required localhost UI, or scheduler.
 
+## Repository search skills — 2026-10-09
+
+Copied `reddit-thread-search` and `x-post-search` from the user's local skill collection into `.agents/skills/` at their explicit request; the `.agents` and `.codex` source copies were identical. Included the Reddit reference, both UI metadata files and the X script. Added guidance to follow the shared workflow, select queries for the actual product and retain draft/review boundaries. X command examples now use paths relative to the skill directory instead of a machine-specific path. README identifies these as checkout resources; the portable installer is unchanged.
+
+Verification: X script `node --check` and `--help` passed; copied reference/workflow links resolve, no machine-specific paths or credentials were found in the added files, and `git diff --check` passed. No core code or dependencies changed, so the core test suite was not rerun. Live search, native skill invocation and portable installation of these skills were not exercised. No commit, push or external action occurred.
+
 ## Current observer boundary — 2026-10-09
 
 The user changed the ownership model: treat real product repos as read-only observed sources and keep promotion-agent’s internal bookkeeping outside them. P10 supersedes historical product-local installation and marketing storage described below.

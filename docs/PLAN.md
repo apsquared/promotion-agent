@@ -82,6 +82,10 @@ User-requested marketing activity on 2026-09-29, using the P03 shared workflow, 
 
 Acceptance: source/installed entrypoints resolve after relocation, upgrades preserve customizations and removal respects ownership; a `competitor` task can prepare, record a draft report, and surface its contents and evidence in the review handoff while remaining open. Validation: Skill Creator reports `Skill is valid!`; `npm run check` passed both typechecks, the helper build and 63/63 tests, including portable entrypoint ownership/link coverage and a task-to-report-to-review handoff. Package dry-run includes the activity resource. Live search quality and native host invocation remain separate from these deterministic checks.
 
+## Repository search skills — 2026-10-09 (completed)
+
+Copied the local `reddit-thread-search` and `x-post-search` folders into `.agents/skills/`, including the Reddit query reference, skill UI metadata and X search script. Added shared-workflow guidance and replaced machine-specific script paths with skill-relative paths. These are checkout resources; portable onboarding remains unchanged. Script syntax/help and reference checks passed; live search and native skill invocation were not exercised.
+
 ## Deferred unless separately requested
 
 AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
