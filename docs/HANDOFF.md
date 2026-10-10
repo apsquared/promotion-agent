@@ -1,5 +1,15 @@
 # Continue here
 
+## Commit-all script — 2026-10-10
+
+Added scripts/commit-all-main.sh: optional commit message, repository-relative execution, main-branch check before staging, origin availability check, all non-ignored changes staged, commit only when needed, and ordinary origin main push. Errors stop execution; no automatic branch switching or force push. Validation: bash -n and git diff --check passed. The script was not executed against this repository, and no commit or push occurred.
+
+## Natural task and review desk follow-ups — 2026-10-10
+
+Updated the canonical templates/WORKFLOW.md conversational guidance: actionable recommendations include a short contextual offer to add a persistent task or open the review desk. The agent handles accepted offers, checks for duplicate tasks, and respects existing selection, setup and external-action boundaries. Already requested work proceeds without another confirmation; personal X account task records remain supported without product registration. All three hosts inherit this behavior through their shared-workflow references; existing installed workspaces need a reviewed upgrade to receive the updated template.
+
+Validation: inspected the shared guidance against the task template, interactive helper documentation and review desk contract; git diff --check passed. No runtime code changed, so tests were not rerun. Live conversational behavior and review desk launching were not exercised. No workspace upgrade, commit, push or external action occurred.
+
 ## X Growth Mentor — 2026-10-10
 
 The requested X growth skill is now included in this repository. Thin Codex/Claude Code/OpenCode entrypoints load templates/WORKFLOW.md v0.8 and templates/activities/x-growth/WORKFLOW.md. Supporting references cover account diagnosis, plan persistence with stable identity, time budgets, draft coaching, experiment reviews and a sourced critique of the supplied article. Account records stay in private user data or a selected promotion workspace; personal accounts require no unrelated product registration. Public actions and recurring checks retain applicable explicit authorization.

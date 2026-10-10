@@ -100,7 +100,13 @@ Added account audits, customized growth plans, persistent account/task/metric re
 
 Validation: Skill Creator validation, local reference/UI metadata/portability checks and git diff checks passed; npm test rebuilt the helpers and passed 68/68 tests. No core helper or installer changes. Portable onboarding does not install the new entrypoints; native host invocation, live account auditing and growth outcomes remain unverified.
 
+## Natural task and review desk follow-ups — 2026-10-10 (implemented)
+
+The shared workflow now asks a brief contextual question when giving actionable recommendations: offer to save the recommendation as a persistent task or open the review desk when reviewing saved work would help. Accepted offers are handled by the agent, with duplicate checks, existing selection/setup boundaries and no repeated confirmation for already requested work. Applies across activities, including X growth coaching. Documentation-only change; validation and limits are recorded in HANDOFF.
+
 ## Deferred unless separately requested
+
+Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.
 
 AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
 
