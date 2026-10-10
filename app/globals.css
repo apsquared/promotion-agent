@@ -244,6 +244,14 @@ pre {
   font-weight: bold;
   color: var(--green);
 }
+.result {
+  margin-top: 28px;
+  border-left: 3px solid var(--green);
+  padding: 4px 0 4px 18px;
+}
+.result .eyebrow {
+  color: var(--green);
+}
 .empty {
   padding: 30px;
 }

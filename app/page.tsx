@@ -1,13 +1,39 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { reviewData } from '../src/review/data.ts';
-import { reviewPrompt, promptTarget, targets } from '../src/review/prompts.js';
+import { completionReport, reviewPrompt, promptTarget, targets } from '../src/review/prompts.js';
 
 type Data = ReturnType<typeof reviewData>;
 type Task = Data['tasks'][number];
 
 function parked(task: Task) {
   return task.disposition && task.disposition.state !== 'active' ? task.disposition.state : null;
+}
+function Completion({ task }: { task: Task }) {
+  if (!task.completion)
+    return (
+      <p className="done-note">
+        Done. No completion summary was recorded; ask the promotion agent to record one.
+      </p>
+    );
+  const report = completionReport(task.completion.summary);
+  return (
+    <section className="result" aria-label="Result">
+      <p className="eyebrow">
+        Result · recorded {new Date(task.completion.recordedAt).toLocaleDateString()}
+      </p>
+      {report.text && <p className="description">{report.text}</p>}
+      {report.sections.map((section, index) => (
+        <div key={index}>
+          <h3>{section.label}</h3>
+          <p className="description">{section.text || 'Not recorded.'}</p>
+        </div>
+      ))}
+      <p className="meta">
+        Evidence: <SafeLink value={task.completion.reference} />
+      </p>
+    </section>
+  );
 }
 function SafeLink({ value }: { value: string }) {
   try {
@@ -196,7 +222,7 @@ export default function ReviewPage() {
                   <pre id="prompt">{prompt.text}</pre>
                 </section>
               ) : (
-                <p className="done-note">Done. Nothing to copy.</p>
+                <Completion task={task} />
               )}
             </>
           ) : (

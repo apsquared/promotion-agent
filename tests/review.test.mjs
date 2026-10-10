@@ -15,7 +15,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
 import { reviewData } from '../src/review/data.ts';
-import { reviewPrompt } from '../src/review/prompts.js';
+import { completionReport, reviewPrompt } from '../src/review/prompts.js';
 import {
   recordTaskEvidence,
   inspectProject,
@@ -134,6 +134,10 @@ test('one prompt per task, labeled for the promotion agent or the product repo',
   assert.ok(promotion.text.includes(data.project.root));
   assert.match(promotion.text, /- marketing\/AGENT\.md/);
   assert.match(promotion.text, /ask before publishing/);
+  assert.match(promotion.text, /add follow-up tasks to .*without asking/);
+  assert.match(promotion.text, /Follow-up to T-001\./);
+  assert.match(promotion.text, /record `verified-complete` evidence/);
+  assert.match(promotion.text, /^Outputs: .*\nImpact: .*\nNext steps: /m);
   const original = readFileSync(f.file, 'utf8');
   writeFileSync(
     f.file,
@@ -146,6 +150,40 @@ test('one prompt per task, labeled for the promotion agent or the product repo',
   assert.ok(product.text.includes(data.tasks[1].materials));
   assert.ok(product.text.includes(`promotion workspace at ${data.project.root}`));
   assert.match(product.text, /Don't commit, push or deploy until I approve/);
+  assert.match(product.text, /promotion agent can queue it as tasks/);
+  assert.match(product.text, /^Outputs: .*\nImpact: .*\nNext steps: /m);
+});
+test('done tasks carry the newest verified-complete summary as outputs, impact and next steps', (t) => {
+  const f = fixture(t);
+  const revision = inspectProject(f.project).snapshot.hash;
+  recordTaskEvidence(f.project, 'T-001', revision, 'draft', 'marketing/AGENT.md', 'Prepared');
+  recordTaskEvidence(
+    f.project,
+    'T-001',
+    revision,
+    'verified-complete',
+    'https://directory.example/listing',
+    'Outputs: Listing live at https://directory.example/listing\nwith the approved logo.\nImpact: expected: a steady trickle of referral visits.\nNext steps: queued T-004 to check referrals on 2026-10-17.',
+  );
+  writeFileSync(f.file, readFileSync(f.file, 'utf8').replace('- [ ] T-001', '- [x] T-001'));
+  const data = reviewData(f.project);
+  const done = data.tasks.find((task) => task.taskId === 'T-001');
+  assert.equal(done.status, 'done');
+  assert.equal(done.completion.outcome, 'verified-complete');
+  assert.equal(done.completion.reference, 'https://directory.example/listing');
+  assert.deepEqual(completionReport(done.completion.summary), {
+    text: '',
+    sections: [
+      { label: 'Outputs', text: 'Listing live at https://directory.example/listing\nwith the approved logo.' },
+      { label: 'Impact', text: 'expected: a steady trickle of referral visits.' },
+      { label: 'Next steps', text: 'queued T-004 to check referrals on 2026-10-17.' },
+    ],
+  });
+  assert.equal(data.tasks.find((task) => task.taskId === 'T-003').completion, null);
+  assert.deepEqual(completionReport('Fictional receipt reviewed'), {
+    text: 'Fictional receipt reviewed',
+    sections: [],
+  });
 });
 test('Next route requires a session token, rejects cross-origin requests, and accepts no path parameters', async (t) => {
   const f = fixture(t);

@@ -1,6 +1,6 @@
 # Marketing tasks — <PRODUCT NAME>
 
-Use sequential T-NNN IDs, never reused. Each task should be executable with its supplied materials. Check the box only when complete and record evidence. Preserve legacy entries without Prompt.
+Use sequential T-NNN IDs, never reused. Each task should be executable with its supplied materials. Check the box only when complete and record evidence; the `verified-complete` summary uses Outputs:, Impact: and Next steps: lines and is shown for done tasks in the review desk. Preserve legacy entries without Prompt.
 
 Format example (outside Open/Done, so it is not a real task):
 
@@ -13,7 +13,7 @@ Format example (outside Open/Done, so it is not a real task):
         3. Record confirmation evidence only after authorized submission.
 ```
 
-Materials is the task description shown in the review desk. Use category `product` for work implemented in the product repository; all other categories run in the promotion agent. Prompt comes last, with 3–8 task-specific steps. Do not put field markers URL: or Materials:, task headers, or ## headings inside continuation blocks. Shared execution policy is added by the prompt builder; it is not a substitute for enforced runtime permissions.
+Materials is the task description shown in the review desk. Any task may queue follow-up tasks: start their Materials with `Follow-up to T-NNN.` and include any earliest date or trigger. Use category `product` for work implemented in the product repository; all other categories run in the promotion agent. Prompt comes last, with 3–8 task-specific steps. Do not put field markers URL: or Materials:, task headers, or ## headings inside continuation blocks. Shared execution policy is added by the prompt builder; it is not a substitute for enforced runtime permissions.
 
 ## Open
 

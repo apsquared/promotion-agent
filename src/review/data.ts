@@ -13,6 +13,8 @@ export type ReviewTask = Omit<PromptTask, 'project'> & {
   status: string;
   disposition: TaskDisposition | null;
   drafts: ReviewDraft[];
+  /** Newest `verified-complete` record: the outputs, impact and next steps shown for a done task. */
+  completion: ReviewDraft | null;
 };
 
 const maxRecordBytes = 256 * 1024;
@@ -87,13 +89,17 @@ export function reviewData(directory: string, database?: string) {
     }
   }
   const drafts = readDrafts(root, project.id, warnings);
-  const tasks: ReviewTask[] = snapshot.tasks.map((task) => ({
-    ...task,
-    disposition: dispositions.get(task.taskId) ?? null,
-    drafts: drafts
+  const tasks: ReviewTask[] = snapshot.tasks.map((task) => {
+    const records = drafts
       .filter((d) => d.taskId === task.taskId)
-      .map(({ taskId: _, ...draft }) => draft),
-  }));
+      .map(({ taskId: _, ...draft }) => draft);
+    return {
+      ...task,
+      disposition: dispositions.get(task.taskId) ?? null,
+      drafts: records,
+      completion: records.find((r) => r.outcome === 'verified-complete') ?? null,
+    };
+  });
   return {
     project: {
       id: project.id,

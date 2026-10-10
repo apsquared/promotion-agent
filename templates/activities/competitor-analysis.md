@@ -49,6 +49,6 @@ Write a dated Markdown report in the separate promotion workspace’s permitted 
 4. Prioritized opportunities, optional reply drafts, and concrete suggested next actions.
 5. Source URLs, checked dates, duplicate/skipped decisions, and unresolved questions.
 
-For a task-linked report, use the existing `record` helper to save a draft evidence account referencing the report, so the local review desk's follow-up prompt points to it. Use task category `competitor` for competitor research tasks; the existing parser, registry and inbox accept it. Follow the shared task format and source-write rules when the user requests task creation; do not automatically turn every mention into a new task.
+For a task-linked report, use the existing `record` helper to save a draft evidence account referencing the report, so the local review desk's follow-up prompt points to it. Use task category `competitor` for competitor research tasks; the existing parser, registry and inbox accept it. Queue the strongest opportunities as follow-up tasks under the shared [Keep the work moving](../WORKFLOW.md#keep-the-work-moving) rules and source-write rules; do not turn every mention into a task.
 
 Distinguish completing the research report from carrying out its recommendations. A research task can be complete when its actual research criteria are verified; suggested replies, submissions and follow-ups remain pending until performed and evidenced under their own scope. Report what was researched, saved, and verified, and what remains a draft or unverified lead.

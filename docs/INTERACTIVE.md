@@ -33,7 +33,7 @@ Both directories must exist before preview. `onboard` uses the product only to r
 
 `state` and `disposition` use an optional private SQLite registry. Use one registry per portfolio for shared locks; the registered checkout path is the workspace. Database destinations inside the observed repo, including symlink aliases, are rejected. Snoozing requires a reason and future UTC timestamp.
 
-After independently verifying actual completion, record `verified-complete`, review the returned evidence path/hash, then use `complete --project <workspace> --task <id> --expected-hash <task-hash> --database <external.sqlite> --evidence <record-path> --evidence-hash <record-hash>`. Completion changes only the workspace task checkbox; it never changes the product's task files. A record is an agent-supplied evidence account, not independent proof of publication. Drafts stay open until their actual task criteria are met.
+After independently verifying actual completion, record `verified-complete` with a summary of `Outputs:`, `Impact:` and `Next steps:` lines (the review desk shows it for done tasks; see templates/WORKFLOW.md), review the returned evidence path/hash, then use `complete --project <workspace> --task <id> --expected-hash <task-hash> --database <external.sqlite> --evidence <record-path> --evidence-hash <record-hash>`. Completion changes only the workspace task checkbox; it never changes the product's task files. A record is an agent-supplied evidence account, not independent proof of publication. Drafts stay open until their actual task criteria are met.
 
 ## Upgrade, relocation and removal
 

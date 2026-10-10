@@ -19,6 +19,30 @@ export const targets = {
   },
 };
 
+/** Shape of a `verified-complete` evidence summary; the review desk shows it on the Done tab. */
+export const completionFormat = `Outputs: what was produced or done, with live URLs or workspace paths.
+Impact: what changed for the product. Give measured results with their source, or label the expected effect "expected".
+Next steps: follow-up task IDs queued, or why none are needed.`;
+
+const sectionLabels = { outputs: 'Outputs', impact: 'Impact', 'next steps': 'Next steps' };
+
+/**
+ * Split a completion summary into its labeled sections. Summaries recorded before the format existed come back as plain text.
+ * @returns {{ sections: { label: string, text: string }[], text: string }}
+ */
+export function completionReport(summary) {
+  const sections = [];
+  const preamble = [];
+  for (const line of summary.split('\n')) {
+    const match = /^\s*(outputs|impact|next steps)\s*:\s*(.*)$/i.exec(line);
+    if (match) sections.push({ label: sectionLabels[match[1].toLowerCase()], text: match[2] });
+    else if (sections.length) sections.at(-1).text += `\n${line}`;
+    else preamble.push(line);
+  }
+  for (const section of sections) section.text = section.text.trim();
+  return { sections, text: preamble.join('\n').trim() };
+}
+
 const fallbackSteps = 'Work out what "done" looks like from the task description, state it in one line, then do it.';
 
 function draftLines(task) {
@@ -49,7 +73,11 @@ ${task.materials || '(none)'}
 Steps:
 ${steps}
 ${drafts ? `\nRelated drafts and proposals:\n${drafts}\n` : ''}
-Paths under marketing/ live in the ${product} promotion workspace at ${data.project.root}. Read them there; don't edit them. Follow this repository's own instructions and run its checks. Don't commit, push or deploy until I approve. When you're done, summarize the change so I can close ${task.taskId} in the promotion agent.`,
+Paths under marketing/ live in the ${product} promotion workspace at ${data.project.root}. Read them there; don't edit them. Follow this repository's own instructions and run its checks. Don't commit, push or deploy until I approve. When you're done, summarize it in this shape so I can record it and close ${task.taskId} in the promotion agent:
+
+${completionFormat}
+
+Under Next steps, list the marketing work this change unlocks (announcing it, updating listings, measuring the result) so the promotion agent can queue it as tasks.`,
     };
   }
   return {
@@ -61,6 +89,12 @@ ${task.actionUrl ? `Destination: ${task.actionUrl}\n` : ''}${parked}
 Steps:
 ${steps}
 ${drafts ? `\nSaved drafts so far:\n${drafts}\n` : ''}
-Read the task in ${data.project.tasksPath}${drafts ? ' and the saved drafts' : ''}, then pick up at the first unfinished step. Save work as drafts in the promotion workspace and keep the product repository${data.project.sourceRoot ? ` (${data.project.sourceRoot})` : ''} read only. Show me the exact content and ask before publishing, sending, spending or marking the task done.`,
+Read the task in ${data.project.tasksPath}${drafts ? ' and the saved drafts' : ''}, then pick up at the first unfinished step. Save work as drafts in the promotion workspace and keep the product repository${data.project.sourceRoot ? ` (${data.project.sourceRoot})` : ''} read only. Show me the exact content and ask before publishing, sending, spending or marking the task done.
+
+Keep the marketing moving: before you stop, either take the next action or queue it. You can add follow-up tasks to ${data.project.tasksPath} without asking (next unused T-NNN ID, Materials starting "Follow-up to ${task.taskId}.", URL and 3–8 Prompt steps; at most three, no duplicates of open or done tasks). Tell me which tasks you added.
+
+When the task is verified done, record \`verified-complete\` evidence whose summary uses exactly this shape (the review desk shows it on the Done tab), then complete the task:
+
+${completionFormat}`,
   };
 }

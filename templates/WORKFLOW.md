@@ -1,4 +1,4 @@
-# Marketing workflow contract — version 0.8
+# Marketing workflow contract — version 0.9
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
 
@@ -28,15 +28,15 @@ For an unregistered draft request, use explicitly selected source facts and retu
 
 Accept ordinary requests without requiring a slash command, task ID, or CLI vocabulary. Keep the selected project for follow-ups in this conversation; a new chat must resolve it again unless running inside its registered promotion workspace. Handle available local tools yourself. Do not ask the user to copy hashes, run builds, or manipulate JSON plans. If a needed tool is unavailable, explain the specific limit and give the smallest useful manual step.
 
-When giving an actionable recommendation, naturally offer to make it part of the user's ongoing work. Ask a short, specific question such as “Want me to add that to your tasks?” or, when reviewing saved work would help, “Want me to open the review desk so you can look through these?” Choose the offer that fits the conversation; offer both when both are useful. This applies across activities, including X growth coaching. Avoid a repeated canned footer or asking again after the user has answered.
+The agent is meant to run most of the marketing, so an actionable recommendation becomes queued work, not just advice. In a registered workspace (or a personal X account's private records), file it as a task yourself under [Keep the work moving](#keep-the-work-moving) and tell the user which task IDs you added; do not ask first. When reviewing saved work would help, offer a short, specific question such as “Want me to open the review desk so you can look through these?” This applies across activities, including X growth coaching. Avoid a repeated canned footer or asking again after the user has answered. If the user declines a queued task, mark it skipped with their reason using the `disposition` helper when a registry is available; otherwise remove the open entry you added (its ID stays retired).
 
-A recommendation alone does not request task creation or opening the desk. When the user accepts, handle it yourself: check for an existing matching task before adding an open task with a stable ID, concrete materials and completion criteria in the selected workspace; or launch/open the review desk for that workspace following its documentation. If task creation or opening the desk was already requested, carry it out without another confirmation. Resolve missing product selection by name, never by asking for a path. If no persistent workspace exists, explain the needed setup; do not silently install one. Personal X accounts may use their private account task records without product registration; the product review desk requires a registered promotion workspace. Adding a task does not authorize its external actions, and opening the desk does not execute work.
+Handle desk requests yourself: launch/open the review desk for that workspace following its documentation, without another confirmation if it was already requested. Resolve missing product selection by name, never by asking for a path. If no persistent workspace exists, list the next actions in chat and explain the setup needed to track them; do not silently install one. Personal X accounts may use their private account task records without product registration; the product review desk requires a registered promotion workspace. Adding a task does not authorize its external actions, and opening the desk does not execute work.
 
 - **"Set up my product for promotion" / "Install this in my project":** follow [conversational setup](SETUP.md). Setup installs into a separate promotion workspace and reads product context; it never installs into the observed repo or authorizes publication.
 - **"Prepare a post" / "Start promotion":** use the context and selection rules below to produce reviewable work. A draft request alone does not authorize installing a runtime. Missing helper configuration or an incompatible task format must not block an independent draft; leave task files untouched and explain any task-tracking limitation.
 - **"Analyze competitors" / "Where are competitors being talked about?":** use activity `competitor` and follow [competitor analysis and mention discovery](activities/competitor-analysis.md). Prepare a sourced comparison and verified conversation shortlist; posting and recurring monitoring are separate actions.
 - **"Make it shorter" / other revisions:** revise the selected draft within the promotion workspace's permitted paths, show the exact new copy, and retain its draft status. Changes invalidate earlier content approval and any hashes of the old artifact; do not rewrite immutable evidence records. Record a new revision if task-linked evidence is needed.
-- **"What's the status?":** read the selected workspace's saved drafts, task state and relevant logs. Report what exists, what was actually done, what is pending, and the next useful step. Do not create work or infer published status from a draft, approval, or evidence claim alone.
+- **"What's the status?":** read the selected workspace's saved drafts, task state and relevant logs. Report what exists, what was actually done, what is pending, and the next useful step. Do not draft new work or infer published status from a draft, approval, or evidence claim alone. If no open task covers the next useful step, queue one under [Keep the work moving](#keep-the-work-moving).
 
 ## Context
 
@@ -77,8 +77,30 @@ For product code/content recommendations: save a proposal in the workspace with 
 
 Every task includes a stable ID, exact URL, self-contained materials, verified asset references, and 3–8 task-specific steps including completion evidence and skip conditions. Tasks predating Prompt remain valid.
 
-Keep a prepared task open until its actual completion criteria are met. For configured projects, `record` can save an immutable task-linked draft or `verified-complete` evidence account in the workspace's marketing logs without creating a database; it hashes local artifact references. The helper does not independently verify a provider action. Inspect the actual receipt, live destination, or validated local artifact yourself before calling the outcome verified. The `complete` helper requires the reviewed evidence record's path and hash as well as the task-file hash, then uses P02's guarded checkbox write-back. If configuration or evidence is missing, leave completion pending instead of blindly rewriting the workspace TASKS.md.
+Keep a prepared task open until its actual completion criteria are met. For configured projects, `record` can save an immutable task-linked draft or `verified-complete` evidence account in the workspace's marketing logs without creating a database; it hashes local artifact references. The helper does not independently verify a provider action. Inspect the actual receipt, live destination, or validated local artifact yourself before calling the outcome verified. The `verified-complete` summary is the task's lasting result, shown on the review desk's Done tab. Write it as three labeled lines (continuation lines allowed):
+
+```text
+Outputs: what was produced or done, with live URLs or workspace paths.
+Impact: what changed for the product. Give measured results with their source, or label the expected effect "expected".
+Next steps: follow-up task IDs queued, or why none are needed.
+```
+
+Never present an expected effect as a measured one. For a `product` task, the product-repository agent returns this summary; verify the change, then record it in the workspace. The `complete` helper requires the reviewed evidence record's path and hash as well as the task-file hash, then uses P02's guarded checkbox write-back. If configuration or evidence is missing, leave completion pending instead of blindly rewriting the workspace TASKS.md.
 
 Optional `state` and `disposition` helpers show or set skipped/snoozed/active state in one chosen local SQLite registry, separate from the workspace task checkbox. Use a reason and a future UTC deadline for snoozing. Draft preparation and evidence records need no registry. Append actual outcomes to the workspace's logs if its instructions require them. Distinguish draft, approved, scheduled, published, failed, cancelled, and uncertain. A model saying done is not proof; include artifact paths, verified URLs, provider IDs/read-back, or validation results as appropriate. Do not record a public URL before it exists.
 
-Report the selected activity and reason, artifacts, actual actions, unresolved needs, and evidence. No automatic git operations in this contract.
+## Keep the work moving
+
+The agent should be running most of the marketing, so every run, and every task you work on, ends with the next action either taken or queued. Before reporting, ask what this work makes possible or necessary next: post or schedule the approved draft, reply when a thread answers, submit the next directory, check results after a week, turn a competitor finding into an engagement task, implement a product proposal. If you can do it now within this run's scope and existing authorization, do it. Otherwise queue it as an open task in the selected workspace. Any task may add follow-up tasks; queuing is workspace bookkeeping, needs no extra permission, and authorizes no external action.
+
+- Check open and done tasks, dispositions and thread/slug history first. Update a matching open task instead of adding a duplicate.
+- Use the next unused T-NNN ID, today's date, a priority and a category (`product` for product-repository work). Start Materials with `Follow-up to T-NNN.` when another task produced it, and state any earliest date or trigger, such as `Not before 2026-10-17` or `After the post goes live`.
+- Make it executable: exact URL, self-contained materials, verified asset references and 3–8 Prompt steps, as for any task. Do not queue vague ideas or work the product facts cannot support.
+- Queue at most three follow-ups per run, highest value first. A short, high-signal queue beats a long backlog.
+- A pending human step (approval, sign-in, payment, a manual submission) is a valid next action: keep or add the task that holds it, with the exact content and destination ready.
+- Completing a task does not end the chain. Close it with evidence, then queue what it unlocked.
+- When nothing useful remains for an activity (cadence met, channels saturated, blocked on a missing fact), say so and name what would unblock it instead of inventing work.
+
+Agents working in the product repository on a `product` task do not edit the promotion workspace; they list follow-up work in their summary, and the promotion agent files it when the task is closed.
+
+Report the selected activity and reason, artifacts, actual actions, follow-up tasks queued (by ID), unresolved needs, and evidence. No automatic git operations in this contract.

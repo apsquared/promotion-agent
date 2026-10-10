@@ -108,6 +108,10 @@ The shared workflow now asks a brief contextual question when giving actionable 
 
 User request: one description and one prompt per task, clearly labeled for the promotion agent or the product repo (category `product`). Drafts/evidence previews, intents, notes and the history view were removed. See HANDOFF for validation.
 
+## Agent-run task chains and completion results — 2026-10-10 (implemented)
+
+User request: tasks know they can create follow-up tasks so the agent is always acting or queuing the next action, and task prompts ask for an Outputs / Impact / Next steps completion summary that the review desk shows for done tasks. WORKFLOW v0.9. See HANDOFF for validation.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.
