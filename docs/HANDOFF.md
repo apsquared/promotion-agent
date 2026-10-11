@@ -1,5 +1,13 @@
 # Continue here
 
+## Public-readiness hardening — 2026-10-10
+
+Updated Next.js to 16.4.0 and transitive source-map-js to 1.2.2. The current npm audit reports zero vulnerabilities. Both typechecks and 71/71 tests passed, the production review build passed, and the package dry run passed. No new dependencies or runtime feature changes were introduced.
+
+Enabled and read back GitHub Dependabot alerts (204) and automated security fixes (enabled, not paused). Main now requires a pull request and up-to-date `check (ubuntu-latest)` and `check (macos-latest)` checks, including administrators; force pushes and deletion are disabled. Zero reviewer approvals are required so a solo maintainer can merge after CI. The direct-main commit/push convenience script is incompatible with this policy and was not run.
+
+README now labels source distribution early access. Architecture/README describe authenticated local complete/skip/resume actions; compatibility distinguishes Ubuntu/macOS automated CI from native agent acceptance. docs/ACCEPTANCE.md tracks native Codex/Claude Code/OpenCode trials and an outside user's first useful draft as pending. These need actual interactive sessions/participants and cannot be established by helper tests. No invitations, npm publication, commit or push occurred; dependency and documentation changes remain local until explicitly published.
+
 ## Mark tasks complete or skipped from the review desk — 2026-10-10
 
 User request: the desk needs a way to manually mark a task complete or skipped. Each open task now has **Did it yourself, or not doing it?** with an optional note, **Mark complete ✓** (confirm dialog) and **Skip**; skipped/snoozed tasks show **Resume task**. `POST /api/review` (same token/origin guard as GET, JSON only, 16 KiB cap) calls `src/review/actions.ts`, which reuses the hash-checked helpers: completion records a `verified-complete` record (Outputs = the note, tagged "marked complete by hand in the review desk"; reference = the task file) and then `completeSelectedTask` checks the box; skip/resume use `setSelectedTaskDisposition`. Completing a skipped/snoozed task is refused until resumed, before any record is written. The client sends the loaded revision, so a changed task file is refused. Actions need `--database`; without it the desk says so. This lifts PLAN's earlier "no browser mutation API" rule at the user's request; completion still writes the workspace checkbox, not database-only state.

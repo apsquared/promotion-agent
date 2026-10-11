@@ -70,6 +70,10 @@ Setup, drafting, revisions, and status now share conversational routes in `templ
 
 Validation: `npm run check` passed 55/55 tests, including installed resource/link checks after relocation and removal of the original bundle. The package dry run includes the new setup procedure and smoke guide. This verifies packaging/helpers; real conversational setup and native menu invocation remain acceptance work.
 
+## Public-readiness hardening — 2026-10-10 (technical changes complete; acceptance pending)
+
+Patched dependency advisories, enabled GitHub Dependabot alerts/security fixes and enforced PR/CI protection on main. Updated early-access positioning, review-write documentation and CI compatibility evidence. Local typechecks, 71 tests, production build, package dry run and zero-vulnerability audit passed. Native-host and outside-user gates remain open in docs/ACCEPTANCE.md; P07 is not complete. See HANDOFF for exact settings and publication status.
+
 ## Release validation in progress
 
 ### P07 — reusable distribution/release (local distribution and public source complete; live gates open)

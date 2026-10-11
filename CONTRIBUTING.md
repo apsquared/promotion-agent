@@ -7,3 +7,5 @@ Run `npm test` on Node 22.14+. Interactive entry points must reference the canon
 Workflow contributions need: purpose, required capabilities, inputs, output artifacts, budgets, review requirements, evidence of completion, and a fictional example. Connector contributions need: capability detection, error handling, verification, and a safe retry strategy for uncertain external writes.
 
 Preserve existing project customization during upgrades. Do not vendor third-party skills without reviewing their license and attribution requirements.
+
+Changes to `main` go through a pull request with both Ubuntu and macOS checks passing against the current base. Administrator enforcement is enabled; direct pushes (including `scripts/commit-all-main.sh`) are not the contribution workflow. No second-person approval is required for this solo-maintainer project.

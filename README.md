@@ -6,6 +6,8 @@ A marketing assistant for your projects, used through Codex, Claude Code, or Ope
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
+**Early access:** automated helper and build checks run on Ubuntu and macOS. Native invocation across all three agents and an outside user’s first successful draft remain acceptance work. See [release status](docs/RELEASE.md).
+
 ## Get started
 
 Requires Git, Node.js 22.14 or newer with npm, and Codex, Claude Code, or OpenCode. Install from source; the npm package is not published yet.
@@ -87,7 +89,7 @@ From a chat in this promotion-agent checkout, ask:
 Open the review desk for my promotion workspace at /absolute/path/to/workspace.
 ```
 
-The local web app lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. It does not execute actions or approve publication. See [review desk details](docs/REVIEW-UI.md).
+The local web app lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
 
 ## Development and details
 

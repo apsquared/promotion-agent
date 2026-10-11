@@ -4,6 +4,12 @@ Promotion-agent is an interactive skill/command plus local Node helpers. “Live
 
 Observer architecture supersedes the historical product-local distribution evidence below. Current setup uses source plus workspace; see INTERACTIVE.md and HANDOFF.md. Existing product-local installations are not automatically migrated.
 
+## Current distribution: early-access source
+
+Share the source checkout as early access. npm publication is optional and is not a prerequisite for trying the GitHub project. Native menu invocation in each supported agent and an outside user’s first useful draft remain open gates; record results using [the acceptance record](ACCEPTANCE.md). Automated tests cannot close those gates.
+
+The review desk supports authenticated local complete/skip/resume actions with a registry. It is not a hosted service or proof that an external marketing action occurred.
+
 ## Public source on 2026-09-27
 
 - The MIT-licensed source repository is public at [apsquared/promotion-agent](https://github.com/apsquared/promotion-agent). Local and remote `main` matched at commit `977c1036a09055333164af5f1744ba8ffd542337` immediately after the first push.
