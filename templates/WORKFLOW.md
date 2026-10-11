@@ -1,4 +1,4 @@
-# Marketing workflow contract — version 0.9
+# Marketing workflow contract — version 0.10
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
 
@@ -35,6 +35,7 @@ Handle desk requests yourself: launch/open the review desk for that workspace fo
 - **"Set up my product for promotion" / "Install this in my project":** follow [conversational setup](SETUP.md). Setup installs into a separate promotion workspace and reads product context; it never installs into the observed repo or authorizes publication.
 - **"Prepare a post" / "Start promotion":** use the context and selection rules below to produce reviewable work. A draft request alone does not authorize installing a runtime. Missing helper configuration or an incompatible task format must not block an independent draft; leave task files untouched and explain any task-tracking limitation.
 - **"Analyze competitors" / "Where are competitors being talked about?":** use activity `competitor` and follow [competitor analysis and mention discovery](activities/competitor-analysis.md). Prepare a sourced comparison and verified conversation shortlist; posting and recurring monitoring are separate actions.
+- **"Make a video" / "Turn the site into a demo video":** use activity `video` and follow [product video](activities/video/WORKFLOW.md). The project lives in the promotion workspace; the user approves the script before any voice is generated, paid credits need confirmation, and a render is a draft until approved. Posting it is a separate task.
 - **"Make it shorter" / other revisions:** revise the selected draft within the promotion workspace's permitted paths, show the exact new copy, and retain its draft status. Changes invalidate earlier content approval and any hashes of the old artifact; do not rewrite immutable evidence records. Record a new revision if task-linked evidence is needed.
 - **"What's the status?":** read the selected workspace's saved drafts, task state and relevant logs. Report what exists, what was actually done, what is pending, and the next useful step. Do not draft new work or infer published status from a draft, approval, or evidence claim alone. If no open task covers the next useful step, queue one under [Keep the work moving](#keep-the-work-moving).
 
@@ -50,7 +51,7 @@ One run performs one activity. An explicit user choice wins; otherwise a due sea
 
 ## Duplicate prevention
 
-Social: compare the last 20 entries and rotate angles/categories. Content: check all recorded slugs and keywords. Directories: skip already prepared/submitted/live entries. Engagement: check open/done tasks and thread URLs. Competitor research: check prior reports and canonical mention/thread URLs; label meaningful updates to earlier findings. Include local skipped/snoozed dispositions when choosing work.
+Social: compare the last 20 entries and rotate angles/categories. Content: check all recorded slugs and keywords. Directories: skip already prepared/submitted/live entries. Engagement: check open/done tasks and thread URLs. Competitor research: check prior reports and canonical mention/thread URLs; label meaningful updates to earlier findings. Video: check existing projects under `marketing/assets/videos/` and reuse their captures, script or audio for variants and cutdowns. Include local skipped/snoozed dispositions when choosing work.
 
 ## Default activity budgets and outputs
 
@@ -61,6 +62,7 @@ Social: compare the last 20 entries and rotate angles/categories. Content: check
 | engagement | 2–4 relevant live threads | Verified source URLs, fit explanation, draft replies; no posting |
 | blog | 1 article proposal | Draft, keyword, metadata, destination and validation plan |
 | competitor | 3–5 competitors, 5–10 verified mentions | Sourced comparison, discussion URLs and context, ranked opportunities, optional reply drafts; follow the [research activity](activities/competitor-analysis.md) |
+| video | One video, or one cut plus its aspect variants | Approved script, rendered MP4, contact sheet and evidence record; follow the [video activity](activities/video/WORKFLOW.md) |
 | pseo | 3–5 page proposals | Distinct keywords, unique copy, canonical/sitemap checks, destination plan |
 
 Project settings may lower or override budgets. Missing credentials or browser/media tools should yield useful preparation or a clear blocked result, never invented research or provider success.

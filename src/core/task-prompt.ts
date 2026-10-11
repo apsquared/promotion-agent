@@ -37,6 +37,7 @@ export type PromptCategory =
   | 'outreach'
   | 'search'
   | 'competitor'
+  | 'video'
   | 'account'
   | 'other';
 
@@ -50,6 +51,7 @@ export function promptCategory(category: string): PromptCategory {
   if (c === 'directory' || c === 'backlink' || c === 'launch') return 'directory';
   if (c === 'outreach' || c === 'engagement') return 'outreach';
   if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
+  if (c === 'video') return 'video';
   if (c === 'search') return 'search';
   if (c === 'account') return 'account';
   return 'other';
@@ -142,6 +144,15 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 3. Check prior reports and task/thread history for duplicates. Save a sourced comparison and mention shortlist with URLs, evidence, relevance, and prioritized next steps in the promotion workspace’s permitted paths.
 4. Prepare useful reply drafts only where a contribution fits. Do not post, contact anyone, create a recurring monitor, or treat mentions as buying intent.
 5. Record the task-linked report for review using the local evidence helper when available. Verify research completion separately from any recommended engagement action.`,
+
+  video: `## How to work this task
+
+1. Follow the product video activity linked from the shared WORKFLOW.md. Build the project in the promotion workspace under \`marketing/assets/videos/<project>/\`; keep the product repository read only.
+2. Check HyperFrames availability and report \`npx hyperframes auth status\` (exit 1 means signed out, which is normal). Signing in, paid credits and installing global skills or offline engines are my decisions; ask first. Without HyperFrames, use the activity's fallback slideshow.
+3. Capture signed-out public pages only and look at every screen; no private identities, contacts or customer data.
+4. On-screen copy and narration come only from approved copy and the workspace's claims guardrails. Show me \`SCRIPT.md\` and get my approval before generating any voice.
+5. Run lint, check and snapshots, look at the contact sheet, then show me the preview and ask before rendering.
+6. Record draft evidence for the MP4 and its contact sheet with the local helper. Do not publish, schedule, commit, deploy or copy the render into the product repository; queue the posting step as its own task.`,
 
   account: `## How to work this task
 

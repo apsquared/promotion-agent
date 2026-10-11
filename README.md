@@ -61,6 +61,7 @@ No database, publishing account, or additional model API key is needed for draft
 - “Analyze our competitors and find where people discuss them.”
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
+- “Turn the site into a short demo video.”
 - “Show me our drafts and pending work.”
 
 This checkout also includes `reddit-thread-search` and `x-post-search` in `.agents/skills/`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
@@ -72,6 +73,10 @@ The agent uses your product documentation and marketing history to support its c
 Ask “Review @myhandle and create a customized X growth plan,” then “What should I do today?” or “Review this week’s results.” Use `$x-growth` in Codex or `/x-growth` in Claude Code/OpenCode. The shared procedure audits available account evidence, adapts the routine to your time budget, saves tasks and metrics, and revises the plan through ongoing coaching. Personal and brand accounts are supported; personal accounts need no product registration.
 
 These entrypoints are checkout resources; portable onboarding does not install them yet. Account plans and analytics stay in private user data or the selected promotion workspace. Public actions and recurring reminders require applicable explicit authorization. See [X growth workflow](templates/activities/x-growth/WORKFLOW.md) and its [research sources](templates/activities/x-growth/research.md).
+
+## Product videos
+
+Ask “Make a 45-second site tour for X,” or use `$promotion-video` in Codex or `/promote-video` in Claude Code/OpenCode. The agent builds the video project in your promotion workspace under `marketing/assets/videos/`, using [HyperFrames](https://github.com/heygen-com/hyperframes) through `npx` when available and a Playwright + ffmpeg slideshow otherwise. You approve the script before any voice is generated. Signing in to HeyGen, anything that uses paid credits, and installing HyperFrames' agent skills globally stay your decisions. The result is a draft MP4 with a contact sheet; posting it, or copying it into your product repository, is a separate request. See the [video activity](templates/activities/video/WORKFLOW.md).
 
 ## Multiple projects
 

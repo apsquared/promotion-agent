@@ -13,7 +13,7 @@ Avoid fabricated testimonials, repetitive openings, empty hype, and unsupported 
 
 ## Channels and cadence
 
-Enabled activities: <social, directory, engagement, blog, pseo, competitor>
+Enabled activities: <social, directory, engagement, blog, pseo, competitor, video>
 Timezone: <IANA timezone>
 Cadence and per-run budgets: <explicit limits>
 Publishing account references: <optional non-secret identifiers; configure credentials locally>
@@ -37,6 +37,7 @@ Prior competitor reports: <existing permitted report paths, if any>
 ## Media
 
 Existing assets and approved generation workflow: <paths and instructions>
+Video projects: <paths under marketing/assets/videos/, their renders, and the approved sources for on-screen copy and narration>
 
 ## Seasonal opportunities
 

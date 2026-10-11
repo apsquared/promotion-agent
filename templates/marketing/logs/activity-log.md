@@ -2,7 +2,7 @@
 
 Append-only memory of every marketing action, one line per action, newest at the bottom. Read (last ~40 lines) at the start of every run; drives channel rotation.
 
-Format: `- YYYY-MM-DD | run#N | activity(social|pseo|blog|directory|backlink|engagement) | action | outcome | ref`
+Format: `- YYYY-MM-DD | run#N | activity(social|pseo|blog|directory|backlink|engagement|competitor|video) | action | outcome | ref`
 (ref = commit sha, provider action ID, URL, or task ID)
 
 ## Log
