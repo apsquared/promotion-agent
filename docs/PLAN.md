@@ -120,6 +120,14 @@ User request: tasks know they can create follow-up tasks so the agent is always 
 
 User request: manually mark a task complete or skipped in the review desk. Adds a session-token POST route that reuses the hash-checked record/complete/disposition helpers (needs `--database`). Supersedes the "no browser mutation API" line above for these three actions only. See HANDOFF for validation.
 
+## P12 — product video activity (implemented; live render acceptance not exercised in this change)
+
+User request, 2026-10-10. Depends on P09's activity/entrypoint pattern, P06 evidence helpers and the review desk. Add activity `video` for short product videos (tours, promos, feature clips): HyperFrames through `npx` when available, a Playwright + ffmpeg slideshow otherwise. One canonical procedure at templates/activities/video/WORKFLOW.md, with capture, audio, frames and fallback references distilled from the 2026-10-10 BuyerCue site-tour run. Thin `promotion-video` Codex skill and `/promote-video` Claude Code/OpenCode commands in source and installed workspaces. WORKFLOW v0.10 routes "Make a video" requests and adds the budget row (one video, or one cut plus its aspect variants; output: approved script, MP4, contact sheet, evidence). Boundaries: project in the workspace under marketing/assets/videos/, product repo read only, no publishing, script approval before voice, signed-out captures, no sign-in/API keys/paid credits/global installs for the user, no new npm dependency.
+
+Acceptance: route test; source and installed entrypoints resolve to the one procedure after relocation, upgrades preserve customizations and removal respects ownership; a `video` task prepares, records draft evidence for an MP4 and its contact sheet, and appears open in the review desk with both references. Package dry-run includes the activity. Not covered by deterministic tests: HyperFrames itself, HeyGen auth, Playwright/ffmpeg and render quality. See HANDOFF.
+
+P12 follow-up, 2026-10-11: added templates/activities/video/craft.md, adapted from Amanda Sartini's launch-video article (X, 2026-10-10), and wired it into the brief defaults, script/storyboard, audio beat grid, frames, checks, variants and fallback. Docs-only apart from one prompt-fallback line; see HANDOFF.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.

@@ -1,5 +1,30 @@
 # Continue here
 
+## P12 follow-up — video craft rules — 2026-10-11
+
+User request: use Amanda Sartini's X article "12 rules for a launch video that looks like a design studio made it" (https://x.com/AmandaSartini/status/2109017063205302326, posted 2026-10-10, read signed-out in the in-app browser) to make better product videos. Added `templates/activities/video/craft.md`, a paraphrased and attributed adaptation: 30 s shape (4 s hook, numbered ~4 s feature beats, 2 s close), hook in the first frame, trigger → visible reaction → still payoff, sound-off text blocks (eyebrow, two ~14-character headline lines, one sentence under 80), measured dot-and-label callouts held ~1 s with no camera move, calm frame and colourful product, eased ~1 s camera moves capped near 1.5× on phone screens, cuts on the music's bars, one dark contrast scene, product-not-logo ending, vertical laid out rather than cropped, fictional demo data with only real features, and a pre-render checklist.
+
+Adapted to existing boundaries: shortened on-screen copy goes beside its approved source in SCRIPT.md for approval; invented data must be clearly fictional, never a real person's, and never presented as metrics; tempo comes from `npx hyperframes beats` on the actual track, and narration timing wins over the grid. WORKFLOW defaults now recommend a 30 s promo / 45–60 s tour and text-only built for sound off (narration optional). Updated WORKFLOW brief/design/script/storyboard/checks/variants, audio.md (beat grid), frames.md (camera, callouts, rebuilt UI, two-line headline height), fallback-slideshow.md and the `video` prompt fallback (0.0 s snapshot and checklist).
+
+Validation: `npm run check` passed both typechecks, build and 74/74 tests; the existing video test confirms craft.md is linked from the procedure and that every link resolves in source and installed copies. `git diff --check` passed. Whether these rules produce better renders was not tested; no video was made. Not committed.
+
+## P12 — product video activity — 2026-10-10
+
+User request: a `video` activity that makes short product videos for a registered product, with HyperFrames (`npx hyperframes`) preferred and a Playwright + ffmpeg slideshow fallback. The procedure is distilled from the BuyerCue site-tour run on 2026-10-10; HyperFrames' own skills stay the source of truth for its internals.
+
+Added:
+
+- `templates/activities/video/WORKFLOW.md` (canonical procedure: boundaries, availability check, brief, capture, design, script/storyboard, audio, frames, assemble/check, review/render, aspect variants, record) with `capture.md`, `audio.md`, `frames.md` and `fallback-slideshow.md` beside it. Records the run's pitfalls: third-party logo badges, cream-to-white colour mapping, short BGM looped with `acrossfade`, a 44 s SFX, retiming to word timestamps, the 48 KB packet limit, digit-leading frame ids, font files, clip ids, overflow/overlap attributes, the 83% safe area, measured highlight targets and wrapping headlines.
+- WORKFLOW v0.10: "Make a video" / "Turn the site into a demo video" route, video duplicate check, and budget row (one video, or one cut plus its aspect variants → approved script, MP4, contact sheet, evidence).
+- Thin entrypoints: `.agents/skills/promotion-video/` (with UI metadata), `.claude/commands/promote-video.md`, `.opencode/commands/promote-video.md`. The installer generates workspace versions of all three and documents them in INSTALLED.md.
+- `video` prompt category with a fallback step list (workspace project, auth status, consent for sign-in/credits/installs, signed-out captures, script approval before voice, snapshots before render, draft evidence, no publishing).
+- Template notes: TASKS.md `video` category, AGENT.md enabled activity and video projects line, activity-log activity list. Installed workspaces receive these only through a reviewed upgrade.
+- README, INTERACTIVE and ARCHITECTURE sections; PLAN P12.
+
+Validation: `npm run check` passed both typechecks, the helper build and 74/74 tests (three new in tests/video.test.mjs: workflow route, budget row and linked references; source and installed entrypoints resolving to the one procedure after relocation, customization preserved on upgrade and removal; a `video` task through prepare, draft evidence for a synthetic MP4 and contact sheet, and the review desk while still open). Skill Creator `quick_validate.py` reported "Skill is valid!" for `promotion-video`. `npm pack --dry-run --ignore-scripts` with a private temporary cache lists all five `dist/templates/activities/video/` files. `git diff --check` passed.
+
+Not verified by these tests: HyperFrames itself, HeyGen auth (`auth status`/`auth login`), TTS/music/SFX services, Playwright, ffmpeg, render quality, and native invocation of the new entrypoints. The evidence test uses a few synthetic bytes, not a real render. No dependency was added; no workspace was upgraded, nothing was rendered, published or committed.
+
 ## Public-readiness hardening — 2026-10-10
 
 Updated Next.js to 16.4.0 and transitive source-map-js to 1.2.2. The current npm audit reports zero vulnerabilities. Both typechecks and 71/71 tests passed, the production review build passed, and the package dry run passed. No new dependencies or runtime feature changes were introduced.
