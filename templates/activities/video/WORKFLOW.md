@@ -2,7 +2,7 @@
 
 Use activity `video` under the [shared workflow](../../WORKFLOW.md). The outcome is one short product video for the selected product (a promo, site tour or feature clip) as a reviewable draft: an approved script, a rendered MP4, a contact sheet and an evidence record. Rendering a video does not publish, schedule or deploy it.
 
-HyperFrames (HeyGen's HTML-to-video framework, run on demand with `npx hyperframes`) is the preferred engine. Its own skills, chiefly `product-launch-video`, are the source of truth for its internals: composition contract, scripts, presets and motion rules. This activity orchestrates that work, adds promotion-agent's boundaries and records the pitfalls found in practice. When HyperFrames is unavailable, use the [fallback slideshow](fallback-slideshow.md), which needs no accounts.
+HyperFrames (HeyGen's HTML-to-video framework, run on demand with `npx hyperframes`) is the preferred engine. Its own skills, chiefly `product-launch-video`, are the source of truth for its internals: composition contract, scripts, presets and motion rules. This activity orchestrates that work, adds promotion-agent's boundaries and records the pitfalls found in practice. When HyperFrames is unavailable, use the [fallback slideshow](fallback-slideshow.md), which needs no accounts. Whatever the engine, follow [video craft](craft.md) for structure, captions, motion and the pre-render checklist.
 
 ## Hard boundaries
 
@@ -31,9 +31,9 @@ Ask only what is missing, one question at a time, each with a recommended defaul
 |---|---|
 | Sell or show? | Promo for a launch; site tour when the user says "tour" or "demo" |
 | Destination → aspect | X/LinkedIn feed 1080×1080; YouTube or embed 1920×1080; Shorts/Reels 1080×1920 |
-| Length | 45 s (range 30–90 s) |
-| Narration or text-only | Narration when signed in or Kokoro is available, otherwise text-only |
-| Music source | HyperFrames free library; none or original for the fallback |
+| Length | 30 s for a promo (hook, up to six 4 s features, close); 45–60 s for a site tour (range 30–90 s) |
+| Narration or text-only | Text-only built for sound off; add narration when signed in or Kokoro is available and the user wants it |
+| Music source | HyperFrames free library, cut on its beat; original or none for the fallback |
 | Design source | Capture the brand from the site; a HyperFrames preset otherwise |
 | Storyboard review | Yes |
 | Automation or companion | Automation, with review stops at the script and before render |
@@ -46,13 +46,13 @@ Follow [capture](capture.md): the brand capture, every page the story needs, the
 
 ## 3. Design
 
-Pick the HyperFrames preset closest to the brand (for example `creative-mode` for neo-brutalist ink borders and hard shadows) and run the skill's `build-frame.mjs`. Then check the colour mapping in `frame.md` against the captured site: a near-white canvas can be mapped to pure white (one run mapped cream `#FAF8F3` to `#FFFFFF`) and must be fixed by hand.
+Keep the frame calm and let the product supply colour and motion ([video craft](craft.md)). Pick the HyperFrames preset closest to the brand (for example `creative-mode` for neo-brutalist ink borders and hard shadows) and run the skill's `build-frame.mjs`. Then check the colour mapping in `frame.md` against the captured site: a near-white canvas can be mapped to pure white (one run mapped cream `#FAF8F3` to `#FFFFFF`) and must be fixed by hand.
 
 ## 4. Script and storyboard
 
-Use a value-first arc: the outcome first, then how the product delivers it, then the call to action. The on-screen headline and sub-line are approved copy verbatim; narration is a restructured version of the same copy and adds nothing. Write `SCRIPT.md` with each line's source, show it to the user and **get approval before generating any voice**. Approval of earlier wording does not cover a changed script.
+Use a value-first arc built on the [video craft](craft.md) structure: a hook that is on screen in the first frame, numbered feature beats that each show a trigger, the product reacting and a readable payoff, one contrast scene in the second half, and a closing shot of the product with one line of approved copy. No logo ending, and no call to action that is not true today. Each beat's text block (eyebrow, two-line headline, one sentence) comes from approved copy; where it must be shortened to fit, put the shortened text beside its approved source in `SCRIPT.md` for approval. Narration is a restructured version of the same copy and adds nothing. Write `SCRIPT.md` with each line's source, show it to the user and **get approval before generating any voice**. Text-only videos also need script approval before frames are built. Approval of earlier wording does not cover a changed script.
 
-In `STORYBOARD.md`, give each frame `type`, `persuasion`, `beat`, `blueprint`, `asset_candidates` (inventory names only, from `capture/extracted/asset-descriptions.md`) and a time-coded shot sequence, plus one `## Video direction` block. Decide captions explicitly: skip them when every frame already shows its headline and sub-line, and say so. Offer the storyboard for review if the brief asked for it.
+In `STORYBOARD.md`, give each frame `type`, `persuasion`, `beat`, `blueprint`, `asset_candidates` (inventory names only, from `capture/extracted/asset-descriptions.md`) and a time-coded shot sequence, plus one `## Video direction` block. Decide captions explicitly: when every beat carries its eyebrow, headline and sentence, that text is the caption and no separate subtitle track is needed; say so. Plan beats on a 2 s bar grid (120 BPM) to be snapped to the real track in the audio step, and list any invented demo data (see [video craft](craft.md)); demo data must be fictional and never a real person's information. Offer the storyboard for review if the brief asked for it.
 
 ## 5. Audio
 
@@ -64,7 +64,7 @@ Follow [frames](frames.md): packet budget, who builds the frames, and the compos
 
 ## 7. Assemble and check
 
-Run the skill's `assemble-index.mjs`, then `transitions.mjs inject` and `transitions.mjs verify`, then `npx hyperframes lint` and `npx hyperframes check`; both must reach 0 errors. Run `npx hyperframes snapshot --at <times>` with each frame's midpoint and end state and each cut at −0.1 s and +0.2 s. Look at the contact sheets yourself and fix collisions, clipped text, empty frames, wrong logos and private data before any render.
+Run the skill's `assemble-index.mjs`, then `transitions.mjs inject` and `transitions.mjs verify`, then `npx hyperframes lint` and `npx hyperframes check`; both must reach 0 errors. Run `npx hyperframes snapshot --at <times>` with each frame's midpoint and end state and each cut at −0.1 s and +0.2 s. Include a snapshot at 0.0 s to check the thumbnail. Look at the contact sheets yourself and fix collisions, clipped text, empty frames, wrong logos and private data, then go through the [pre-render checklist](craft.md#pre-render-checklist) before any render.
 
 ## 8. Review and render
 
@@ -72,7 +72,7 @@ Run `npx hyperframes preview --background` and show the user the Studio URL. Ask
 
 ## 9. Aspect variants
 
-For another destination, make a sibling project `<project>-16x9` (or `-9x16`) that copies the first one's captures, audio, script, storyboard and timings. Change only `format`, the aspect and destination in `BRIEF.md`, and the frame layouts. For landscape, put the text in a left column and the screenshot window on the right; for vertical, stack them. Re-run lint, check and snapshots, look at them, then render. One run makes one video, or one cut plus its aspect variants.
+For another destination, make a sibling project `<project>-16x9` (or `-9x16`) that copies the first one's captures, audio, script, storyboard and timings. Change only `format`, the aspect and destination in `BRIEF.md`, and the frame layouts. Lay the same story out again rather than cropping: for landscape, the text block in a left column and the device or screenshot window on the right; for vertical, the text block on top and a larger device below. Re-run lint, check and snapshots, look at them, then render. One run makes one video, or one cut plus its aspect variants.
 
 ## 10. Record
 

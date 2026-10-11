@@ -17,6 +17,7 @@ The generated files are a starting point. Check each of these before building fr
 - **Music length against the cut.** A library track can be shorter than the video (one run got a 30 s track for a 43.7 s cut). Loop it with ffmpeg's `acrossfade` to cover the cut, fade it out over the last 1–2 s, and record the source track, the loop and the fade in `audio_meta.json`.
 - **SFX lengths and offsets.** A returned SFX can be far longer than its moment (a typing sound came back 44 s long). Set each effect's `duration_s` and `offset_s` from the voice's word timestamps in `audio_meta.json`, so it starts and stops with the words it accompanies.
 - **Retiming.** Narration usually runs longer than the estimate. Retime every scene window to the word timestamps rather than compressing the voice, and update `duration:` in `STORYBOARD.md` and `BRIEF.md` to the real total.
+- **Beat grid.** Run `npx hyperframes beats <project-dir> --json` on the final music bed, then snap each scene start to the nearest bar and land taps, checks and card arrivals on beats, each with its own short SFX. When narration and the grid disagree, the words win and the scene start moves to the next bar. See [video craft](craft.md).
 - **Licensing.** Note where each music and SFX file came from and its licence or plan terms; this goes into the assets README in the Record step.
 
 Mixing (ducking, fades, gain) belongs to the HyperFrames audio skill; follow it rather than restating it here.

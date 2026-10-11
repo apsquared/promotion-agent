@@ -1,5 +1,13 @@
 # Continue here
 
+## P12 follow-up — video craft rules — 2026-10-11
+
+User request: use Amanda Sartini's X article "12 rules for a launch video that looks like a design studio made it" (https://x.com/AmandaSartini/status/2109017063205302326, posted 2026-10-10, read signed-out in the in-app browser) to make better product videos. Added `templates/activities/video/craft.md`, a paraphrased and attributed adaptation: 30 s shape (4 s hook, numbered ~4 s feature beats, 2 s close), hook in the first frame, trigger → visible reaction → still payoff, sound-off text blocks (eyebrow, two ~14-character headline lines, one sentence under 80), measured dot-and-label callouts held ~1 s with no camera move, calm frame and colourful product, eased ~1 s camera moves capped near 1.5× on phone screens, cuts on the music's bars, one dark contrast scene, product-not-logo ending, vertical laid out rather than cropped, fictional demo data with only real features, and a pre-render checklist.
+
+Adapted to existing boundaries: shortened on-screen copy goes beside its approved source in SCRIPT.md for approval; invented data must be clearly fictional, never a real person's, and never presented as metrics; tempo comes from `npx hyperframes beats` on the actual track, and narration timing wins over the grid. WORKFLOW defaults now recommend a 30 s promo / 45–60 s tour and text-only built for sound off (narration optional). Updated WORKFLOW brief/design/script/storyboard/checks/variants, audio.md (beat grid), frames.md (camera, callouts, rebuilt UI, two-line headline height), fallback-slideshow.md and the `video` prompt fallback (0.0 s snapshot and checklist).
+
+Validation: `npm run check` passed both typechecks, build and 74/74 tests; the existing video test confirms craft.md is linked from the procedure and that every link resolves in source and installed copies. `git diff --check` passed. Whether these rules produce better renders was not tested; no video was made. Not committed.
+
 ## P12 — product video activity — 2026-10-10
 
 User request: a `video` activity that makes short product videos for a registered product, with HyperFrames (`npx hyperframes`) preferred and a Playwright + ffmpeg slideshow fallback. The procedure is distilled from the BuyerCue site-tour run on 2026-10-10; HyperFrames' own skills stay the source of truth for its internals.

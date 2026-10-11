@@ -151,7 +151,7 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 2. Check HyperFrames availability and report \`npx hyperframes auth status\` (exit 1 means signed out, which is normal). Signing in, paid credits and installing global skills or offline engines are my decisions; ask first. Without HyperFrames, use the activity's fallback slideshow.
 3. Capture signed-out public pages only and look at every screen; no private identities, contacts or customer data.
 4. On-screen copy and narration come only from approved copy and the workspace's claims guardrails. Show me \`SCRIPT.md\` and get my approval before generating any voice.
-5. Run lint, check and snapshots, look at the contact sheet, then show me the preview and ask before rendering.
+5. Run lint, check and snapshots (including 0.0 s for the thumbnail), go through the activity's pre-render checklist on the contact sheet, then show me the preview and ask before rendering.
 6. Record draft evidence for the MP4 and its contact sheet with the local helper. Do not publish, schedule, commit, deploy or copy the render into the product repository; queue the posting step as its own task.`,
 
   account: `## How to work this task

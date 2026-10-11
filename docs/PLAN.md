@@ -126,6 +126,8 @@ User request, 2026-10-10. Depends on P09's activity/entrypoint pattern, P06 evid
 
 Acceptance: route test; source and installed entrypoints resolve to the one procedure after relocation, upgrades preserve customizations and removal respects ownership; a `video` task prepares, records draft evidence for an MP4 and its contact sheet, and appears open in the review desk with both references. Package dry-run includes the activity. Not covered by deterministic tests: HyperFrames itself, HeyGen auth, Playwright/ffmpeg and render quality. See HANDOFF.
 
+P12 follow-up, 2026-10-11: added templates/activities/video/craft.md, adapted from Amanda Sartini's launch-video article (X, 2026-10-10), and wired it into the brief defaults, script/storyboard, audio beat grid, frames, checks, variants and fallback. Docs-only apart from one prompt-fallback line; see HANDOFF.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.

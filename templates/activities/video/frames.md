@@ -18,6 +18,8 @@ Frames may be built by per-frame sub-agents or by the orchestrating agent from t
 - **Intentional overflow and overlap.** Mark deliberate camera overflow inside a window with `data-layout-allow-overflow`, and identical chrome that overlaps during crossfades with `data-layout-allow-overlap`. Do not use them to silence real collisions.
 - **Safe area.** Keep all content above about 83% of the canvas height, clear of player controls and platform overlays.
 - **Highlight targets.** Measure the boxes you highlight or zoom into with Playwright at the same viewport width the screenshot was captured at; do not guess coordinates.
-- **Wrapping headlines.** A headline that wraps to two lines collides with the screenshot window below it. Size the type for the longest approved line, or move the window.
+- **Camera and callouts.** One eased camera move per beat, about a second long, zooming no more than about 1.5× on a phone screen. Keep callout labels still and fully visible for about a second, with no camera move under them. See [video craft](craft.md).
+- **Rebuilt UI.** When a beat needs the product to react and the captures are static, rebuild just that UI fragment in HTML from the captured design and animate it, with fictional demo data. Show only features the product has today.
+- **Headline height.** Headlines are two lines by design; a third line from unexpected wrapping collides with the window below it. Lay the text block out for two lines at the longest approved headline, and size the type or move the window rather than letting it wrap.
 
 Check each frame in snapshots before assembly, not only in the final contact sheet.
