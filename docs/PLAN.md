@@ -128,6 +128,8 @@ Acceptance: route test; source and installed entrypoints resolve to the one proc
 
 P12 follow-up, 2026-10-11: added templates/activities/video/craft.md, adapted from Amanda Sartini's launch-video article (X, 2026-10-10), and wired it into the brief defaults, script/storyboard, audio beat grid, frames, checks, variants and fallback. Docs-only apart from one prompt-fallback line; see HANDOFF.
 
+P12 standalone skill, 2026-10-11: added `skills/product-video/` to the independent skills collection, a self-contained version of the activity with no workspace or registration. Its `references/` are byte-identical to the activity's reference files (now location-neutral), enforced by a test. See HANDOFF.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.

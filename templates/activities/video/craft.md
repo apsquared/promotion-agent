@@ -1,6 +1,6 @@
 # Video craft
 
-Part of the [video activity](WORKFLOW.md). These rules decide whether a product video reads as designed or as a slideshow. They are adapted from Amanda Sartini's "12 rules for a launch video that looks like a design studio made it" (X article, 2026-10-10, https://x.com/AmandaSartini/status/2109017063205302326) and fitted to promotion-agent's boundaries. The activity's claims, privacy and approval rules win wherever they differ.
+Part of the product video procedure. These rules decide whether a product video reads as designed or as a slideshow. They are adapted from Amanda Sartini's "12 rules for a launch video that looks like a design studio made it" (X article, 2026-10-10, https://x.com/AmandaSartini/status/2109017063205302326) and fitted to the procedure's boundaries. Its claims, privacy and approval rules win wherever they differ.
 
 ## Why videos flop
 

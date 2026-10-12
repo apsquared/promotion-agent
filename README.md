@@ -98,7 +98,7 @@ The local web app lists your tasks. Each task shows its description and one prom
 
 ## Reusable AI skills
 
-The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS. The collection includes installation instructions and is separate from promotion-agent onboarding.
+The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, or `product-video` to make a short product video from a public website without setting up promotion-agent. The collection includes installation instructions and is separate from promotion-agent onboarding.
 
 ## Development and details
 

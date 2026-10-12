@@ -1,6 +1,6 @@
 # Video capture
 
-Part of the [video activity](WORKFLOW.md). Run from the video project directory in the promotion workspace. Capture signed-out, public pages only.
+Part of the product video procedure. Run from the video project directory. Capture signed-out, public pages only.
 
 ## Brand and pages
 
@@ -20,4 +20,4 @@ Copy the chosen screens into `capture/assets/` and describe each in `capture/ext
 
 Tight crops of a single section at 2× (a search box, one result card, a pricing tier) work better for zoom and highlight shots than full-page screenshots. Take them with Playwright at the same viewport width as the page capture so coordinates stay comparable, and add them to the inventory.
 
-Playwright from any existing local install is enough; do not add it to promotion-agent.
+Playwright from any existing local install is enough; do not add it as a project dependency.

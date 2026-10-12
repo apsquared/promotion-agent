@@ -111,3 +111,27 @@ test('video task survives preparation, draft render evidence and review handoff 
   assert.ok(handoff.text.includes(sheet));
   assert.equal(readFileSync(taskFile, 'utf8'), markdown);
 });
+
+test('standalone product-video skill is self-contained and its references match the activity', t => {
+  const skill = 'skills/product-video';
+  const text = readFileSync(join(skill, 'SKILL.md'), 'utf8');
+  assert.match(text, /^---\nname: product-video\ndescription: .+\nlicense: MIT\n---\n/);
+  const activityRefs = readdirSync(activityDir).filter(n => n !== 'WORKFLOW.md').sort();
+  assert.deepEqual(readdirSync(join(skill, 'references')).sort(), activityRefs);
+  for (const name of activityRefs)
+    assert.equal(readFileSync(join(skill, 'references', name), 'utf8'), readFileSync(join(activityDir, name), 'utf8'), `${name} drifted from the activity`);
+  // Copied anywhere on its own, every link still resolves inside the folder.
+  const root = mkdtempSync(join(tmpdir(), 'product-video-skill-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const copy = join(root, 'product-video');
+  cpSync(skill, copy, { recursive: true });
+  const files = ['SKILL.md', ...activityRefs.map(n => `references/${n}`)];
+  const linked = new Set();
+  for (const file of files) for (const link of links(join(copy, file))) {
+    assert.ok(link.startsWith(copy + '/'), `${file} links outside the skill: ${link}`);
+    assert.ok(existsSync(link), `Missing linked resource: ${link}`);
+    linked.add(link);
+  }
+  for (const name of activityRefs) assert.ok(linked.has(join(copy, 'references', name)), `${name} is not linked from the skill`);
+  for (const file of files) assert.doesNotMatch(readFileSync(join(copy, file), 'utf8'), /\.promotion-agent|templates\/|marketing\/logs|\/Users\//);
+});

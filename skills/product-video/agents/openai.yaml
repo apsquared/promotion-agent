@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Video"
+  short_description: "Make a short product tour or promo video as a reviewable draft"
+  default_prompt: "Use $product-video to turn my product's website into a 30-second promo video. Ask what's missing, show me the script before building it, and render a draft."
