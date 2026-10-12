@@ -14,7 +14,8 @@ import {
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
-import { reviewData } from '../src/review/data.ts';
+import { reviewBoard, reviewData } from '../src/review/data.ts';
+import { observerSource } from '../src/onboarding/workspace.ts';
 import { completionReport, reviewPrompt } from '../src/review/prompts.js';
 import {
   recordTaskEvidence,
@@ -221,23 +222,29 @@ test('Next route requires a session token, rejects cross-origin requests, and ac
   );
   assert.equal(response.status, 200);
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal((await response.json()).project.root, realpathSync(f.project));
+  assert.equal((await response.json()).projects[0].project.root, realpathSync(f.project));
   delete process.env.PROMOTION_REVIEW_TOKEN;
   assert.equal(GET(request({ authorization: 'Bearer test-session-token' })).status, 401);
 });
 test('the desk marks a task skipped, resumes it, and marks it complete with a recorded result', (t) => {
   const f = fixture(t);
   const revision = () => reviewData(f.project, f.database).revision;
+  const projectId = inspectProject(f.project).project.id;
   const act = (action, taskId, note) =>
-    applyReviewAction(f.project, f.database, parseReviewAction({ action, taskId, revision: revision(), note }));
+    applyReviewAction(f.project, f.database, parseReviewAction({ action, projectId, taskId, revision: revision(), note }));
   assert.throws(
-    () => applyReviewAction(f.project, undefined, { action: 'skip', taskId: 'T-001', revision: revision() }),
+    () => applyReviewAction(f.project, undefined, { action: 'skip', projectId, taskId: 'T-001', revision: revision() }),
     /needs a registry/,
   );
-  assert.throws(() => parseReviewAction({ action: 'delete', taskId: 'T-001', revision: 'x' }), /Unknown action/);
+  assert.throws(() => parseReviewAction({ action: 'delete', projectId, taskId: 'T-001', revision: 'x' }), /Unknown action/);
+  assert.throws(() => parseReviewAction({ action: 'skip', taskId: 'T-001', revision: 'x' }), /Project, task and revision/);
   assert.throws(
-    () => applyReviewAction(f.project, f.database, { action: 'complete', taskId: 'T-001', revision: 'a'.repeat(64) }),
+    () => applyReviewAction(f.project, f.database, { action: 'complete', projectId, taskId: 'T-001', revision: 'a'.repeat(64) }),
     /Task file changed/,
+  );
+  assert.throws(
+    () => applyReviewAction(f.project, f.database, { action: 'skip', projectId: randomUUID(), taskId: 'T-001', revision: revision() }),
+    /Project changed/,
   );
   act('skip', 'T-002');
   assert.equal(reviewData(f.project, f.database).tasks[1].disposition.reason, 'Skipped in the review desk.');
@@ -287,7 +294,7 @@ test('the action route requires the session token and JSON, and returns the fres
         body: JSON.stringify(body),
       }),
     );
-  const body = { action: 'skip', taskId: 'T-001', revision, note: 'Not a fit' };
+  const body = { action: 'skip', projectId: inspectProject(f.project).project.id, taskId: 'T-001', revision, note: 'Not a fit' };
   assert.equal((await post({}, body)).status, 401);
   assert.equal(
     (await post({ authorization: 'Bearer test-session-token', origin: 'https://outside.example' }, body)).status,
@@ -300,8 +307,117 @@ test('the action route requires the session token and JSON, and returns the fres
   assert.equal(existsSync(f.database), false);
   const response = await post({ authorization: 'Bearer test-session-token' }, body);
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).tasks[0].disposition.reason, 'Not a fit');
+  assert.equal((await response.json()).projects[0].tasks[0].disposition.reason, 'Not a fit');
+  const other = await post({ authorization: 'Bearer test-session-token' }, { ...body, projectId: randomUUID() });
+  assert.equal(other.status, 409);
+  assert.match((await other.json()).error, /not on this review board/);
   const stale = await post({ authorization: 'Bearer test-session-token' }, { ...body, revision: 'b'.repeat(64) });
   assert.equal(stale.status, 409);
   assert.match((await stale.json()).error, /Task file changed/);
+});
+
+/** A second observer workspace with its own stable ID and name, registered alongside the fixture. */
+function portfolio(t) {
+  const f = fixture(t);
+  const second = join(f.dir, 'second');
+  cpSync(f.project, second, { recursive: true });
+  const config = JSON.parse(readFileSync(join(second, 'promotion-agent.json'), 'utf8'));
+  writeFileSync(
+    join(second, 'promotion-agent.json'),
+    JSON.stringify({ ...config, id: randomUUID(), displayName: 'Another Product' }),
+  );
+  const observed = join(f.dir, 'observed');
+  mkdirSync(observed);
+  for (const workspace of [f.project, second])
+    writeFileSync(join(workspace, 'promotion-source.json'), JSON.stringify(observerSource(workspace, observed)));
+  const store = new Store(f.database);
+  for (const workspace of [f.project, second]) {
+    const { project } = inspectProject(workspace);
+    store.registerProject(project, {
+      schemaVersion: 1,
+      projectId: project.id,
+      checkoutPath: workspace,
+      preferredAgent: null,
+      credentialReferences: [],
+    });
+  }
+  // A legacy product-local registration (no promotion-source.json) is never read.
+  const legacy = join(f.dir, 'legacy');
+  cpSync(new URL('../examples/example-desk/', import.meta.url), legacy, { recursive: true });
+  const legacyProject = { ...inspectProject(legacy).project, id: randomUUID(), displayName: 'Legacy' };
+  store.registerProject(legacyProject, {
+    schemaVersion: 1,
+    projectId: legacyProject.id,
+    checkoutPath: legacy,
+    preferredAgent: null,
+    credentialReferences: [],
+  });
+  store.close();
+  return { ...f, second, legacy };
+}
+test('one board covers every registered workspace, or an explicit list, without reading product checkouts', (t) => {
+  const f = portfolio(t);
+  const before = readFileSync(f.database);
+  const board = reviewBoard([], f.database);
+  assert.deepEqual(
+    board.projects.map((p) => p.project.displayName),
+    ['Another Product', 'Example Desk'],
+  );
+  assert.deepEqual(board.unavailable, [{ name: 'Legacy', error: 'Not a promotion workspace or not found; skipped.' }]);
+  assert.ok(board.projects.every((p) => p.registry.status === 'registered' && p.tasks.length === 4));
+  assert.deepEqual(readFileSync(f.database), before);
+  // Dispositions stay with their own project.
+  const second = board.projects[0];
+  setSelectedTaskDisposition(f.second, 'T-001', second.revision, f.database, 'skipped', 'Not now', null);
+  const after = reviewBoard([], f.database);
+  assert.equal(after.projects[0].tasks[0].disposition.state, 'skipped');
+  assert.equal(after.projects[1].tasks[0].disposition, null);
+  // An explicit list shows only those workspaces; a broken or duplicate one never hides the others.
+  const explicit = reviewBoard([f.project, f.project, join(f.dir, 'missing')]);
+  assert.deepEqual(explicit.projects.map((p) => p.project.displayName), ['Example Desk']);
+  assert.match(explicit.unavailable.map((entry) => entry.error).join(' '), /Duplicate project ID/);
+  assert.equal(explicit.unavailable.length, 2);
+  assert.throws(() => reviewBoard([]), /No projects configured/);
+  assert.deepEqual(reviewBoard([], join(f.dir, 'absent.sqlite')).projects, []);
+  assert.equal(existsSync(join(f.dir, 'absent.sqlite')), false);
+});
+test('the route serves the whole registry and routes actions by project ID', async (t) => {
+  const f = portfolio(t);
+  const keys = [
+    'PROMOTION_REVIEW_PROJECT',
+    'PROMOTION_REVIEW_PROJECTS',
+    'PROMOTION_REVIEW_DATABASE',
+    'PROMOTION_REVIEW_TOKEN',
+    'PROMOTION_REVIEW_ORIGIN',
+  ];
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  t.after(() => {
+    for (const key of keys)
+      saved[key] === undefined ? delete process.env[key] : (process.env[key] = saved[key]);
+  });
+  Object.assign(process.env, {
+    PROMOTION_REVIEW_PROJECT: '',
+    PROMOTION_REVIEW_PROJECTS: '[]',
+    PROMOTION_REVIEW_DATABASE: f.database,
+    PROMOTION_REVIEW_TOKEN: 'test-session-token',
+    PROMOTION_REVIEW_ORIGIN: 'http://127.0.0.1:4317',
+  });
+  const auth = { host: '127.0.0.1:4317', authorization: 'Bearer test-session-token' };
+  const board = await GET(new Request('http://127.0.0.1:4317/api/review', { headers: auth })).json();
+  assert.equal(board.projects.length, 2);
+  const target = board.projects.find((p) => p.project.displayName === 'Another Product');
+  const response = await POST(
+    new Request('http://127.0.0.1:4317/api/review', {
+      method: 'POST',
+      headers: { ...auth, 'content-type': 'application/json' },
+      body: JSON.stringify({ action: 'complete', projectId: target.project.id, taskId: 'T-002', revision: target.revision, note: 'Replied' }),
+    }),
+  );
+  assert.equal(response.status, 200);
+  assert.match(readFileSync(join(f.second, 'marketing/TASKS.md'), 'utf8'), /- \[x\] T-002/);
+  assert.match(readFileSync(f.file, 'utf8'), /- \[ \] T-002/);
+  const fresh = await response.json();
+  assert.equal(fresh.projects.find((p) => p.project.id === target.project.id).tasks[1].status, 'done');
+  process.env.PROMOTION_REVIEW_DATABASE = '';
+  assert.equal(GET(new Request('http://127.0.0.1:4317/api/review', { headers: auth })).status, 503);
 });

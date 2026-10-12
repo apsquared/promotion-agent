@@ -1,5 +1,17 @@
 # Continue here
 
+## One review desk for all projects — 2026-10-12
+
+User request: running the review desk should not mean a separate process and URL per project; one running desk should have a consolidated board and a per-project board.
+
+- `scripts/review.mjs` accepts repeated `--project`, or only `--database` to show every promotion workspace in the registry. The server rereads the registry on each refresh, so newly registered products appear without restarting. Registrations without `promotion-source.json` (legacy product-local checkouts) are listed as skipped and never read.
+- `src/review/data.ts` adds `reviewBoard` (per-workspace `reviewData`, sorted by name; an unreadable or duplicate-ID workspace is reported without hiding the others) and `configuredDirectories` (`PROMOTION_REVIEW_PROJECTS` JSON array, falling back to `PROMOTION_REVIEW_PROJECT`).
+- `/api/review` returns `{ projects, unavailable, refreshedAt }`. POST requires a `projectId` that must be on the board; `applyReviewAction` also refuses a project ID that does not match the workspace. Paths still never come from the browser.
+- The page has **All projects** plus one button per product (open-task counts). All projects merges tasks with a product chip, ordered by priority with parked tasks last; a product board is `?project=<id>`, survives reload and works with back/forward. One workspace shows its board directly.
+- WORKFLOW v0.11: agents run one desk (registry-only launch when a registry exists) and point to a desk already running in the session instead of starting another. README, REVIEW-UI, ARCHITECTURE, PLAN and the manual smoke test updated.
+
+Validation: `npm run check` passed both typechecks, build and 77/77 tests (two new: registry discovery with a skipped legacy registration, isolated dispositions, explicit lists with duplicate/missing workspaces, no database creation; the route serving the whole registry and completing a task in the second workspace only, with unknown project IDs refused). `npm run review:build` passed. Browser-checked a dev server in registry mode against two scratch workspaces: consolidated board with product chips and per-project warnings, switching to a product board (URL `?project=<id>`), skipping a task there and reloading, the other product's same-ID task untouched, and no horizontal overflow at 375px. Not exercised: an agent launching the desk from conversation, clipboard copy in this change. No commit, push or external action.
+
 ## Standalone skills collection — 2026-10-11
 
 Created `skills/readme.md` and `skills/mcp-ify/` from the user-supplied brief. The 59-line SKILL.md routes to design/access boundaries, authentication/connection UX, conditional spending controls, verification/activation, and four fictional adaptation scenarios. Generated `agents/openai.yaml` with Skill Creator. The collection is self-contained, has no promotion-agent runtime dependency, and is not installed by portable onboarding. README installation now leads with the documented skills.sh CLI (`npx skills add apsquared/promotion-agent --skill mcp-ify`), optional agent/global flags, and a local-checkout command until the skill is pushed. Manual copying remains a short fallback. Root README links the catalog.

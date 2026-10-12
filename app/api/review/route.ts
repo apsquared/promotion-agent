@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { reviewData } from '../../../src/review/data.ts';
+import { configuredDirectories, reviewBoard } from '../../../src/review/data.ts';
 import { applyReviewAction, parseReviewAction } from '../../../src/review/actions.ts';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,22 +31,23 @@ function guard(request: Request) {
       { status: 401, headers },
     );
   }
-  if (!process.env.PROMOTION_REVIEW_PROJECT)
-    return Response.json(
-      { error: 'No project configured for this review server.' },
-      { status: 503, headers },
-    );
-  return null;
+  try {
+    if (configuredDirectories().length || database()) return null;
+  } catch {}
+  return Response.json(
+    { error: 'No projects configured for this review server.' },
+    { status: 503, headers },
+  );
 }
+const database = () => process.env.PROMOTION_REVIEW_DATABASE || undefined;
+/** Every configured workspace; individual unreadable workspaces are reported inside the board. */
+const board = () => reviewBoard(configuredDirectories(), database());
 function read() {
   try {
-    return Response.json(
-      reviewData(process.env.PROMOTION_REVIEW_PROJECT!, process.env.PROMOTION_REVIEW_DATABASE),
-      { headers },
-    );
+    return Response.json(board(), { headers });
   } catch {
     return Response.json(
-      { error: 'Project could not be read. Restore its configuration and files, then refresh.' },
+      { error: 'Projects could not be read. Restore their configuration and files, then refresh.' },
       { status: 409, headers },
     );
   }
@@ -54,7 +55,7 @@ function read() {
 export function GET(request: Request) {
   return guard(request) ?? read();
 }
-/** Mark the selected task complete, skipped, or back to active, then return the fresh read model. */
+/** Mark a task complete, skipped, or back to active, then return the fresh board. The project is chosen by stable ID, never by path. */
 export async function POST(request: Request) {
   const denied = guard(request);
   if (denied) return denied;
@@ -63,11 +64,10 @@ export async function POST(request: Request) {
   try {
     const body = await request.text();
     if (Buffer.byteLength(body) > maxBody) throw new Error('Request too large');
-    applyReviewAction(
-      process.env.PROMOTION_REVIEW_PROJECT!,
-      process.env.PROMOTION_REVIEW_DATABASE || undefined,
-      parseReviewAction(JSON.parse(body)),
-    );
+    const action = parseReviewAction(JSON.parse(body));
+    const project = board().projects.find((entry) => entry.project.id === action.projectId);
+    if (!project) throw new Error('Project is not on this review board');
+    applyReviewAction(project.project.root, database(), action);
   } catch (error) {
     return Response.json({ error: (error as Error).message }, { status: 409, headers });
   }

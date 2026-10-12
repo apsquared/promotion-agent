@@ -91,10 +91,10 @@ Existing marketing files in a product repo can be read as source material. Earli
 From a chat in this promotion-agent checkout, ask:
 
 ```text
-Open the review desk for my promotion workspace at /absolute/path/to/workspace.
+Open the review desk.
 ```
 
-The local web app lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
+One local web app covers all your products: a consolidated **All projects** board and a board per product, switched at the top of the page. It lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
 
 ## Reusable AI skills
 

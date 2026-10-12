@@ -71,7 +71,7 @@ function readDrafts(root: string, projectId: string, warnings: string[]) {
   return drafts.sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
 }
 
-/** Read a single selected project. Never reconcile, migrate, or discover other checkouts. */
+/** Read one workspace. Never reconcile, migrate, or discover other checkouts. */
 export function reviewData(directory: string, database?: string) {
   const { root, sourceRoot, project, snapshot } = inspectProject(directory);
   const warnings: string[] = [];
@@ -115,4 +115,74 @@ export function reviewData(directory: string, database?: string) {
     tasks,
     registry,
   };
+}
+
+export type ReviewProject = ReturnType<typeof reviewData>;
+
+/** Observer workspaces registered in the portfolio registry, read-only. Never migrates or follows product checkouts. */
+function registeredWorkspaces(database: string, unavailable: { name: string; error: string }[]) {
+  const db = new DatabaseSync(resolve(database), { readOnly: true });
+  try {
+    db.exec('PRAGMA query_only = ON; PRAGMA busy_timeout = 1000');
+    if (db.prepare('PRAGMA user_version').get()!.user_version !== DATABASE_VERSION)
+      throw new Error('Unsupported database version');
+    const workspaces: string[] = [];
+    for (const row of db.prepare('SELECT project_json, checkout_path FROM projects ORDER BY checkout_path').all()) {
+      const path = String(row.checkout_path);
+      // Only separate promotion workspaces; a legacy product-local registration is a product repo and stays unread.
+      if (existsSync(join(/* turbopackIgnore: true */ path, 'promotion-source.json'))) workspaces.push(path);
+      else {
+        let name = path;
+        try {
+          name = JSON.parse(String(row.project_json)).displayName ?? path;
+        } catch {}
+        unavailable.push({ name, error: 'Not a promotion workspace or not found; skipped.' });
+      }
+    }
+    return workspaces;
+  } finally {
+    db.close();
+  }
+}
+
+/**
+ * Every configured workspace on one board: the explicit `directories`, or with none, each observer
+ * workspace registered in `database`. One unreadable workspace never hides the others.
+ */
+export function reviewBoard(directories: string[], database?: string) {
+  const unavailable: { name: string; error: string }[] = [];
+  let workspaces = directories;
+  if (!directories.length) {
+    if (!database) throw new Error('No projects configured');
+    try {
+      workspaces = existsSync(database) ? registeredWorkspaces(database, unavailable) : [];
+    } catch (error) {
+      unavailable.push({ name: 'Registry', error: (error as Error).message });
+      workspaces = [];
+    }
+  }
+  const projects: ReviewProject[] = [];
+  for (const directory of workspaces) {
+    try {
+      const data = reviewData(directory, database);
+      if (projects.some((other) => other.project.id === data.project.id))
+        throw new Error(`Duplicate project ID ${data.project.id}; only the first copy is shown`);
+      projects.push(data);
+    } catch (error) {
+      unavailable.push({ name: directory, error: (error as Error).message });
+    }
+  }
+  projects.sort((a, b) => a.project.displayName.localeCompare(b.project.displayName));
+  return { projects, unavailable, refreshedAt: new Date().toISOString() };
+}
+
+/** Configured project directories for a review server; empty means every workspace in the registry. */
+export function configuredDirectories(env: NodeJS.ProcessEnv = process.env): string[] {
+  if (env.PROMOTION_REVIEW_PROJECTS) {
+    const list = JSON.parse(env.PROMOTION_REVIEW_PROJECTS);
+    if (!Array.isArray(list) || list.some((entry) => typeof entry !== 'string'))
+      throw new Error('PROMOTION_REVIEW_PROJECTS must be a JSON array of paths');
+    return list;
+  }
+  return env.PROMOTION_REVIEW_PROJECT ? [env.PROMOTION_REVIEW_PROJECT] : [];
 }
