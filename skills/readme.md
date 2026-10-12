@@ -9,8 +9,11 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 | Skill | Purpose | Example request |
 | --- | --- | --- |
 | [mcp-ify](mcp-ify/SKILL.md) | Design, implement, or review customer MCP tools for an existing SaaS, including permissions, applicable spending controls, connection UX, and verification. | `Use $mcp-ify to add customer MCP access to this SaaS. Inspect the repo and suggest the first useful workflows.` |
+| [product-video](product-video/SKILL.md) | Make a short product tour, launch promo or feature clip from a product's public site, with HyperFrames or a Playwright + ffmpeg fallback, as a reviewable draft MP4. | `Use $product-video to turn https://example.com into a 30-second promo for X.` |
 
 `mcp-ify` adapts to the project's stack and account model. It includes examples for read-only analytics, paid unlocks, collaboration writes, and existing MCP servers. It does not itself supply an MCP server or deploy one merely by being installed.
+
+`product-video` runs HyperFrames on demand through `npx` and adds no dependency to your project. It asks before signing in, using paid credits or installing HyperFrames' agent skills globally, shows you the script before building, and never publishes, commits or deploys. It is the standalone version of promotion-agent's `video` activity; its `references/` are kept identical to that activity's.
 
 ## Install
 
@@ -20,6 +23,8 @@ With Node.js and npm installed, run this from the project where you want to use 
 npx skills add apsquared/promotion-agent --skill mcp-ify
 ```
 
+Use the same command with `--skill product-video` for the video skill.
+
 The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets you choose your agent and installation options. Add `--agent codex` to target Codex, or `--global` to make the skill available across your projects.
 
 **Availability:** the GitHub command requires the skill to be pushed to the repository. Until then, install from this checkout instead:
@@ -27,6 +32,8 @@ The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets 
 ```sh
 npx skills add ./skills/mcp-ify --agent codex --global
 ```
+
+or `./skills/product-video` for the video skill.
 
 Run the local command from the promotion-agent repository root. It installs this local skill for your personal Codex use.
 
@@ -38,13 +45,15 @@ Open your SaaS project in your agent and ask:
 Use $mcp-ify to add customer MCP access to this SaaS.
 ```
 
-You can also ask for a plan only or a review of an existing MCP server. Use your host's skill selector if it uses a different invocation syntax. If Codex does not show the installed skill, restart it.
+For a video, open any folder in your agent and ask `Use $product-video to make a 30-second promo of https://example.com.`
+
+For `mcp-ify` you can also ask for a plan only or a review of an existing MCP server. Use your host's skill selector if it uses a different invocation syntax. If Codex does not show the installed skill, restart it.
 
 ## Manual installation
 
-Prefer copying files? Copy the whole `mcp-ify` folder, including `references/` and `agents/`, into your project's `.agents/skills/` or your personal `~/.agents/skills/` directory for Codex. Other hosts have their own skill locations. Preserve local customizations when replacing an existing copy.
+Prefer copying files? Copy the whole skill folder (for example `mcp-ify` or `product-video`), including `references/` and `agents/`, into your project's `.agents/skills/` or your personal `~/.agents/skills/` directory for Codex. Other hosts have their own skill locations. Preserve local customizations when replacing an existing copy.
 
-To remove a manual installation, remove only its installed `mcp-ify` folder. This does not undo product changes made while using the skill.
+To remove a manual installation, remove only that installed skill folder. This does not undo product changes made while using the skill.
 
 ## Add a skill
 

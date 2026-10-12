@@ -1,6 +1,6 @@
 # Video audio
 
-Part of the [video activity](WORKFLOW.md). Generate voice only after the user has approved `SCRIPT.md`. Confirm before any step that would use paid credits.
+Part of the product video procedure. Generate voice only after the user has approved `SCRIPT.md`. Confirm before any step that would use paid credits.
 
 ## Generate
 

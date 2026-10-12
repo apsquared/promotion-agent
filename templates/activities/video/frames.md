@@ -1,6 +1,6 @@
 # Video frames
 
-Part of the [video activity](WORKFLOW.md). HyperFrames' composition contract (`hyperframes-core`) and the `product-launch-video` skill own how frames are written; this page records the limits and pitfalls met in practice.
+Part of the product video procedure. HyperFrames' composition contract (`hyperframes-core`) and the `product-launch-video` skill own how frames are written; this page records the limits and pitfalls met in practice.
 
 ## Packets
 
@@ -8,7 +8,7 @@ The skill's `frame-packets.mjs` builds one packet per frame and rejects any pack
 
 ## Who builds the frames
 
-Frames may be built by per-frame sub-agents or by the orchestrating agent from the packets. promotion-agent's rule is no sub-agents without a concrete need, so build them yourself by default. Never launch another AI CLI to do it.
+Frames may be built by per-frame sub-agents or by the orchestrating agent from the packets. Build them yourself by default; use sub-agents only for a concrete need and within the host's permissions. Never launch another AI CLI to do it.
 
 ## Contract pitfalls
 
