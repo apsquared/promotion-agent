@@ -1,6 +1,6 @@
 import { inspectProject, completeSelectedTask, readSelectedTaskState, recordTaskEvidence, setSelectedTaskDisposition } from '../interactive/tasks.ts';
 
-export type ReviewAction = { action: 'complete' | 'skip' | 'resume'; taskId: string; revision: string; note?: string };
+export type ReviewAction = { action: 'complete' | 'skip' | 'resume'; projectId: string; taskId: string; revision: string; note?: string };
 
 const maxNote = 2000;
 
@@ -8,9 +8,10 @@ const maxNote = 2000;
 export function parseReviewAction(body: unknown): ReviewAction {
   const input = (body ?? {}) as Record<string, unknown>;
   if (!['complete', 'skip', 'resume'].includes(input.action as string)) throw new Error('Unknown action');
-  if (typeof input.taskId !== 'string' || typeof input.revision !== 'string') throw new Error('Task and revision are required');
+  if (typeof input.projectId !== 'string' || typeof input.taskId !== 'string' || typeof input.revision !== 'string')
+    throw new Error('Project, task and revision are required');
   if (input.note !== undefined && (typeof input.note !== 'string' || input.note.length > maxNote)) throw new Error('Note is too long');
-  return { action: input.action as ReviewAction['action'], taskId: input.taskId, revision: input.revision, note: (input.note as string | undefined)?.trim() };
+  return { action: input.action as ReviewAction['action'], projectId: input.projectId, taskId: input.taskId, revision: input.revision, note: (input.note as string | undefined)?.trim() };
 }
 
 /**
@@ -20,6 +21,7 @@ export function parseReviewAction(body: unknown): ReviewAction {
 export function applyReviewAction(directory: string, database: string | undefined, input: ReviewAction) {
   if (!database) throw new Error('Marking tasks needs a registry. Relaunch the review desk with --database.');
   const { taskId, revision, note } = input;
+  if (inspectProject(directory).project.id !== input.projectId) throw new Error('Project changed; refresh the board');
   if (input.action === 'resume') return setSelectedTaskDisposition(directory, taskId, revision, database, 'active', null, null);
   if (input.action === 'skip')
     return setSelectedTaskDisposition(directory, taskId, revision, database, 'skipped', note || 'Skipped in the review desk.', null);

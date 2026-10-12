@@ -118,6 +118,23 @@ aside {
   font-weight: normal;
   margin-left: 4px;
 }
+.projects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.projects button[aria-pressed='true'] {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+  font-weight: bold;
+}
+.projects span {
+  opacity: 0.75;
+  font-weight: normal;
+  margin-left: 4px;
+}
 .task {
   display: block;
   text-align: left;
@@ -159,6 +176,11 @@ aside {
 .chip.product {
   background: var(--pale-blue);
   color: var(--blue);
+}
+.chip.project {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
 }
 .chip.muted {
   background: #eee;

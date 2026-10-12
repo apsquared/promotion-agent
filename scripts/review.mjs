@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 
 const help =
-  'Local Next.js review: npm run review -- --project <directory> [--database <local.sqlite>] [--port <4317>] [--production]';
+  'Local Next.js review desk for one or more promotion workspaces:\n' +
+  '  npm run review -- --database <registry.sqlite> [--port <4317>] [--production]   every workspace in the registry\n' +
+  '  npm run review -- --project <directory> [--project <directory> ...] [--database <registry.sqlite>] [--port <4317>] [--production]';
 try {
   const args = process.argv.slice(2);
   if (args.includes('--help')) {
@@ -14,6 +16,7 @@ try {
     process.exit(0);
   }
   const options = {};
+  const projects = [];
   for (let i = 0; i < args.length; i++) {
     const key = args[i];
     if (Object.hasOwn(options, key)) throw new Error('Duplicate option');
@@ -27,13 +30,18 @@ try {
       args[i + 1].startsWith('--')
     )
       throw new Error(help);
-    options[key] = args[++i];
+    if (key === '--project') projects.push(args[++i]);
+    else options[key] = args[++i];
   }
-  if (!options['--project']) throw new Error(help);
-  const project = realpathSync(options['--project']);
-  if (!existsSync(resolve(project, 'promotion-agent.json')))
-    throw new Error('Select a configured promotion workspace with promotion-agent.json');
-  if (!existsSync(resolve(project, 'promotion-source.json'))) throw new Error('Select a registered observer workspace');
+  // Without --project the server shows every workspace registered in the registry, rereading it on each refresh.
+  if (!projects.length && !options['--database']) throw new Error(help);
+  const workspaces = [...new Set(projects.map((project) => realpathSync(project)))];
+  for (const project of workspaces) {
+    if (!existsSync(resolve(project, 'promotion-agent.json')))
+      throw new Error(`Select a configured promotion workspace with promotion-agent.json: ${project}`);
+    if (!existsSync(resolve(project, 'promotion-source.json')))
+      throw new Error(`Select a registered observer workspace: ${project}`);
+  }
   const port = Number(options['--port'] ?? 4317);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port');
   const origin = `http://127.0.0.1:${port}`;
@@ -55,7 +63,8 @@ try {
       env: {
         ...process.env,
         NEXT_TELEMETRY_DISABLED: '1',
-        PROMOTION_REVIEW_PROJECT: project,
+        PROMOTION_REVIEW_PROJECTS: JSON.stringify(workspaces),
+        PROMOTION_REVIEW_PROJECT: '',
         PROMOTION_REVIEW_DATABASE: options['--database'] ? resolve(options['--database']) : '',
         PROMOTION_REVIEW_TOKEN: token,
         PROMOTION_REVIEW_ORIGIN: origin,
@@ -63,7 +72,9 @@ try {
     },
   );
   console.log(
-    `\nOpen your private review session: ${origin}/#${token}\nStop with Ctrl+C. Tasks and drafts remain in the promotion workspace. The observed repository is read only.\n`,
+    `\nOpen your private review session: ${origin}/#${token}\n${
+      workspaces.length ? `Projects: ${workspaces.length} selected.` : 'Projects: every workspace in the registry.'
+    } Switch between the consolidated board and each project's board at the top of the page.\nStop with Ctrl+C. Tasks and drafts remain in the promotion workspaces. Observed repositories are read only.\n`,
   );
   child.on('error', (error) => {
     console.error(error.message);

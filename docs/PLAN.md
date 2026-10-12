@@ -120,6 +120,10 @@ User request: tasks know they can create follow-up tasks so the agent is always 
 
 User request: manually mark a task complete or skipped in the review desk. Adds a session-token POST route that reuses the hash-checked record/complete/disposition helpers (needs `--database`). Supersedes the "no browser mutation API" line above for these three actions only. See HANDOFF for validation.
 
+## One review desk for all projects — 2026-10-12 (implemented)
+
+User request: one running review desk (one URL) with a consolidated board and a per-project board, instead of a separate run and URL per project. The launcher takes repeated `--project` or, with only `--database`, every registered promotion workspace. Actions carry a project ID. WORKFLOW v0.11 tells agents to run one desk. See HANDOFF for validation.
+
 ## P12 — product video activity (implemented; live render acceptance not exercised in this change)
 
 User request, 2026-10-10. Depends on P09's activity/entrypoint pattern, P06 evidence helpers and the review desk. Add activity `video` for short product videos (tours, promos, feature clips): HyperFrames through `npx` when available, a Playwright + ffmpeg slideshow otherwise. One canonical procedure at templates/activities/video/WORKFLOW.md, with capture, audio, frames and fallback references distilled from the 2026-10-10 BuyerCue site-tour run. Thin `promotion-video` Codex skill and `/promote-video` Claude Code/OpenCode commands in source and installed workspaces. WORKFLOW v0.10 routes "Make a video" requests and adds the budget row (one video, or one cut plus its aspect variants; output: approved script, MP4, contact sheet, evidence). Boundaries: project in the workspace under marketing/assets/videos/, product repo read only, no publishing, script approval before voice, signed-out captures, no sign-in/API keys/paid credits/global installs for the user, no new npm dependency.

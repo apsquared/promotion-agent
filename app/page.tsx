@@ -1,10 +1,19 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { reviewData } from '../src/review/data.ts';
+import type { ReviewProject, reviewBoard } from '../src/review/data.ts';
 import { completionReport, reviewPrompt, promptTarget, targets } from '../src/review/prompts.js';
 
-type Data = ReturnType<typeof reviewData>;
-type Task = Data['tasks'][number];
+type Board = ReturnType<typeof reviewBoard>;
+type Task = ReviewProject['tasks'][number] & { project: ReviewProject; key: string };
+const all = 'all';
+const priorityRank = (priority: string) => {
+  const rank = /^P(\d+)$/i.exec(priority.trim());
+  return rank ? Number(rank[1]) : 99;
+};
+/** The board in the URL (`?project=<id>`), so a per-project view survives a reload. */
+function scopeFromUrl() {
+  return new URLSearchParams(window.location.search).get('project') || all;
+}
 
 function parked(task: Task) {
   return task.disposition && task.disposition.state !== 'active' ? task.disposition.state : null;
@@ -50,7 +59,8 @@ function SafeLink({ value }: { value: string }) {
   }
 }
 export default function ReviewPage() {
-  const [data, setData] = useState<Data | null>(null);
+  const [data, setData] = useState<Board | null>(null);
+  const [scope, setScope] = useState(all);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState<'todo' | 'done'>('todo');
@@ -63,7 +73,7 @@ export default function ReviewPage() {
     const fragment = window.location.hash.slice(1);
     if (/^[a-f0-9]{64}$/.test(fragment)) {
       sessionStorage.setItem('promotion-review-token', fragment);
-      window.history.replaceState(null, '', window.location.pathname);
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
     }
     const token = sessionStorage.getItem('promotion-review-token') ?? '';
     return fetch('/api/review', {
@@ -88,22 +98,48 @@ export default function ReviewPage() {
     }
   }, []);
   useEffect(() => {
+    setScope(scopeFromUrl());
+    const back = () => setScope(scopeFromUrl());
+    window.addEventListener('popstate', back);
     void refresh();
+    return () => window.removeEventListener('popstate', back);
   }, [refresh]);
+  const projects = useMemo(() => data?.projects ?? [], [data]);
+  // One project needs no consolidated view; an unknown ?project= falls back to all projects.
+  const current =
+    projects.length === 1 ? projects[0] : (projects.find((p) => p.project.id === scope) ?? null);
+  const counts = (list: ReviewProject[]) =>
+    list.reduce((sum, p) => sum + p.tasks.filter((t) => t.status !== 'done').length, 0);
   const lists = useMemo(() => {
-    const all = data?.tasks ?? [];
-    const todo = all.filter((t) => t.status !== 'done');
-    // Active work first; skipped/snoozed sink to the bottom.
-    todo.sort((a, b) => Number(!!parked(a)) - Number(!!parked(b)));
-    return { todo, done: all.filter((t) => t.status === 'done') };
-  }, [data]);
+    const shown = current ? [current] : projects;
+    const tasks: Task[] = shown.flatMap((project) =>
+      project.tasks.map((t) => ({ ...t, project, key: `${project.project.id}:${t.taskId}` })),
+    );
+    const todo = tasks.filter((t) => t.status !== 'done');
+    // Active work first; skipped/snoozed sink to the bottom. The consolidated board also ranks by priority.
+    todo.sort(
+      (a, b) =>
+        Number(!!parked(a)) - Number(!!parked(b)) ||
+        (current ? 0 : priorityRank(a.priority) - priorityRank(b.priority)),
+    );
+    return { todo, done: tasks.filter((t) => t.status === 'done') };
+  }, [projects, current]);
   const tasks = lists[view];
-  const task = tasks.find((t) => t.taskId === selected) ?? tasks[0];
-  const prompt = data && task && task.status !== 'done' ? reviewPrompt(data, task) : null;
-  const valid = data?.classification === 'valid';
-  const canMark = valid && !!data?.registry.path && data.registry.status !== 'unavailable';
+  const task = tasks.find((t) => t.key === selected) ?? tasks[0];
+  const prompt = task && task.status !== 'done' ? reviewPrompt(task.project, task) : null;
+  const valid = task?.project.classification === 'valid';
+  const canMark =
+    valid && !!task.project.registry.path && task.project.registry.status !== 'unavailable';
+  const switchTo = (next: string) => {
+    setScope(next);
+    setSelected('');
+    setCopied('');
+    setNote('');
+    const url = next === all ? window.location.pathname : `?project=${encodeURIComponent(next)}`;
+    window.history.pushState(null, '', url);
+  };
   const act = async (action: 'complete' | 'skip' | 'resume') => {
-    if (!data || !task) return;
+    if (!task) return;
     if (action === 'complete' && !window.confirm(`Mark ${task.taskId} complete? This checks its box in the task file.`))
       return;
     setActing(true);
@@ -112,14 +148,20 @@ export default function ReviewPage() {
       const response = await request({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, taskId: task.taskId, revision: data.revision, note }),
+        body: JSON.stringify({
+          action,
+          projectId: task.project.project.id,
+          taskId: task.taskId,
+          revision: task.project.revision,
+          note,
+        }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Unable to update the task');
       setData(result);
       setNote('');
       // Keep the task in view: skipped tasks sink in To do, completed ones move to Done.
-      setSelected(task.taskId);
+      setSelected(task.key);
       if (action === 'complete') setView('done');
     } catch (err) {
       setError(`${(err as Error).message}. Refresh and try again.`);
@@ -131,7 +173,7 @@ export default function ReviewPage() {
     if (!prompt || !task) return;
     try {
       await navigator.clipboard.writeText(prompt.text);
-      setCopied(task.taskId);
+      setCopied(task.key);
     } catch {
       const range = document.createRange();
       const node = document.getElementById('prompt');
@@ -140,12 +182,12 @@ export default function ReviewPage() {
         window.getSelection()?.removeAllRanges();
         window.getSelection()?.addRange(range);
       }
-      if (document.execCommand('copy')) setCopied(task.taskId);
+      if (document.execCommand('copy')) setCopied(task.key);
       else setError('Clipboard unavailable. The prompt is selected; copy it manually.');
     }
   };
-  const choose = (taskId: string) => {
-    setSelected(taskId);
+  const choose = (key: string) => {
+    setSelected(key);
     setCopied('');
     setNote('');
     if (window.matchMedia('(max-width: 800px)').matches)
@@ -157,29 +199,57 @@ export default function ReviewPage() {
         <div>
           <p className="eyebrow">Promotion tasks</p>
           <h1>
-            {data?.project.displayName ?? (loading ? 'Opening workspace…' : 'Not connected')}
+            {current?.project.displayName ??
+              (data ? 'All projects' : loading ? 'Opening workspaces…' : 'Not connected')}
           </h1>
         </div>
         <button onClick={refresh} disabled={loading}>
           {loading ? 'Refreshing…' : 'Refresh ↻'}
         </button>
       </header>
+      {projects.length > 1 && (
+        <nav className="projects" aria-label="Boards">
+          <button aria-pressed={!current} onClick={() => switchTo(all)}>
+            All projects <span>{counts(projects)}</span>
+          </button>
+          {projects.map((p) => (
+            <button
+              key={p.project.id}
+              aria-pressed={current === p}
+              onClick={() => switchTo(p.project.id)}
+            >
+              {p.project.displayName} <span>{counts([p])}</span>
+            </button>
+          ))}
+        </nav>
+      )}
       {error && (
         <p className="warning" role="alert">
           {error}
         </p>
       )}
-      {data?.warnings.map((warning, index) => (
-        <p className="warning" key={index}>
-          {warning}
-        </p>
+      {!current &&
+        data?.unavailable.map((entry, index) => (
+          <p className="warning" key={index}>
+            {entry.name}: {entry.error}
+          </p>
+        ))}
+      {(current ? [current] : projects).map((p) => (
+        <div key={p.project.id}>
+          {p.warnings.map((warning, index) => (
+            <p className="warning" key={index}>
+              {current ? '' : `${p.project.displayName}: `}
+              {warning}
+            </p>
+          ))}
+          {p.classification !== 'valid' && (
+            <p className="warning">
+              {p.project.displayName}: the task file is {p.classification}. Ask the promotion agent
+              to fix it before copying prompts.
+            </p>
+          )}
+        </div>
       ))}
-      {data && !valid && (
-        <p className="warning">
-          The task file is {data.classification}. Ask the promotion agent to fix it before copying
-          prompts.
-        </p>
-      )}
       <section className="board" aria-busy={loading}>
         <aside>
           <nav className="tabs" aria-label="Task lists">
@@ -194,12 +264,13 @@ export default function ReviewPage() {
             tasks.map((item) => (
               <button
                 className="task"
-                key={item.taskId}
-                aria-current={item.taskId === task?.taskId}
-                onClick={() => choose(item.taskId)}
+                key={item.key}
+                aria-current={item.key === task?.key}
+                onClick={() => choose(item.key)}
               >
                 <strong>{item.title}</strong>
                 <span className="meta">
+                  {!current && <span className="chip project">{item.project.project.displayName}</span>}
                   {item.taskId} · {item.priority} · {item.category}
                   {item.status !== 'done' && promptTarget(item) === 'product' && (
                     <span className="chip product">{targets.product.label}</span>
@@ -212,18 +283,21 @@ export default function ReviewPage() {
             <p className="empty">
               {loading
                 ? 'Loading tasks…'
-                : data
+                : data && projects.length
                   ? view === 'todo'
                     ? 'Nothing to do. Ask the promotion agent for new tasks.'
                     : 'No finished tasks yet.'
-                  : 'Open the private session link from your agent.'}
+                  : data
+                    ? 'No promotion workspaces found. Ask your agent to register a product.'
+                    : 'Open the private session link from your agent.'}
             </p>
           )}
         </aside>
         <article ref={detail} aria-label="Selected task">
-          {task && data ? (
+          {task ? (
             <>
               <p className="meta">
+                {!current && `${task.project.project.displayName} · `}
                 {task.taskId} · {task.priority} · {task.category} · filed {task.filedDate}
               </p>
               <h2>{task.title}</h2>
@@ -249,7 +323,7 @@ export default function ReviewPage() {
                       <p>{targets[prompt.target].where}</p>
                     </div>
                     <button className="primary" disabled={!valid || loading} onClick={copy}>
-                      {copied === task.taskId ? 'Copied ✓' : 'Copy prompt'}
+                      {copied === task.key ? 'Copied ✓' : 'Copy prompt'}
                     </button>
                   </div>
                   <pre id="prompt">{prompt.text}</pre>
