@@ -137,3 +137,7 @@ AI subprocess runners, model/auth management, background execution, autonomous s
 ## Verification
 
 Run `npm test` for code changes and record current results in docs/HANDOFF.md. Skill metadata checks and native syntax documentation do not establish native menu execution. Helpers run locally on Node 22.14+, use fictional tests, and do not need model credentials or external services.
+
+## Standalone AI skills collection — 2026-10-11 (implemented locally)
+
+User-requested `skills/` collection, independent of the promotion workflow and installer. First skill: `mcp-ify`, with concise Agent Skills metadata/instructions, Codex UI metadata, focused implementation references, and four adaptation examples. `skills/readme.md` documents the catalog, installation, updates, removal, and contributions; root README links it. No core/runtime changes or dependencies. Skill Creator validation and relocation/link/UI metadata checks passed; native invocation and actual SaaS implementation remain unverified. See HANDOFF.
