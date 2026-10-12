@@ -228,7 +228,8 @@ export default function ReviewPage() {
           {error}
         </p>
       )}
-      {!current &&
+      {/* Unreadable workspaces belong on the consolidated board, which a lone workspace's board stands in for. */}
+      {(!current || projects.length === 1) &&
         data?.unavailable.map((entry, index) => (
           <p className="warning" key={index}>
             {entry.name}: {entry.error}
