@@ -1,5 +1,9 @@
 # Continue here
 
+## Review desk: unreadable-workspace warnings with one project — 2026-10-12
+
+Follow-up to the one-desk change. Warnings for workspaces that could not be read (or registrations skipped as non-workspaces) were shown only on the All projects board. When just one workspace was readable, the desk shows that project's board directly, so those warnings never appeared. They now show whenever the board stands in for the consolidated view. Browser-checked in registry mode with one readable scratch workspace and one skipped: the warning appears above the lone board. `npm run check` passed.
+
 ## One review desk for all projects — 2026-10-12
 
 User request: running the review desk should not mean a separate process and URL per project; one running desk should have a consolidated board and a per-project board.
