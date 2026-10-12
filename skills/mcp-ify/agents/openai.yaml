@@ -1,0 +1,4 @@
+interface:
+  display_name: "MCP-ify"
+  short_description: "Turn SaaS workflows into customer MCP tools"
+  default_prompt: "Use $mcp-ify to inspect this SaaS and implement a useful customer MCP integration, resolving product and access decisions first."

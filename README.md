@@ -96,6 +96,10 @@ Open the review desk for my promotion workspace at /absolute/path/to/workspace.
 
 The local web app lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
 
+## Reusable AI skills
+
+The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS. The collection includes installation instructions and is separate from promotion-agent onboarding.
+
 ## Development and details
 
 ```sh
