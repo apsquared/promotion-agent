@@ -1,12 +1,14 @@
 # Local review desk
 
+This guide is for agent users. How the desk is built and tested is in the maintainer docs.
+
 The optional Next.js App Router app complements the conversational workflow. One running desk (one URL) covers every promotion workspace: a consolidated **All projects** board and a board per product. Each task has a description and one prompt to copy, labeled with where to paste it.
 
 ## Start from the source checkout
 
 Ask the current agent to open the review desk. The agent runs the launcher once for all products and opens its printed private session link. The local app runs separately from the portable workspace helpers; registering a product does not install Next.js into either the product or workspace.
 
-Developer commands, run in the promotion-agent checkout:
+Launcher commands (the agent runs these in the promotion-agent checkout):
 
 ```sh
 npm ci
@@ -58,13 +60,9 @@ A task whose newest evidence record is a scheduled-post account (see the [post s
 
 Done tasks are listed under **Done** with no prompt. Selecting one shows its result from the newest `verified-complete` evidence record: **Outputs**, **Impact** and **Next steps**, the recorded date and the evidence reference. Summaries recorded before that format show as plain text; a task checked off without a record says so. Copying does not execute or approve anything, complete a task, or write to the registry. The desk shows task text as inert text and does not open referenced draft files; the agent reads them.
 
-Each workspace's state is read by its stable project ID. In registry mode the app lists registered checkout paths and reads only those that are promotion workspaces; product repositories are never read. Reading never creates a missing database; marking a task may create the selected one, as the `disposition` and `complete` helpers do. The only write route is the session-token `POST /api/review` for marking a task complete, skipped or resumed; it accepts a project ID (which must be on the board), a task ID, the loaded task-file revision and a note, never paths. There is no background agent runner or scheduler.
+The desk reads only promotion workspaces; product repositories are never read. Reading never creates a missing database; marking a task may create the selected one, as the `disposition` and `complete` helpers do. It binds to 127.0.0.1, requires the session link's token, and never takes file paths from the browser. There is no background agent runner or scheduler.
 
-## Next.js and deployment
-
-The root `app/` directory contains React UI and a Node-runtime route at `/api/review`. `src/review/data.ts` owns the local file/SQLite read model (`reviewData` for one workspace, `reviewBoard` for the configured set). `src/review/actions.ts` applies the mark complete/skip/resume actions through the existing helpers. `src/review/prompts.js` builds the one prompt per task and decides its target (`product` category → product repo, otherwise promotion agent). The existing helper build remains `npm run build`; the Next.js build is `npm run review:build`. `vercel.json` selects Next.js and the correct build/output directory.
-
-Local launching binds to 127.0.0.1 and creates a random session token. The API requires that token and rejects mismatched local hosts and cross-origin requests. Project and database paths are server configuration, never browser request parameters. No browser code receives filesystem or database access.
+## Running it on another server
 
 For a separately managed Next.js server, configure these server-only variables:
 
@@ -73,8 +71,4 @@ For a separately managed Next.js server, configure these server-only variables:
 - `PROMOTION_REVIEW_TOKEN`: a strong random access token, required even outside local mode.
 - `PROMOTION_REVIEW_ORIGIN`: exact local origin when binding a local service; leave unset behind a hosted platform proxy.
 
-The app can be built as a standard Next.js project for Vercel. **The current data adapter is local:** a Vercel deployment cannot access the user's laptop or maintain a persistent writable SQLite checkout. Useful hosted deployment therefore requires a separately implemented hosted read model or explicit snapshot delivery, plus an appropriate hosted authentication model. Those are not implemented by the Next.js conversion. No data is uploaded or deployment performed by this workflow.
-
-## Verification
-
-`npm run check` checks helper and frontend types and runs the core/integration suite, including read-only database behavior, task-linked draft references, isolation by project ID, prompt contents and targets, and route authentication. `npm run review:build` validates the optimized Next.js build. Browser acceptance evidence is recorded in `docs/HANDOFF.md`; a build alone does not verify clipboard or visual behavior. Copy falls back to `document.execCommand('copy')` when the Clipboard API is blocked.
+**The current data adapter is local:** a hosted deployment such as Vercel cannot access your laptop or maintain a persistent writable SQLite checkout, so hosted use is not supported yet. No data is uploaded or deployment performed by this workflow.

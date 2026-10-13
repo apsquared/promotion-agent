@@ -18,7 +18,7 @@ The product repository is an observed, read-only source. A separate private prom
 
 `templates/WORKFLOW.md` resolves the product name using session selection, available host inventories, registration metadata and bounded local directory searches, verifying candidate identity before registration. Ambiguity is resolved through named choices; the user is never asked for a filesystem path. `templates/SETUP.md` uses that resolved source and selects a separate workspace, normally a UUID directory under ~/.local/share/promotion-agent/projects/. The agent creates the workspace, reads source documentation and handles helper commands. `onboard` takes both paths; the hash-reviewed install plan targets only the workspace. Every other CLI command takes the workspace as --project and requires observer registration. Product-local legacy plans cannot be applied through the active CLI.
 
-The existing conservative installer is reused inside the workspace. It ships compiled helpers, shared workflow, schemas, templates, docs and thin host wrappers, preserving local customizations and marketing data. No skills, config, runtime, locks or starter marketing files are installed into the observed product. Drafting can run without installation by returning work in chat. Existing product-local installations are not migrated or removed automatically; explicit import and cleanup are separate work.
+The existing conservative installer is reused inside the workspace. It ships compiled helpers, shared workflow, schemas, templates, user docs (not docs/maintainers/) and thin host wrappers, preserving local customizations and marketing data. No skills, config, runtime, locks or starter marketing files are installed into the observed product. Drafting can run without installation by returning work in chat. Existing product-local installations are not migrated or removed automatically; explicit import and cleanup are separate work.
 
 ## Local helpers and state ownership
 
@@ -32,7 +32,7 @@ No AI CLI, authentication probe, required database, app-owned publishing connect
 
 The permissive legacy parser is unchanged; strictTaskSnapshot gates reconciliation and completion. Missing/unreadable/invalid imports cannot archive tasks. Skipped/snoozed is independent of repo completion. Only successful validated snapshots reconcile absent tasks.
 
-Completion changes one checkbox while preserving multiline content and all unrelated bytes. It requires the reviewed hash, takes a cooperative per-project lock, stages and atomically replaces the file, and verifies read-back. Conflicts require rescan/review. Never overwrite a stale snapshot. Symlink task paths are rejected. Registry deletion never removes workspace files. See docs/STORAGE.md for recovery and the residual external-editor race.
+Completion changes one checkbox while preserving multiline content and all unrelated bytes. It requires the reviewed hash, takes a cooperative per-project lock, stages and atomically replaces the file, and verifies read-back. Conflicts require rescan/review. Never overwrite a stale snapshot. Symlink task paths are rejected. Registry deletion never removes workspace files. See docs/maintainers/STORAGE.md for recovery and the residual external-editor race.
 
 ## Actions and evidence
 

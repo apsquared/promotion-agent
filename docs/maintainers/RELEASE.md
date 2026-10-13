@@ -2,7 +2,7 @@
 
 Promotion-agent is an interactive skill/command plus local Node helpers. “Live” means a founder can register an explicitly selected read-only product checkout with a separate private promotion workspace, invoke it in their existing agent session, and get a useful reviewed draft. The optional local review desk is available; hosted deployment remains separate.
 
-Observer architecture supersedes the historical product-local distribution evidence below. Current setup uses source plus workspace; see INTERACTIVE.md and HANDOFF.md. Existing product-local installations are not automatically migrated.
+Observer architecture supersedes the historical product-local distribution evidence below. Current setup uses source plus workspace; see [USING.md](../USING.md), [HELPERS.md](../HELPERS.md) and [HANDOFF.md](HANDOFF.md). Existing product-local installations are not automatically migrated.
 
 ## Current distribution: early-access source
 
@@ -24,7 +24,7 @@ The review desk supports authenticated local complete/skip/resume actions with a
 - An offline `npm install --prefix <temporary-directory> --ignore-scripts` of that tarball succeeded. The installed binary onboarded a fictional project, inspected a valid empty task snapshot, removed 31 unchanged managed files with a reviewed plan, kept product configuration and tasks, and reinstalled the skill. This was an isolated install on the current machine, not a second clean OS image.
 - The tested host was macOS 14.5 arm64, Node v22.14.0, npm 10.9.2. The package declares Node >=22.14.0. Linux, Windows and newer Node versions have not been exercised here.
 - Upgrade tests cover idempotence, updating an unchanged workflow from a newer compiled bundle, and preserving locally edited workflow/configuration. Removal tests cover stale-plan rejection, customized wrapper preservation, product-data preservation and reinstall. Empty directories and a manifest for retained product files may remain after removal; inspect before manual cleanup.
-- The repo has an MIT LICENSE and `license: MIT` package metadata. The extraction record is in `docs/EXTRACTION.md`; public source location and release provenance still need an actual remote/release workflow.
+- The repo has an MIT LICENSE and `license: MIT` package metadata. The extraction record is in [history/EXTRACTION.md](history/EXTRACTION.md); public source location and release provenance still need an actual remote/release workflow.
 - A 1280×640, 153 KB `assets/opengraph.png` was added for the repository preview. The subsequent `npm pack --dry-run --json` passed with 31 files, including the image; the earlier 30-file offline-install test preceded this asset addition.
 
 These checks validate files and deterministic helpers. They do **not** establish native invocation in all three agents, an outside founder's result, public registry availability, or external publishing.
@@ -48,3 +48,13 @@ No npm publish, real product installation, external post, or spending has occurr
 From a newer installed package or checkout outside the selected promotion workspace, run `promotion-agent onboard --project <product> --workspace <external-workspace> --name <display-name> --plan <private-new-plan.json>`, review the plan and apply with `promotion-agent install --project <external-workspace> --plan <private-new-plan.json> --review-hash <printed-hash>`. Only unchanged managed workspace files update; locally edited files and marketing data remain. The observed product repository stays untouched.
 
 For removal, run `promotion-agent remove-preview --project <external-workspace> --plan <private-new-plan.json>`, inspect the paths, then `promotion-agent remove --project <external-workspace> --plan <private-new-plan.json> --review-hash <printed-hash>`. The plan file contains before-images and an absolute selected path; keep it private. Removal deletes only unchanged installer-owned runtime/wrappers, preserving custom files, product configuration, marketing facts/tasks/logs, and any optional local SQLite registry. Use the package or checkout outside the workspace so the running helper does not delete its own code while executing.
+
+## Compatibility evidence
+
+User-facing support status is in [COMPATIBILITY.md](../COMPATIBILITY.md).
+
+Layouts were checked against official [Codex skill docs](https://learn.chatgpt.com/docs/build-skills), [Claude Code skill docs](https://code.claude.com/docs/en/skills) (which still support `.claude/commands/`) and [OpenCode command docs](https://opencode.ai/v2/docs/commands). Metadata, links and helper behavior are checked locally. Native menu selection across all three hosts has not been exercised.
+
+The packaged Node helper was exercised on macOS 14.5 arm64 with Node 22.14.0 and npm 10.9.2. The declared minimum is Node 22.14.0. GitHub Actions runs automated checks and the review build on Ubuntu and macOS with Node 22.14.0. This is not native agent acceptance on Linux; Windows and a native host-version matrix remain unverified. The acceptance matrix still to run is under [remaining gates](#remaining-gates-to-published-and-live).
+
+The earlier P03 headless probes and their authentication/isolation blockers are superseded, not repaired. Their runner code and smoke command were removed. No CLI login, repair, global skill installation or external account change is required or performed by this restructure.

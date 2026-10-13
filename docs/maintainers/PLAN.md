@@ -34,7 +34,7 @@ Strict portable/local configuration schemas, stable UUID/task identity, fact pro
 
 ### P02 — safe local storage/write-back (completed)
 
-Transactional SQLite schema and backup/export, strict task read classification, safe reconciliation, byte-preserving checkbox completion, hash checks and cooperative locks, explicit selected-file portfolio import previews. See docs/STORAGE.md for evidence and limits. This library is optional for drafting.
+Transactional SQLite schema and backup/export, strict task read classification, safe reconciliation, byte-preserving checkbox completion, hash checks and cooperative locks, explicit selected-file portfolio import previews. See docs/maintainers/STORAGE.md for evidence and limits. This library is optional for drafting.
 
 ### P03 — interactive skills and commands (completed)
 
@@ -56,7 +56,7 @@ Implemented a review-hash-gated plan/apply installer for one selected project, w
 
 Dependencies: P04. Exercise directory kits, social drafts, engagement research and content proposals in real interactive hosts using fictional inputs. Check host discovery, useful fallback for missing tools, project-context separation, duplicate prevention and exact-content review. Record observed artifacts and distinguish real interactive evidence from automated helper tests.
 
-The current Codex desktop session produced and reviewed fictional artifacts for all four activities, exercised a missing-directory fallback, used real public-thread research without posting, avoided logged duplicates, and kept two product contexts separate. See docs/P05-VERIFICATION.md. The skill was visible in this session's catalog, but native menu selection was not tested. Claude Code and OpenCode were unavailable as active sessions; their native command invocation remains P07 release verification. Do not describe those hosts as live-verified from file-layout tests.
+The current Codex desktop session produced and reviewed fictional artifacts for all four activities, exercised a missing-directory fallback, used real public-thread research without posting, avoided logged duplicates, and kept two product contexts separate. See docs/maintainers/history/P05-VERIFICATION.md. The skill was visible in this session's catalog, but native menu selection was not tested. Claude Code and OpenCode were unavailable as active sessions; their native command invocation remains P07 release verification. Do not describe those hosts as live-verified from file-layout tests.
 
 ### P06 — completion, logs and optional local history (completed)
 
@@ -72,7 +72,7 @@ Validation: `npm run check` passed 55/55 tests, including installed resource/lin
 
 ## Public-readiness hardening — 2026-10-10 (technical changes complete; acceptance pending)
 
-Patched dependency advisories, enabled GitHub Dependabot alerts/security fixes and enforced PR/CI protection on main. Updated early-access positioning, review-write documentation and CI compatibility evidence. Local typechecks, 71 tests, production build, package dry run and zero-vulnerability audit passed. Native-host and outside-user gates remain open in docs/ACCEPTANCE.md; P07 is not complete. See HANDOFF for exact settings and publication status.
+Patched dependency advisories, enabled GitHub Dependabot alerts/security fixes and enforced PR/CI protection on main. Updated early-access positioning, review-write documentation and CI compatibility evidence. Local typechecks, 71 tests, production build, package dry run and zero-vulnerability audit passed. Native-host and outside-user gates remain open in docs/maintainers/ACCEPTANCE.md; P07 is not complete. See HANDOFF for exact settings and publication status.
 
 ## Release validation in progress
 
@@ -80,7 +80,7 @@ Patched dependency advisories, enabled GitHub Dependabot alerts/security fixes a
 
 Dependencies: P04–P06. Verify clean-machine skill/command installation and native invocation in Codex, Claude Code and OpenCode, supported hosts/OS versions, license/provenance, removal/upgrade behavior and an outside founder's first useful draft. Keep npm publication and remote pushes explicit separate actions.
 
-The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. Public source is at `https://github.com/apsquared/promotion-agent`; the initial Ubuntu/macOS GitHub Actions check passed on Node 22.14.0. That CI run adds automated coverage, while the end-to-end install evidence remains macOS 14.5 arm64/Node 22.14.0 only. Native menu invocation in all three hosts, an outside founder's first useful draft, broader host/OS acceptance and npm publication remain open release gates. Follow the concrete sequence in docs/RELEASE.md; do not mark P07 fully complete from local helper tests or the source push.
+The packed package installs offline in an isolated temporary prefix, onboards/removes/reinstalls a fictional product, and passes 55 tests. Package contents now exclude internal planning/handoff records, MIT metadata is explicit, and reviewed removal preserves product data and customized wrappers. Public source is at `https://github.com/apsquared/promotion-agent`; the initial Ubuntu/macOS GitHub Actions check passed on Node 22.14.0. That CI run adds automated coverage, while the end-to-end install evidence remains macOS 14.5 arm64/Node 22.14.0 only. Native menu invocation in all three hosts, an outside founder's first useful draft, broader host/OS acceptance and npm publication remain open release gates. Follow the concrete sequence in docs/maintainers/RELEASE.md; do not mark P07 fully complete from local helper tests or the source push.
 
 ## P08 — optional local Next.js review desk (completed locally)
 
@@ -157,7 +157,7 @@ AI subprocess runners, model/auth management, background execution, autonomous s
 
 ## Verification
 
-Run `npm test` for code changes and record current results in docs/HANDOFF.md. Skill metadata checks and native syntax documentation do not establish native menu execution. Helpers run locally on Node 22.14+, use fictional tests, and do not need model credentials or external services.
+Run `npm test` for code changes and record current results in docs/maintainers/HANDOFF.md. Skill metadata checks and native syntax documentation do not establish native menu execution. Helpers run locally on Node 22.14+, use fictional tests, and do not need model credentials or external services.
 
 ## Standalone AI skills collection — 2026-10-11 (implemented locally)
 

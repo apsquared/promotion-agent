@@ -6,7 +6,7 @@ A marketing assistant for your projects, used through Codex, Claude Code, or Ope
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
-**Early access:** automated helper and build checks run on Ubuntu and macOS. Native invocation across all three agents and an outside user’s first successful draft remain acceptance work. See [release status](docs/RELEASE.md).
+**Early access:** automated helper and build checks run on Ubuntu and macOS. Native invocation across all three agents and an outside user’s first successful draft remain acceptance work. See [release status](docs/maintainers/RELEASE.md).
 
 ## Get started
 
@@ -131,11 +131,17 @@ npm run check
 
 The current agent performs the marketing work. Local helpers manage workspace files and evidence; there is no separate AI runner or background scheduler. Automated helper checks do not establish live native-menu or conversational behavior across all three hosts.
 
-- [Usage and helper reference](docs/INTERACTIVE.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Shared workflow](templates/WORKFLOW.md)
-- [Manual smoke test](docs/MANUAL-SMOKE-TEST.md)
-- [Compatibility](docs/COMPATIBILITY.md) and [release status](docs/RELEASE.md)
-- [Plan](docs/PLAN.md), [handoff](docs/HANDOFF.md), and [contributing](CONTRIBUTING.md)
+The [documentation index](docs/README.md) defines its two audiences: **agent users**, who use promotion-agent to promote their products, and **agent maintainers**, who develop promotion-agent itself.
+
+For agent users:
+
+- [Using promotion-agent](docs/USING.md) and the [shared workflow](templates/WORKFLOW.md)
+- [Review desk](docs/REVIEW-UI.md) and [compatibility](docs/COMPATIBILITY.md)
+- [Helper reference](docs/HELPERS.md) (run by your agent)
+
+For agent maintainers:
+
+- [Contributing](CONTRIBUTING.md), [plan](docs/maintainers/PLAN.md) and [handoff](docs/maintainers/HANDOFF.md)
+- [Architecture](docs/maintainers/ARCHITECTURE.md) and [release status](docs/maintainers/RELEASE.md)
 
 ![Promotion-agent: marketing work inside your agent](assets/opengraph.png)

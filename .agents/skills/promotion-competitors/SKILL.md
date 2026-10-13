@@ -7,4 +7,4 @@ Read [the shared workflow](../../../templates/WORKFLOW.md), then follow [the com
 
 Resolve the named product using the shared workflow's discovery procedure; never ask for a filesystem path. Work in this interactive session with available research tools. Keep the product repo read only. Save a sourced competitor comparison and verified mention shortlist in its separate promotion workspace's permitted paths. Include useful draft replies when appropriate; this research request does not authorize posting, outreach, or recurring monitoring.
 
-Use [the local helpers](../../../docs/INTERACTIVE.md) when the project supports task-linked reports and evidence. A report can still be prepared without installation or a database. Follow the shared workflow for task completion and applicable authorization.
+Use [the local helpers](../../../docs/HELPERS.md) when the project supports task-linked reports and evidence. A report can still be prepared without installation or a database. Follow the shared workflow for task completion and applicable authorization.

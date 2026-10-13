@@ -80,7 +80,7 @@ In the workspace, never the product repository:
 
 - Append an activity-log line, for example `- 2026-10-10 | run#N | video | rendered site tour draft | draft | T-NNN`.
 - Write `marketing/assets/videos/README.md` (or update it) with a row per render: path, duration, aspect, sources and capture dates, alt text or a one-line description, and how the music was sourced or licensed.
-- File the task and evidence through the existing helpers: `record` a `draft` entry for the MP4 and one for its contact sheet against the task (see [the helper reference](../../../docs/INTERACTIVE.md)). The task stays open until its actual completion criteria are met; a render alone completes a "make a video" task only when the user has approved it.
+- File the task and evidence through the existing helpers: `record` a `draft` entry for the MP4 and one for its contact sheet against the task (see [the helper reference](../../../docs/HELPERS.md)). The task stays open until its actual completion criteria are met; a render alone completes a "make a video" task only when the user has approved it.
 - Queue follow-ups under the shared workflow's Keep the work moving rules: the posting task with exact copy and destination, an aspect variant or cutdown, or a `product` task to place the asset in the product repository if the user wants that.
 
 Report the brief, script approval, auth status and any credit use, the render paths and durations, what was checked and what was not, and the follow-up task IDs.

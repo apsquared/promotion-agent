@@ -36,6 +36,8 @@ The check-and-rename sequence is not an OS-level compare-and-swap against unrela
 
 ## Explicit legacy portfolio import
 
+Internal legacy storage/parser APIs remain for compatibility tests and explicit future migration work. Their historical checkout fields refer to the marketing workspace in observer mode; they are not the supported product-local setup route.
+
 `LegacyProjectImporter(store).preview(selectedFilename)` reads a user-selected Markdown table without writing registry or repo files. Supported name columns: Project, Product, Name. Supported path columns include Source Dir, Source Directory, Repo, Repository, Repo Path, Local Path, Source, SourceDir, and Path (case-insensitive). One name column and one path column are required in exactly one table. Optional columns are ignored; account/credential values are not imported. Pipes within cells are unsupported and must be corrected manually.
 
 Paths may be absolute, relative to the selected table's directory, or start with `~/`; backtick-wrapped paths are accepted. Checkouts must exist. Duplicate canonical paths and invalid rows produce diagnostics and block applying the entire preview. No scanning or import of a real portfolio occurs automatically.
@@ -50,4 +52,4 @@ To restore, close all Store instances/writers, retain the current database as a 
 
 ## Verified scope
 
-The original P02 run on Node v22.14.0 / SQLite 3.47.2 on macOS passed 38 tests: 21 storage/write-back/import tests plus the 17 prior contract and legacy tests. Tests use fictional temporary repositories and include transaction rollback, restart/idempotence, backup restoration, preserved multiline/CRLF/BOM content, stale revisions, cross-process locks, external edits during staging, failed rename cleanup, invalid-read non-archival, symlink rejection, and selective import preview/conflicts. Current cumulative results, including the P04 typecheck and P06 interactive helpers, are in docs/HANDOFF.md. No real portfolio, scheduling dispatch or publishing was exercised.
+The original P02 run on Node v22.14.0 / SQLite 3.47.2 on macOS passed 38 tests: 21 storage/write-back/import tests plus the 17 prior contract and legacy tests. Tests use fictional temporary repositories and include transaction rollback, restart/idempotence, backup restoration, preserved multiline/CRLF/BOM content, stale revisions, cross-process locks, external edits during staging, failed rename cleanup, invalid-read non-archival, symlink rejection, and selective import preview/conflicts. Current cumulative results, including the P04 typecheck and P06 interactive helpers, are in [HANDOFF.md](HANDOFF.md). No real portfolio, scheduling dispatch or publishing was exercised.
