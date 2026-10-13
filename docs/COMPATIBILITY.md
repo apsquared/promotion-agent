@@ -1,10 +1,10 @@
 # Interactive invocation compatibility
 
-| Host | Repo entry point | Invoke in the existing session |
-| --- | --- | --- |
-| Codex | `.agents/skills/promotion-agent/SKILL.md` | `$promotion-agent <project and request>` |
-| Claude Code | `.claude/commands/promote.md` | `/promote <project and request>` |
-| OpenCode | `.opencode/commands/promote.md` | `/promote <project and request>` |
+| Intended host | Repo entry point | Invoke in the existing session | Native menu acceptance |
+| --- | --- | --- | --- |
+| Codex | `.agents/skills/promotion-agent/SKILL.md` | `$promotion-agent <project and request>` | Pending |
+| Claude Code | `.claude/commands/promote.md` | `/promote <project and request>` | Pending |
+| OpenCode | `.opencode/commands/promote.md` | `/promote <project and request>` | Pending |
 
 In this source checkout every wrapper references `templates/WORKFLOW.md`. In a registered promotion workspace every wrapper references its bundled `.promotion-agent/templates/WORKFLOW.md`. There is no CLI detection, auth check, version allowlist, subprocess launch, model override or native resume logic. Installed AI command-line binary health is irrelevant to using this workflow in an already running session.
 

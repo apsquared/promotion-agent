@@ -38,6 +38,8 @@ export type PromptCategory =
   | 'search'
   | 'competitor'
   | 'video'
+  | 'release'
+  | 'acquisition'
   | 'account'
   | 'other';
 
@@ -52,6 +54,8 @@ export function promptCategory(category: string): PromptCategory {
   if (c === 'outreach' || c === 'engagement') return 'outreach';
   if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
   if (c === 'video') return 'video';
+  if (c === 'release' || c === 'launch-pack') return 'release';
+  if (c === 'acquisition' || c === 'first-customers') return 'acquisition';
   if (c === 'search') return 'search';
   if (c === 'account') return 'account';
   return 'other';
@@ -96,7 +100,8 @@ export function involvesPayment(task: PromptTask): boolean {
 export function needsBrowser(task: PromptTask): boolean {
   if (/https?:\/\//i.test(task.actionUrl || '')) return true;
   if (/https?:\/\//i.test(task.materials || '')) return true;
-  return promptCategory(task.category) !== 'other';
+  const category = promptCategory(task.category);
+  return category !== 'other' && category !== 'release';
 }
 
 /** Does the flow look like it needs an account, a login, or a verification? */
@@ -153,6 +158,23 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 4. On-screen copy and narration come only from approved copy and the workspace's claims guardrails. Show me \`SCRIPT.md\` and get my approval before generating any voice.
 5. Run lint, check and snapshots (including 0.0 s for the thumbnail), go through the activity's pre-render checklist on the contact sheet, then show me the preview and ask before rendering.
 6. Record draft evidence for the MP4 and its contact sheet with the local helper. Do not publish, schedule, commit, deploy or copy the render into the product repository; queue the posting step as its own task.`,
+
+  release: `## How to work this task
+
+1. Follow the release activity linked from the shared WORKFLOW.md. Resolve a specific Git comparison or supplied changelog; freeze exact base/head and included commit IDs, or record the changelog's hash and any unavailable commit IDs as unresolved.
+2. Check previous release packs, claim IDs, post logs and open/done tasks before announcing the same change again. Reuse the stable release ID for revisions; never silently expand its source range.
+3. Read minimal sanitized documentation/change excerpts from the selected read-only source. Keep a source table for every claim; classify customer benefits, internal refactors and unresolved facts. A merged commit alone cannot establish availability: require separate deployment evidence for the claimed environment and audience.
+4. Save one coordinated pack in the promotion workspace under marketing/releases/<release-UUID>/: versioned X announcement, short release notes, customer-facing explanation and demo storyboard. Unknown or undeployed features stay out of availability copy and demo claims.
+5. Record task-linked draft evidence with the existing helper. Queue up to three deduplicated review, deployment-verification, publication or video tasks under existing task rules. Use the existing video activity for rendering and publishing workflow for approved posts; a launch-pack request authorizes preparation only.`,
+
+  acquisition: `## How to work this task
+
+1. Follow the acquisition activity linked from the shared WORKFLOW.md. Resume the selected workspace sprint UUID, customer definition, audience, sourced offer, daily time budget, baseline, target and dated learning history; do not restart or create another task board.
+2. Read existing project TASKS.md, prior opportunity/action/outcome evidence and skipped/snoozed dispositions. Use acquisition-status with the selected registry when available; deduplicate canonical threads and related tasks. Never replace or revive skipped work without authorization.
+3. Reuse competitor research and conversation discovery for a small verified shortlist. Explain audience fit, stated problem, recency and useful contribution; a thread match is an opportunity, not buying intent or a customer.
+4. Prepare a tailored reply, discovery question or sourced offer for exact-content/destination review. Keep it unsent until explicitly authorized; verify the target and community rules before sending.
+5. Queue only the next few executable actions within the daily budget in the existing TASKS.md, at most three follow-ups. Keep wider opportunities and append dated results/reviews in the sprint record. Distinguish reported from verified actions and outcomes, paying customers from trials/signups, and deduplicate customer units and repeated reports.
+6. Completing research or a reply cannot complete the customer sprint. Check evidence against its customer definition and paying-customer target; retain unresolved facts and queue the next useful action.`,
 
   account: `## How to work this task
 

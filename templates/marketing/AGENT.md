@@ -13,7 +13,7 @@ Avoid fabricated testimonials, repetitive openings, empty hype, and unsupported 
 
 ## Channels and cadence
 
-Enabled activities: <social, directory, engagement, blog, pseo, competitor, video>
+Enabled activities: <social, directory, engagement, blog, pseo, competitor, video, release, acquisition>
 Timezone: <IANA timezone>
 Cadence and per-run budgets: <explicit limits>
 Publishing account references: <optional non-secret handles; scheduler adapter and provider account IDs live in promotion-agent.json `scheduler`, never credentials>
@@ -38,6 +38,17 @@ Prior competitor reports: <existing permitted report paths, if any>
 
 Existing assets and approved generation workflow: <paths and instructions>
 Video projects: <paths under marketing/assets/videos/, their renders, and the approved sources for on-screen copy and narration>
+
+## Acquisition sprints
+
+Sprint records: <permitted workspace path, normally marketing/acquisition/<sprint-UUID>/SPRINT.json; existing project UUID, customer definition, audience, offer, daily minutes, baseline/target, opportunity/action/outcome history and dated reviews>
+Executable actions: <references to the existing project TASKS.md and selected registry; no sprint task board>
+Outcome evidence: <minimal sanitized references; distinguish paying customers, trials and signups, reported and verified; never store credentials or private customer records>
+
+## Releases
+
+Launch packs: <permitted workspace path, normally marketing/releases/<release-UUID>/; project UUID, frozen source IDs, claim table, deployment evidence/unknowns, draft versions, statuses and task references>
+Availability evidence: <environment/audience/rollout limits and dated sources; a merged commit alone is insufficient>
 
 ## Seasonal opportunities
 

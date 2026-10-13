@@ -76,6 +76,12 @@ Patched dependency advisories, enabled GitHub Dependabot alerts/security fixes a
 
 ## Release validation in progress
 
+### Safety and founder positioning follow-up — 2026-10-12 (implemented locally)
+
+User-requested follow-up to the repository review. WORKFLOW v0.13 and setup reference a portable privacy procedure for minimal source reads, secret/customer-data exclusions, sanitized external queries, untrusted source instructions and media review. README leads with founder outputs, persistent context, explicit bring-your-own-agent costs, qualified read-only/privacy boundaries, and a combined setup/first-draft request. SECURITY.md documents actual boundaries and sanitized reporting. Removed the stage-all/direct-main helper and updated contribution guidance.
+
+Completed a sourced fictional draft/revision/status walkthrough in the current Codex session using local helpers directly; source remained unchanged and the review task stayed open. Native host menus, conversational discovery, outside-founder trial and live providers remain open gates. Existing installed workspaces need a reviewed upgrade to receive the new workflow/privacy resource. No dependencies, source-access sandbox, portfolio migration, publication or Git action added. See HANDOFF for validation.
+
 ### P07 — reusable distribution/release (local distribution and public source complete; live gates open)
 
 Dependencies: P04–P06. Verify clean-machine skill/command installation and native invocation in Codex, Claude Code and OpenCode, supported hosts/OS versions, license/provenance, removal/upgrade behavior and an outside founder's first useful draft. Keep npm publication and remote pushes explicit separate actions.
@@ -149,9 +155,25 @@ Delivered: one adapter-neutral procedure at templates/publishing/WORKFLOW.md (op
 
 Acceptance: config default/rejection tests, route and source/installed procedure tests, the scheduled-task bookkeeping path through the review desk and `complete`, a no-provider-call check, and the package dry-run. Not covered by deterministic tests: Post Bridge itself, its CLI behavior, account connection, link stripping and actual publication. See HANDOFF.
 
+## P14 — “I shipped this” launch packs (implemented locally)
+
+Depends on the shared workflow, P10 observer boundary, P06 evidence/tasks, P12 video and P13 publishing. WORKFLOW v0.14 routes ordinary shipped-since-date/changelog requests to `templates/activities/release/WORKFLOW.md`. One pack freezes exact source IDs or a hashed changelog, maps every claim to implementation and separate deployment evidence, checks prior packs/overlapping changes, and saves coordinated X announcement, release notes, customer explanation and demo storyboard under a stable release UUID bound to the workspace project UUID. Versioned drafts/claim history/status/task references use existing files and helpers, with no new database or runner. Unknown deployment stays unresolved; internal-only work and undeployed features do not enter availability copy.
+
+The optional read-only `release-source` helper uses Git argument arrays to resolve local refs, require complete ancestral history and return bounded filtered names with full IDs. It returns no diff, messages, authors or deployment assertion and leaves the source unchanged. The task prompt builder supplies a `release` fallback (`launch` retains its existing directory-submission meaning). Review/fact-check tasks use `release`, renders use the existing video activity and approved posts use the publishing workflow. No new dependency or host entrypoint.
+
+Acceptance: automated source-boundary/ID/filter/limit/portable-resource/task-evidence tests and a current-agent fictional three-change walkthrough with two draft versions, a source/claim table, three open follow-ups and byte-identical source/Git files. See [the saved example](../examples/release-pack/README.md) and HANDOFF for execution evidence and limits. Installed workspaces receive the new procedure/helper only through a reviewed upgrade. Native invocation, live deployment/provider checks and rendering remain separate verification work.
+
+## P15 — first 10 paying customers sprint (implemented locally)
+
+Depends on project/workspace identity, competitor and conversation research, existing task/evidence/disposition helpers and the shared interactive workflow. WORKFLOW v0.15 routes the first-customers request, selected-sprint “What should I do today?” and results updates to `templates/activities/acquisition/WORKFLOW.md`. A stable sprint record owns audience, sourced offer, customer/payment definition, minutes, separate baselines and total/additional target, ranked opportunity history, historical action/outcome evidence and dated reviews. Immutable version snapshots preserve learning; the existing project TASKS.md remains the only executable board. Queue only the next few actions, respect skipped/snoozed work, and retain the wider shortlist in the plan. Replies/offers remain unsent until authorized.
+
+`src/interactive/acquisition.ts` and read-only CLI `acquisition-status` validate saved identity/history, canonical opportunity deduplication and evidence basis, keep distinct paying/trial/signup and reported/verified progress, deduplicate repeated outcome units, and select at most three suggestions within daily minutes using the existing board/dispositions. A reported action awaiting verification is never suggested as another send. Unknown baseline is not zero; research/action completion cannot achieve the customer objective. No new sending integration, task board, dependency, project config field, database table, background execution or UI action.
+
+Acceptance: `npm run check` passes both typechecks, helper build and 96 tests, including seven new fictional acquisition cases for canonical thread aliases/duplicate rejection, strict records, reported/verified/category/count corrections, cross-process and relocated resume, daily budget, skipped/snoozed/corrupt-or-missing state, immutable source and task bytes, separate research completion, unsent/previously reported actions and shared installed resources. Package/link validation and limits are recorded in HANDOFF. Native conversational execution, live research quality, actual sending/payment confirmation and acquisition results remain unverified. Existing installed workspaces receive this only through a reviewed upgrade.
+
 ## Deferred unless separately requested
 
-Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.
+Commit/push convenience script: retired on 2026-10-12 during the safety review follow-up. Contributions use reviewed, scoped changes through a pull request; no stage-all/direct-main helper remains. See HANDOFF.
 
 AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors (code in promotion-agent that calls a provider, stores its credentials or holds a scheduled time; P13's agent-run optional Post Bridge adapter is not one), hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
 

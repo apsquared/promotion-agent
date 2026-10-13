@@ -15,6 +15,10 @@ Format example (outside Open/Done, so it is not a real task):
 
 Materials is the task description shown in the review desk. Any task may queue follow-up tasks: start their Materials with `Follow-up to T-NNN.` and include any earliest date or trigger. Use category `product` for work implemented in the product repository; all other categories run in the promotion agent. Use category `video` for product videos: the project lives under `marketing/assets/videos/<project>/` in this workspace, and the render and contact sheet are recorded as draft evidence until the user approves them; posting the video is its own task. Prompt comes last, with 3–8 task-specific steps. Do not put field markers URL: or Materials:, task headers, or ## headings inside continuation blocks. Shared execution policy is added by the prompt builder; it is not a substitute for enforced runtime permissions.
 
+Use category `release` for launch-pack review or release fact checks. Materials must name the stable release UUID, frozen source snapshot, exact draft version and unresolved claims. Queue renders as `video` tasks through the existing video activity and approved posts through the publishing workflow; preparation never authorizes either action. Keep at most three deduplicated follow-ups per run.
+
+Use category `acquisition` for sprint execution/review. Materials name the sprint/opportunity UUIDs, exact unsent draft version and destination, minutes and approval trigger. Keep wider opportunities and outcome history in the sprint record; this file is the only executable task board. A research/action completion does not complete the paying-customer target.
+
 ## Open
 
 ## Done

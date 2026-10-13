@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "projectId": "8f981a52-6f24-430d-996d-87869c1cb228",
+  "kind": "git",
+  "baseCommit": "34b25fd523f2fc6a9e66dc4f2cdadb43ae5cd93d",
+  "headCommit": "30cadd67781b9c7a16e6b4e5ea2db7a58ccba1d2",
+  "comparison": "base excluded; head included; all reachable commits in base..head",
+  "commits": [
+    {
+      "commit": "a6a0a7bd40e4fcd5d2217f7463fa50da5063fff1",
+      "files": [
+        "README.md",
+        "notes.ts"
+      ],
+      "excludedFileCount": 0,
+      "omittedFileCount": 0
+    },
+    {
+      "commit": "53c61b695a98d9f697c3daca1a93214113fd1b27",
+      "files": [
+        "notes.ts"
+      ],
+      "excludedFileCount": 0,
+      "omittedFileCount": 0
+    },
+    {
+      "commit": "30cadd67781b9c7a16e6b4e5ea2db7a58ccba1d2",
+      "files": [
+        "CHANGELOG.md",
+        "sharing.ts"
+      ],
+      "excludedFileCount": 0,
+      "omittedFileCount": 0
+    }
+  ],
+  "limitations": [
+    "Names only; inspect minimal sanitized excerpts at these commits.",
+    "Sensitive/non-source paths excluded; file lists may be truncated. Omitted paths are not reviewed.",
+    "Local commits do not prove merge, deployment, availability or publication. Working-tree edits are excluded."
+  ]
+}

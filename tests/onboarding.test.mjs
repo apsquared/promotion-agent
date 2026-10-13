@@ -161,7 +161,7 @@ test('a project relocates with stable UUID and compiled helpers run without orig
   rmSync(source, { recursive: true });
   const relocated = join(dir, 'relocated'); renameSync(project, relocated);
   // The conversational setup route and guide must travel with the installed bundle.
-  for (const relative of ['templates/WORKFLOW.md', 'templates/SETUP.md', 'docs/INTERACTIVE.md', 'docs/MANUAL-SMOKE-TEST.md']) {
+  for (const relative of ['templates/WORKFLOW.md', 'templates/SETUP.md', 'docs/INTERACTIVE.md', 'docs/MANUAL-SMOKE-TEST.md', 'docs/PRIVACY.md']) {
     const resource = join(relocated, '.promotion-agent', relative);
     const content = readFileSync(resource, 'utf8');
     for (const [, href] of content.matchAll(/\]\(([^)]+)\)/g)) {

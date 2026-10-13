@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "11111111-1111-4111-8111-111111111111",
+  "projectId": "22222222-2222-4222-8222-222222222222",
+  "version": 1,
+  "createdAt": "2026-10-13T14:00:00.000Z",
+  "status": "active",
+  "audience": "Fictional example only; replace with a specific sourced audience",
+  "offer": "Unknown; discovery only until a sourced offer is defined",
+  "offerSource": "Not yet supplied",
+  "dailyMinutes": 30,
+  "customerDefinition": "Example: distinct accounts with one successful non-refunded first payment for the defined offer; founder must confirm qualifying events and exclusions",
+  "customerUnit": "account",
+  "baseline": {
+    "at": "2026-10-13T14:00:00.000Z",
+    "payingCustomers": { "count": null, "basis": "unknown", "reference": null },
+    "trialUsers": { "count": null, "basis": "unknown", "reference": null },
+    "signups": { "count": null, "basis": "unknown", "reference": null }
+  },
+  "target": { "payingCustomers": 10, "mode": "total" },
+  "opportunities": [],
+  "actions": [],
+  "outcomes": [],
+  "reviews": []
+}

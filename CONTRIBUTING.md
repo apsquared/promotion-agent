@@ -8,4 +8,4 @@ Workflow contributions need: purpose, required capabilities, inputs, output arti
 
 Preserve existing project customization during upgrades. Do not vendor third-party skills without reviewing their license and attribution requirements.
 
-Changes to `main` go through a pull request with both Ubuntu and macOS checks passing against the current base. Administrator enforcement is enabled; direct pushes (including `scripts/commit-all-main.sh`) are not the contribution workflow. No second-person approval is required for this solo-maintainer project.
+Changes to `main` go through a pull request with both Ubuntu and macOS checks passing against the current base. Administrator enforcement is enabled; direct pushes are not the contribution workflow. Stage only the intended files after reviewing the diff. No second-person approval is required for this solo-maintainer project.
