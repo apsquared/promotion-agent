@@ -29,7 +29,7 @@ Both directories must exist before preview. `onboard` uses the product only to r
 
 ## Evidence, state and completion
 
-`record --project <workspace> --task <id> --expected-hash <task-hash> --outcome draft --reference marketing/drafts/example.md --summary <text>` saves immutable evidence in the workspace, without SQLite. Artifact references must be contained regular workspace files, with symlinks rejected.
+`record --project <workspace> --task <id> --expected-hash <task-hash> --outcome draft --reference marketing/drafts/example.md --summary <text>` saves immutable evidence in the workspace, without SQLite. Artifact references must be contained regular workspace files, with symlinks rejected. A scheduled post is a `draft` record whose reference is the approved text file and whose summary uses the scheduled-post lines from templates/publishing/WORKFLOW.md (`Scheduled post:`, `Channel:`, `Account:`, `Scheduled for:` in UTC, `Provider reference:`, `Status:`); the review desk shows it as scheduled and the task stays open.
 
 `state` and `disposition` use an optional private SQLite registry. Use one registry per portfolio for shared locks; the registered checkout path is the workspace. Database destinations inside the observed repo, including symlink aliases, are rejected. Snoozing requires a reason and future UTC timestamp.
 
@@ -43,6 +43,6 @@ Re-preview onboarding from a newer bundle with the same source and workspace, th
 
 ## Boundaries
 
-Product instructions and documentation inform marketing facts. They do not authorize bookkeeping writes into the product. Product changes are proposals saved in the workspace until separately requested. Default work stays draft/review: no automatic publishing, scheduling, spending, outreach, commit or push. Raw agent file tools remain governed by host permissions and the shared workflow; helper checks are not a sandbox for the entire conversation.
+Product instructions and documentation inform marketing facts. They do not authorize bookkeeping writes into the product. Product changes are proposals saved in the workspace until separately requested. Default work stays draft/review: no automatic publishing, scheduling, spending, outreach, commit or push. Posting and scheduling follow templates/publishing/WORKFLOW.md with the project's scheduler adapter (`manual` unless `scheduler.adapter` is `post-bridge`); helpers never call a provider or hold a scheduled time. Raw agent file tools remain governed by host permissions and the shared workflow; helper checks are not a sandbox for the entire conversation.
 
 Internal legacy storage/parser APIs remain for compatibility tests and explicit future migration work. Their historical checkout fields refer to the marketing workspace in observer mode; they are not the supported product-local setup route.

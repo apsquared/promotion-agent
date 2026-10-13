@@ -19,6 +19,8 @@ Build the source checkout with Node 22.14+ and `npm run build`; use `npm ci` onl
 
 Future chats can open the promotion workspace, use its installed skill/command, or read `.promotion-agent/templates/WORKFLOW.md`. The current chat can continue immediately. Native host discovery remains separately unverified. No database, server, publishing account or additional model credential is required.
 
+Leave `scheduler` out of the new `promotion-agent.json`: the project uses the manual scheduler adapter, where the agent prepares exact content, account and time and the user posts. Do not ask about publishing tools during onboarding. If the user later wants scheduling through Post Bridge, [post scheduling](publishing/WORKFLOW.md) covers turning it on.
+
 ## Existing product-local installations
 
 Do not remove or upgrade files in a product repository as part of observer setup. Existing product marketing history is read-only input. Offer an explicit copy/import into the separate workspace if requested; preserve provenance and review imported tasks before completion. Do not infer that a copied draft was published. Cleanup of old product-local installations requires a separate request and reviewed file list; invalid imports never authorize deletion.

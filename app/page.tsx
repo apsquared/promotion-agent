@@ -277,6 +277,7 @@ export default function ReviewPage() {
                     <span className="chip product">{targets.product.label}</span>
                   )}
                   {parked(item) && <span className="chip muted">{parked(item)}</span>}
+                  {item.scheduled && <span className="chip scheduled">{item.scheduled.status}</span>}
                 </span>
               </button>
             ))
@@ -311,6 +312,17 @@ export default function ReviewPage() {
                 <p className="warning">
                   {parked(task)}: {task.disposition!.reason}
                   {task.disposition!.until ? ` · until ${task.disposition!.until}` : ''}
+                </p>
+              )}
+              {task.scheduled && (
+                <p className="scheduled-post">
+                  <strong>{task.scheduled.status === 'scheduled' ? 'Scheduled' : `Scheduled post ${task.scheduled.status}`}</strong>{' '}
+                  · {task.scheduled.adapter === 'post-bridge' ? 'Post Bridge' : 'Manual'}
+                  {task.scheduled.channel && ` · ${task.scheduled.channel}`} · {task.scheduled.localTime} (
+                  {task.scheduled.scheduledFor.slice(11, 16)} UTC)
+                  {task.scheduled.reference && ` · ref ${task.scheduled.reference}`}
+                  <br />
+                  Recorded by the agent; not verified as published. Changes and cancellations go through the agent.
                 </p>
               )}
               <h3>Description</h3>

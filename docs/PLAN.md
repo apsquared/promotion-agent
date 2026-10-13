@@ -134,11 +134,26 @@ P12 follow-up, 2026-10-11: added templates/activities/video/craft.md, adapted fr
 
 P12 standalone skill, 2026-10-11: added `skills/product-video/` to the independent skills collection, a self-contained version of the activity with no workspace or registration. Its `references/` are byte-identical to the activity's reference files (now location-neutral), enforced by a test. See HANDOFF.
 
+## P13 — generic post scheduler with optional Post Bridge (implemented; live provider acceptance not exercised)
+
+Scope change requested by the user on 2026-10-12. Earlier this plan excluded app-owned publishing connectors, ARCHITECTURE said no publishing connector is introduced, and EXTRACTION records "mandatory Post Bridge" as a legacy problem that was removed. The user now wants optional Post Bridge support behind a generic scheduler, because a real Idea Launch run on 2026-10-12 showed the agent could schedule through the user's own Post Bridge setup, and that doing so without a written contract left each provider limit (no X threads, stripped links, account matching, the open verification) for the agent to discover. Depends on P06 evidence helpers, the review desk and WORKFLOW v0.11.
+
+The properties behind the earlier exclusion are kept:
+
+- **Optional.** No project needs Post Bridge. `manual` is the default adapter, and a configuration without `scheduler` means manual.
+- **No background runner.** Promotion-agent never runs a timer, daemon, cron or queue. A scheduled time is held by the provider or the human; the agent acts only inside a user conversation.
+- **No stored credentials.** Promotion-agent never stores, reads or asks for a provider API key. The configuration has no credential fields.
+- **No new npm dependency.** The agent runs `npx postbridge-cli` (or Post Bridge's MCP tools) in its session under the user's host permissions. Promotion-agent's own code makes no provider calls.
+
+Delivered: one adapter-neutral procedure at templates/publishing/WORKFLOW.md (operations capabilities, accounts, fit, schedule, status, update/cancel, verify; lifecycle, approval, UTC conversion, duplicate check, post-log and evidence bookkeeping, follow-up) with `manual.md` and `post-bridge.md` beside it. WORKFLOW v0.12 routes "Post this" / "Schedule it for Tuesday 9am" there and sends scheduling in Review and action and Tasks and evidence through the selected adapter. Optional `scheduler` project setting (`adapter`, per-channel `accounts`; `post-bridge` requires `policy.publish: exact-content-review`), named apart from the legacy agent-run `scheduleSchema`/`adapterCapabilitiesSchema`. Scheduled posts are `draft` evidence in a labeled summary shape; the review desk shows them read only. No entrypoints were added. Installed workspaces receive this only through a reviewed upgrade.
+
+Acceptance: config default/rejection tests, route and source/installed procedure tests, the scheduled-task bookkeeping path through the review desk and `complete`, a no-provider-call check, and the package dry-run. Not covered by deterministic tests: Post Bridge itself, its CLI behavior, account connection, link stripping and actual publication. See HANDOFF.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script (2026-10-10): added scripts/commit-all-main.sh at the user's request. It stages all non-ignored changes, commits on main and pushes origin main without force. Creating the script does not run it. See HANDOFF for validation.
 
-AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors, hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
+AI subprocess runners, model/auth management, background execution, autonomous scheduling, app-owned publishing connectors (code in promotion-agent that calls a provider, stores its credentials or holds a scheduled time; P13's agent-run optional Post Bridge adapter is not one), hosted services, paid advertising, auto-sending outreach and unrestricted plugin execution. Existing legacy board material in reference/ remains design source only.
 
 ## Verification
 

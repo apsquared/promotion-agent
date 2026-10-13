@@ -94,6 +94,8 @@ For competitor comparisons and mention discovery, ask "Analyze our competitors a
 
 For a short product video (site tour, promo or feature clip), ask "Turn the site into a demo video", use $promotion-video in Codex or /promote-video in Claude Code/OpenCode, or read .promotion-agent/templates/activities/video/WORKFLOW.md. The video project lives in marketing/assets/videos/ in this workspace. HyperFrames runs on demand through npx; signing in to HeyGen, paid credits and global skill installs are the user's decisions. A render is a draft; it is not published, scheduled or copied into the product repository without a separate request.
 
+To post or schedule an approved draft, ask "Post this" or "Schedule it for Tuesday 9am"; the agent follows .promotion-agent/templates/publishing/WORKFLOW.md. The default manual adapter hands you the exact content, account and time to post yourself. Scheduling through Post Bridge is optional: set "scheduler": { "adapter": "post-bridge" } in promotion-agent.json (with policy.publish "exact-content-review") and set up Post Bridge's own CLI yourself. Promotion-agent never stores provider keys or runs a timer; every schedule, post, update or cancellation needs your approval of the exact content, account and time, and a scheduled post stays open until it is verified live.
+
 ## Helper reference for the agent
 
 Run these when needed; do not ask the user to operate them. From this promotion workspace root:

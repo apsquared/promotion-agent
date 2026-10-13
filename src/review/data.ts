@@ -4,9 +4,10 @@ import { join, resolve } from 'node:path';
 import { inspectProject } from '../interactive/tasks.ts';
 import { taskFile } from '../storage/files.ts';
 import { taskEvidenceSchema } from '../../schemas/contracts.ts';
-import type { TaskDisposition } from '../core/contracts.ts';
+import { postScheduler, type TaskDisposition } from '../core/contracts.ts';
 import type { PromptTask } from '../core/task-prompt.ts';
 import { DATABASE_VERSION } from '../storage/migrations.ts';
+import { parseScheduledPost, projectLocalTime, type ScheduledPost } from '../publishing/scheduled-post.ts';
 
 export type ReviewDraft = { reference: string; outcome: string; recordedAt: string; summary: string };
 export type ReviewTask = Omit<PromptTask, 'project'> & {
@@ -15,6 +16,8 @@ export type ReviewTask = Omit<PromptTask, 'project'> & {
   drafts: ReviewDraft[];
   /** Newest `verified-complete` record: the outputs, impact and next steps shown for a done task. */
   completion: ReviewDraft | null;
+  /** The newest record's scheduled-post account, if it is one; read only, and never proof of publication. */
+  scheduled: (ScheduledPost & { localTime: string; recordedAt: string }) | null;
 };
 
 const maxRecordBytes = 256 * 1024;
@@ -93,11 +96,17 @@ export function reviewData(directory: string, database?: string) {
     const records = drafts
       .filter((d) => d.taskId === task.taskId)
       .map(({ taskId: _, ...draft }) => draft);
+    const post = task.status === 'open' && records[0] ? parseScheduledPost(records[0].summary) : null;
     return {
       ...task,
       disposition: dispositions.get(task.taskId) ?? null,
       drafts: records,
       completion: records.find((r) => r.outcome === 'verified-complete') ?? null,
+      scheduled: post && {
+        ...post,
+        localTime: projectLocalTime(post.scheduledFor, project.timezone),
+        recordedAt: records[0].recordedAt,
+      },
     };
   });
   return {
@@ -107,6 +116,8 @@ export function reviewData(directory: string, database?: string) {
       root,
       sourceRoot,
       tasksPath: project.tasksPath,
+      timezone: project.timezone,
+      scheduler: postScheduler(project).adapter,
     },
     revision: snapshot.hash,
     classification: snapshot.classification,

@@ -1,9 +1,10 @@
 import type { Infer } from '../../schemas/validation.ts';
-import { artifactSchema, adapterCapabilitiesSchema, localProjectSchema, policySchema, projectSchema, reviewSchema, reviewBindingSchema, runSchema, runInputSchema, runOutputSchema, scheduleSchema, taskDispositionSchema, taskEvidenceSchema, taskKeySchema } from '../../schemas/contracts.ts';
+import { artifactSchema, adapterCapabilitiesSchema, localProjectSchema, policySchema, postSchedulerSchema, projectSchema, reviewSchema, reviewBindingSchema, runSchema, runInputSchema, runOutputSchema, scheduleSchema, taskDispositionSchema, taskEvidenceSchema, taskKeySchema } from '../../schemas/contracts.ts';
 
 export type Project = Infer<typeof projectSchema>;
 export type LocalProject = Infer<typeof localProjectSchema>;
 export type Policy = Infer<typeof policySchema>;
+export type PostScheduler = Infer<typeof postSchedulerSchema>;
 export type Run = Infer<typeof runSchema>;
 export type RunInput = Infer<typeof runInputSchema>;
 export type RunOutput = Infer<typeof runOutputSchema>;
@@ -44,6 +45,12 @@ export const CONFIG_MIGRATIONS = Object.freeze([{ from: null, to: 1, description
 export function loadProjectConfig(value: unknown): Project { return projectSchema.parse(value); }
 export function serializeProjectConfig(value: unknown): string {
   return JSON.stringify(projectSchema.parse(value), null, 2) + '\n';
+}
+
+/** The project's social post scheduler; absent configuration means the manual adapter. */
+export function postScheduler(project: Project): { adapter: PostScheduler['adapter']; accounts: NonNullable<PostScheduler['accounts']> } {
+  const scheduler = projectSchema.parse(project).scheduler;
+  return { adapter: scheduler?.adapter ?? 'manual', accounts: scheduler?.accounts ?? {} };
 }
 
 /** Only reviewed, sourced facts can enter generated product claims. */

@@ -26,7 +26,7 @@ Inspect/prepare read workspace context/tasks. Evidence records and artifact refe
 
 Legacy parser/storage APIs remain compatible for existing records and tests. Their checkout fields denote the marketing workspace in observer mode, not the observed source repo. The supported CLI requires a workspace mapping; raw library callers and agent file tools are not a global security sandbox. Host permissions still govern raw agent tools, and the shared workflow explicitly prohibits unrequested product writes.
 
-No AI CLI, authentication probe, required database, publishing connector, server or scheduler is introduced. Context comes from product documentation and existing read-only marketing history, with provenance and unknown facts retained.
+No AI CLI, authentication probe, required database, app-owned publishing connector, server or background scheduler is introduced. Social posting goes through the agent-run scheduler adapters described under Post scheduling. Context comes from product documentation and existing read-only marketing history, with provenance and unknown facts retained.
 
 ## Task write-back
 
@@ -39,6 +39,14 @@ Completion changes one checkbox while preserving multiline content and all unrel
 Default to draft/review. Respect prior user authorization; when an external action is not authorized, show exact content/destination before executing. Changes invalidate stale approval. Use only available integrations in the current interactive host; never copy credentials into project files or model prompts.
 
 Log actual artifacts, checks, verified URLs/provider confirmations and unresolved limitations. Distinguish drafted, submitted, scheduled, published and uncertain. Do not infer a result from intent or a generated summary. No implicit commit, push, spending or outreach. Product-specific extensions remain owned by their project; do not bake another product's generator or database into this repo.
+
+## Post scheduling
+
+`templates/publishing/WORKFLOW.md` is one adapter-neutral contract for taking an approved social draft to a scheduled or published post: capabilities, accounts, fit, schedule, status, update/cancel and verify, with one lifecycle (drafted, approved, scheduled, published, failed, cancelled, uncertain). Adapter references sit beside it. `manual` is the default for every project and needs no tools: the agent hands over exact content, account and time. `post-bridge` is opt-in per project: the agent runs Post Bridge's published CLI through `npx` (or its MCP tools when the session has them) under the user's host permissions, using the user's own Post Bridge credential setup.
+
+The boundary: promotion-agent's code never calls a provider, stores or reads a provider key, or holds a scheduled time. There is no timer, daemon, cron or queue; the provider or the human holds the time, and verification is a queued task done in a later conversation. Every schedule, post, update or cancellation needs explicit approval of the exact content, account and time; fit changes (a merged thread, a moved link) void approval.
+
+Deterministic code is limited to configuration and bookkeeping. `promotion-agent.json` may carry an optional `scheduler` (`adapter`: `manual` | `post-bridge`, optional `accounts` from channel to a non-secret account reference, no credential fields); absent means manual, and `post-bridge` requires `policy.publish: exact-content-review`. These names are distinct from the legacy agent-run `scheduleSchema`. A scheduled post is a `draft` evidence record whose summary uses labeled lines (`Scheduled post`, `Channel`, `Account`, `Scheduled for`, `Provider reference`, `Status`); `src/publishing/scheduled-post.ts` parses it so the review desk can show the adapter and project-local time read only. It parses an agent's account; it proves nothing. Completion still needs `verified-complete` evidence with the live URL. The review desk cannot schedule, change or cancel posts.
 
 ## Optional Next.js review desk
 

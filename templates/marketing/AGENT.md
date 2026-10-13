@@ -16,7 +16,7 @@ Avoid fabricated testimonials, repetitive openings, empty hype, and unsupported 
 Enabled activities: <social, directory, engagement, blog, pseo, competitor, video>
 Timezone: <IANA timezone>
 Cadence and per-run budgets: <explicit limits>
-Publishing account references: <optional non-secret identifiers; configure credentials locally>
+Publishing account references: <optional non-secret handles; scheduler adapter and provider account IDs live in promotion-agent.json `scheduler`, never credentials>
 Shared-account restrictions: <if any>
 Default: prepare drafts; no external publication, commit, or push.
 
