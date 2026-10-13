@@ -1,4 +1,4 @@
-// Extracted legacy compatibility parser. See docs/EXTRACTION.md.
+// Extracted legacy compatibility parser. See docs/maintainers/history/EXTRACTION.md.
 // Do not use permissive parseTasks alone to authorize deletion reconciliation.
 const TASK_HEADER =
   /^- \[( |x|X)\]\s*(T-\d+)\s*\|\s*([0-9]{4}-[0-9]{2}-[0-9]{2}|[^|]*?)\s*\|\s*(P\d)\s*\|\s*([^|]+?)\s*\|\s*(.+?)\s*$/;

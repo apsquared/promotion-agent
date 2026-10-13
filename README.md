@@ -10,7 +10,7 @@ The workflow treats your product repository as a read-only source and saves mark
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
-**Early access:** designed for Codex, Claude Code, and OpenCode. Automated helper and build checks run on Ubuntu and macOS; native menu invocation in each host and an outside founder's first useful draft remain unverified. See [acceptance status](docs/ACCEPTANCE.md).
+**Early access:** designed for Codex, Claude Code, and OpenCode. Automated helper and build checks run on Ubuntu and macOS; native menu invocation in each host and an outside founder's first useful draft remain unverified. See [acceptance status](docs/maintainers/ACCEPTANCE.md).
 
 ## See the first draft
 
@@ -22,7 +22,7 @@ Ask “Make it shorter”:
 
 > Example Desk helps small teams organize reference notes.
 
-Both stay drafts. The workspace keeps the versions and an open review task, so “What's the status?” can report what is ready and what needs your decision. See the [sourced walkthrough and verification limits](docs/FIRST-DRAFT.md). This is a fictional example, not a customer testimonial or a live post.
+Both stay drafts. The workspace keeps the versions and an open review task, so “What's the status?” can report what is ready and what needs your decision. See the [sourced walkthrough and verification limits](docs/maintainers/FIRST-DRAFT.md). This is a fictional example, not a customer testimonial or a live post.
 
 ## Get started
 
@@ -167,11 +167,17 @@ npm run check
 
 The current agent performs the marketing work. Local helpers manage workspace files and evidence; there is no separate AI runner or background scheduler. Automated helper checks do not establish live native-menu or conversational behavior across all three hosts.
 
-- [Usage and helper reference](docs/INTERACTIVE.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Shared workflow](templates/WORKFLOW.md)
-- [Manual smoke test](docs/MANUAL-SMOKE-TEST.md)
-- [Compatibility](docs/COMPATIBILITY.md) and [release status](docs/RELEASE.md)
-- [Plan](docs/PLAN.md), [handoff](docs/HANDOFF.md), and [contributing](CONTRIBUTING.md)
+The [documentation index](docs/README.md) defines its two audiences: **agent users**, who use promotion-agent to promote their products, and **agent maintainers**, who develop promotion-agent itself.
+
+For agent users:
+
+- [Using promotion-agent](docs/USING.md) and the [shared workflow](templates/WORKFLOW.md)
+- [Review desk](docs/REVIEW-UI.md) and [compatibility](docs/COMPATIBILITY.md)
+- [Helper reference](docs/HELPERS.md) (run by your agent)
+
+For agent maintainers:
+
+- [Contributing](CONTRIBUTING.md), [plan](docs/maintainers/PLAN.md) and [handoff](docs/maintainers/HANDOFF.md)
+- [Architecture](docs/maintainers/ARCHITECTURE.md) and [release status](docs/maintainers/RELEASE.md)
 
 ![Promotion-agent: marketing work inside your agent](assets/opengraph.png)

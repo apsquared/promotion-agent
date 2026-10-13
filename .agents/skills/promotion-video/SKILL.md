@@ -7,4 +7,4 @@ Read [the shared workflow](../../../templates/WORKFLOW.md), then follow [the pro
 
 Resolve the named product using the shared workflow's discovery procedure; never ask for a filesystem path. Work in this interactive session with the available tools. Keep the product repo read only and build the video project in its separate promotion workspace. Do not sign in, paste API keys, use paid credits or install global skills or offline engines for the user without asking. A render is a draft; this request does not authorize publishing, scheduling, committing or deploying.
 
-Use [the local helpers](../../../docs/INTERACTIVE.md) to record task-linked evidence for the render and contact sheet. Follow the shared workflow for task completion and applicable authorization.
+Use [the local helpers](../../../docs/HELPERS.md) to record task-linked evidence for the render and contact sheet. Follow the shared workflow for task completion and applicable authorization.

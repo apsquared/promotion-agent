@@ -4,7 +4,7 @@ This is a maintainer walkthrough completed in the current Codex session on 2026-
 
 ## Start with a sourced fact
 
-The repository's [Example Desk context](../examples/example-desk/marketing/AGENT.md) says:
+The repository's [Example Desk context](../../examples/example-desk/marketing/AGENT.md) says:
 
 > Helps a small team organize reference notes.
 

@@ -11,8 +11,8 @@ Source: the owner's AP2 repository at commit a86e4058cedf8baebd287ea7c33f440341b
 | marketing-template/AGENT.template.md | templates/marketing/AGENT.md | Rewritten generic project context |
 | marketing-template/TASKS.template.md | templates/marketing/TASKS.md | Generic compatible task format and instructions |
 | marketing-template/logs/*.md | templates/marketing/logs/*.md | Preserved formats; provider-neutral identifiers |
-| MY_PROJECTS.md and marketing-template/SETUP.md | docs/PLAN.md, docs/ARCHITECTURE.md | Captured onboarding/import requirements; actual portfolio and account table excluded |
-| utils/db/marketingTasksShared.ts, utils/db/marketingTasks.ts, app/api/admin/tasks/[id]/route.ts | docs/ARCHITECTURE.md and this record | Captured state semantics; no hosted DB/auth code copied |
+| MY_PROJECTS.md and marketing-template/SETUP.md | docs/maintainers/PLAN.md, docs/maintainers/ARCHITECTURE.md | Captured onboarding/import requirements; actual portfolio and account table excluded |
+| utils/db/marketingTasksShared.ts, utils/db/marketingTasks.ts, app/api/admin/tasks/[id]/route.ts | docs/maintainers/ARCHITECTURE.md and this record | Captured state semantics; no hosted DB/auth code copied |
 
 ## Existing behavior to preserve
 
@@ -38,4 +38,4 @@ The extracted parser is not yet a format-preserving writer. Snapshot diagnostics
 
 ## Interactive architecture revision
 
-The user replaced the headless execution design with skills/commands in the current agent session. P01/P02 remain optional local infrastructure; P03 subprocess code and probes were removed. The active roadmap is docs/PLAN.md and the shared marketing contract remains templates/WORKFLOW.md. No original product checkout was changed.
+The user replaced the headless execution design with skills/commands in the current agent session. P01/P02 remain optional local infrastructure; P03 subprocess code and probes were removed. The active roadmap is docs/maintainers/PLAN.md and the shared marketing contract remains templates/WORKFLOW.md. No original product checkout was changed.
