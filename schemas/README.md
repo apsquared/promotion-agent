@@ -28,6 +28,8 @@ Run validation rejects inconsistent lifecycle timestamps, cross-project/run arti
 
 Reviews bind project, artifact ID/revision, intended action, destination, account reference, and intended post time. `reviewMatches` compares the entire binding and requires an approved decision. Any future publishing helper must additionally verify artifact bytes/revision, ownership, provider/account state, and action attempts before dispatch. An approved record alone never sends anything.
 
+`Project.scheduler` (P13) selects the social post scheduler adapter: `manual` (also the meaning of an absent field) or `post-bridge`, with optional per-channel non-secret account references. It has no credential fields; `post-bridge` requires `policy.publish: exact-content-review`. An approval to schedule binds the same fields as `ReviewBinding` with `action: 'schedule'` (destination, account reference, intended UTC time) plus the exact content; the interactive workflow holds that approval in conversation rather than storing a review. `postScheduler` resolves the default. It is unrelated to the Schedule schema below.
+
 The historical AdapterCapabilities and Schedule schemas are retained for P01/P02 compatibility only. The interactive workflow does not populate them, inspect CLI versions/authentication, or dispatch agent runs/schedules. Host tools and permissions remain owned by the active session.
 
 ## Validation tooling

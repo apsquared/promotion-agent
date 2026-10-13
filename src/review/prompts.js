@@ -60,6 +60,13 @@ export function reviewPrompt(data, task) {
       ? `\nThis task is ${task.disposition.state} (${task.disposition.reason}). Check with me before reactivating it.\n`
       : '';
   const drafts = draftLines(task);
+  const post = task.scheduled;
+  const scheduled =
+    post && post.status === 'scheduled'
+      ? `\nRecorded as scheduled through the ${post.adapter} adapter for ${post.localTime} (${post.scheduledFor.slice(11, 16)} UTC)${post.reference ? `, reference ${post.reference}` : ''}. Scheduled is not published: follow the verify step of the shared workflow's publishing procedure, and change, cancel or repost only with my approval.\n`
+      : post
+        ? `\nThe latest scheduled-post record says ${post.status}. Check it with the shared workflow's publishing procedure before doing anything else.\n`
+        : '';
   if (target === 'product') {
     return {
       target,
@@ -85,7 +92,7 @@ Under Next steps, list the marketing work this change unlocks (announcing it, up
     text: `Continue ${product} promotion task ${task.taskId}: ${task.title}
 
 Promotion workspace: ${data.project.root}
-${task.actionUrl ? `Destination: ${task.actionUrl}\n` : ''}${parked}
+${task.actionUrl ? `Destination: ${task.actionUrl}\n` : ''}${parked}${scheduled}
 Steps:
 ${steps}
 ${drafts ? `\nSaved drafts so far:\n${drafts}\n` : ''}

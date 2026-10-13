@@ -52,7 +52,7 @@ What's the status?
 
 For future chats, open the **promotion workspace** the agent created. It contains the workflow and your saved marketing work. If your agent does not discover the workflow, say “Read .promotion-agent/templates/WORKFLOW.md.”
 
-No database, publishing account, or additional model API key is needed for drafting. Publishing, sending outreach, spending, committing, and pushing require separate authorization.
+No database, publishing account, or additional model API key is needed for drafting. Scheduling through [Post Bridge](#posting-and-scheduling-with-optional-post-bridge) is optional. Publishing, sending outreach, spending, committing, and pushing require separate authorization.
 
 ## What you can ask for
 
@@ -62,6 +62,7 @@ No database, publishing account, or additional model API key is needed for draft
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
+- “Schedule this post for Tuesday 9am.”
 - “Show me our drafts and pending work.”
 
 This checkout also includes `reddit-thread-search` and `x-post-search` in `.agents/skills/`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
@@ -77,6 +78,27 @@ These entrypoints are checkout resources; portable onboarding does not install t
 ## Product videos
 
 Ask “Make a 45-second site tour for X,” or use `$promotion-video` in Codex or `/promote-video` in Claude Code/OpenCode. The agent builds the video project in your promotion workspace under `marketing/assets/videos/`, using [HyperFrames](https://github.com/heygen-com/hyperframes) through `npx` when available and a Playwright + ffmpeg slideshow otherwise. You approve the script before any voice is generated. Signing in to HeyGen, anything that uses paid credits, and installing HyperFrames' agent skills globally stay your decisions. The result is a draft MP4 with a contact sheet; posting it, or copying it into your product repository, is a separate request. See the [video activity](templates/activities/video/WORKFLOW.md).
+
+## Posting and scheduling, with optional Post Bridge
+
+When a draft is approved, ask “Post this” or “Schedule it for Tuesday 9am.” Every project starts with **manual** posting: the agent hands you the exact text, account and time (in your timezone and UTC), and you post it yourself. No tools or accounts are needed.
+
+### Post Bridge (optional)
+
+If you use [Post Bridge](https://www.post-bridge.com), the agent can schedule posts through it for you.
+
+1. Set up Post Bridge's own CLI once, with your key: `npx postbridge-cli setup --key <your key>`. You run this yourself; the agent never asks for, reads or stores your key.
+2. Ask the agent: “Use Post Bridge to schedule posts for Example Desk.” It turns Post Bridge on for that product's workspace only, then lists your connected Post Bridge accounts so you can confirm which one to post from.
+3. Ask for a post as usual. Before anything is scheduled, the agent shows you the exact text, the account and the time, and waits for your yes.
+
+What to expect:
+
+- **X threads are not supported** by Post Bridge. The agent offers to merge a thread into one post, or to hand you the replies to post yourself, and asks you to approve the changed text.
+- **Links are removed from X posts** by Post Bridge. The agent offers to put the link in a reply posted right after the tweet, or to say “link in bio”, and shows you the change first.
+- **Scheduled is not published.** The task stays open until the agent has checked the live post after its scheduled time and recorded its URL. The review desk marks it **scheduled** meanwhile.
+- Changing or cancelling a scheduled post also needs your approval. The agent never posts immediately unless you ask it to.
+
+Promotion-agent runs no background timer and adds no dependency: Post Bridge holds the scheduled time, and the agent works only while you are in a conversation. Signing up, connecting or reconnecting social accounts, and any paid Post Bridge plan stay in your hands. These steps follow the [post scheduling procedure](templates/publishing/WORKFLOW.md) and its [Post Bridge reference](templates/publishing/post-bridge.md); they have not yet been verified end to end by automated tests.
 
 ## Multiple projects
 

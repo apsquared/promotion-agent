@@ -26,7 +26,15 @@ export function array<T>(item: Schema<T>): Schema<T[]> {
 export function nullable<T>(item: Schema<T>): Schema<T | null> {
   return { parse: (v, p) => v === null ? null : item.parse(v, p) };
 }
-export function object<S extends Record<string, Schema<unknown>>>(shape: S): Schema<{ [K in keyof S]: Infer<S[K]> }> {
+/** A field that may be absent from an object. Absent stays absent; it is never filled with a default. */
+export type Optional<T> = Schema<T> & { optional: true };
+export function optional<T>(item: Schema<T>): Optional<T> {
+  return { optional: true, parse: (v, p) => item.parse(v, p) };
+}
+type Shape = Record<string, Schema<unknown>>;
+type ObjectOf<S extends Shape> = { [K in keyof S as S[K] extends Optional<unknown> ? never : K]: Infer<S[K]> } &
+  { [K in keyof S as S[K] extends Optional<unknown> ? K : never]?: Infer<S[K]> };
+export function object<S extends Shape>(shape: S): Schema<ObjectOf<S>> {
   return { parse(value, path = '$') {
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${path}: expected object`);
     const input = value as Record<string, unknown>;
@@ -34,8 +42,20 @@ export function object<S extends Record<string, Schema<unknown>>>(shape: S): Sch
       if (!Object.hasOwn(shape, key)) throw new Error(`${path}.${key}: unknown field`);
     }
     const result: Record<string, unknown> = {};
-    for (const key of Object.keys(shape)) result[key] = shape[key].parse(input[key], `${path}.${key}`);
-    return result as { [K in keyof S]: Infer<S[K]> };
+    for (const key of Object.keys(shape)) {
+      if (!Object.hasOwn(input, key) && (shape[key] as Partial<Optional<unknown>>).optional) continue;
+      result[key] = shape[key].parse(input[key], `${path}.${key}`);
+    }
+    return result as ObjectOf<S>;
+  } };
+}
+/** A strict map: every key must pass `key`, every value `item`. */
+export function record<K extends string, T>(key: Schema<K>, item: Schema<T>): Schema<Partial<Record<K, T>>> {
+  return { parse(value, path = '$') {
+    if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${path}: expected object`);
+    const result: Partial<Record<K, T>> = {};
+    for (const [k, v] of Object.entries(value)) result[key.parse(k, `${path} key ${JSON.stringify(k)}`)] = item.parse(v, `${path}.${k}`);
+    return result;
   } };
 }
 export function refine<T>(schema: Schema<T>, check: (value: T) => boolean, description: string): Schema<T> {

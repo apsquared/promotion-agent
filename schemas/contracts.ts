@@ -1,4 +1,4 @@
-import { array, boolean, choice, literal, nullable, nonnegative, object, positiveInteger, refine, rule, text } from './validation.ts';
+import { array, boolean, choice, literal, nullable, nonnegative, object, optional, positiveInteger, record, refine, rule, text } from './validation.ts';
 
 export const SCHEMA_VERSION = 1;
 export const uuid = rule<string>(v => typeof v === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(v), 'lowercase UUID');
@@ -36,11 +36,23 @@ export const cadenceSchema = refine(object({
   localTime: nullable(rule<string>(v => typeof v === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(v), 'HH:mm')),
   weekdays: array(rule<number>(v => typeof v === 'number' && Number.isInteger(v) && v >= 1 && v <= 7, 'ISO weekday 1-7')),
 }), c => new Set(c.weekdays).size === c.weekdays.length && (c.kind === 'manual' ? c.localTime === null && c.weekdays.length === 0 : c.localTime !== null && (c.kind === 'daily' ? c.weekdays.length === 0 : c.weekdays.length > 0)), 'cadence fields must match manual/daily/weekly kind');
-export const projectSchema = object({
+/**
+ * Social post scheduling (P13), unrelated to the historical agent-run `scheduleSchema` below.
+ * `manual` hands the user exact content, account and time; `post-bridge` schedules through the user's own Post Bridge setup.
+ */
+export const schedulerAdapter = choice('manual', 'post-bridge');
+export const socialChannel = choice('x', 'linkedin', 'instagram', 'facebook', 'threads', 'bluesky', 'tiktok', 'youtube', 'pinterest');
+/** A non-secret provider account ID or handle. Credentials never belong in project configuration. */
+export const accountReference = rule<string>(v => typeof v === 'string' && /^@?[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/.test(v) &&
+  !/^(?:pb|sk|pk|rk)_(?:live|test)_|^sk-/i.test(v), 'account ID or handle (no credentials)');
+export const postSchedulerSchema = object({ adapter: schedulerAdapter, accounts: optional(record(socialChannel, accountReference)) });
+export const projectSchema = refine(object({
   schemaVersion: literal(SCHEMA_VERSION), id: uuid, displayName: text,
   contextPath: relativePath, tasksPath: relativePath, facts: array(factSchema),
   policy: policySchema, timezone, cadence: cadenceSchema,
-});
+  scheduler: optional(postSchedulerSchema),
+}), p => p.scheduler?.adapter !== 'post-bridge' || p.policy.publish === 'exact-content-review',
+'scheduler adapter post-bridge requires policy.publish exact-content-review');
 export const credentialReferenceSchema = object({
   connector: text, environmentVariable: rule<string>(v => typeof v === 'string' && /^[A-Z_][A-Z0-9_]*$/.test(v), 'environment variable NAME only'),
 });
