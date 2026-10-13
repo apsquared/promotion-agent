@@ -1,6 +1,6 @@
 # Documentation
 
-promotion-agent documentation serves two audiences. Every document names its audience in its opening lines.
+promotion-agent documentation serves two audiences, and a document's folder says which one it is for.
 
 ## Audiences
 
@@ -18,6 +18,7 @@ User documentation lives directly in `docs/` and ships in each installed promoti
 - [Review desk](REVIEW-UI.md): the optional local task board.
 - [Compatibility](COMPATIBILITY.md): how to invoke it in each agent host, and supported platforms.
 - [Helper reference](HELPERS.md): local helper commands, run by the agent in your session.
+- [Privacy and source handling](PRIVACY.md): what the agent reads, sends out and keeps private.
 
 The [shared workflow](../templates/WORKFLOW.md) the agent follows lives in `templates/`.
 
@@ -31,5 +32,5 @@ Start with [AGENTS.md](../AGENTS.md) and [CONTRIBUTING.md](../CONTRIBUTING.md).
 - [Storage](maintainers/STORAGE.md): SQLite registry, write-back and legacy APIs.
 - [Review desk internals](maintainers/REVIEW-DESK.md): code layout, security and verification.
 - [Release checklist](maintainers/RELEASE.md): distribution status, remaining gates and compatibility evidence.
-- [Acceptance record](maintainers/ACCEPTANCE.md) and [manual smoke test](maintainers/MANUAL-SMOKE-TEST.md).
+- [Acceptance record](maintainers/ACCEPTANCE.md), [manual smoke test](maintainers/MANUAL-SMOKE-TEST.md) and [first-draft walkthrough](maintainers/FIRST-DRAFT.md).
 - [History](maintainers/history/): the original extraction record and the P05 verification.

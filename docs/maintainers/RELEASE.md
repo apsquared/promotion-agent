@@ -8,6 +8,8 @@ Observer architecture supersedes the historical product-local distribution evide
 
 Share the source checkout as early access. npm publication is optional and is not a prerequisite for trying the GitHub project. Native menu invocation in each supported agent and an outside user’s first useful draft remain open gates; record results using [the acceptance record](ACCEPTANCE.md). Automated tests cannot close those gates.
 
+Describe the project as free and MIT licensed with a user-supplied AI agent; host/model usage and optional services may cost money. Do not claim local-only inference or a global read-only sandbox. The README and [privacy procedure](../PRIVACY.md) explain external data flows and helper-versus-host boundaries. The [fictional first-draft walkthrough](FIRST-DRAFT.md) is a maintainer example, not an outside-user result or cross-host acceptance.
+
 The review desk supports authenticated local complete/skip/resume actions with a registry. It is not a hosted service or proof that an external marketing action occurred.
 
 ## Public source on 2026-09-27

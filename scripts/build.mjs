@@ -8,7 +8,7 @@ if (compiled.status !== 0) process.exit(compiled.status ?? 1);
 cpSync(new URL('../templates/', import.meta.url), new URL('../dist/templates/', import.meta.url), { recursive: true });
 mkdirSync(new URL('../dist/docs/', import.meta.url));
 // User docs only; docs/maintainers/ stays in the source checkout (see docs/README.md).
-for (const name of ['COMPATIBILITY.md', 'HELPERS.md', 'REVIEW-UI.md', 'USING.md'])
+for (const name of ['COMPATIBILITY.md', 'HELPERS.md', 'PRIVACY.md', 'REVIEW-UI.md', 'USING.md'])
   cpSync(new URL(`../docs/${name}`, import.meta.url), new URL(`../dist/docs/${name}`, import.meta.url));
 writeFileSync(new URL('../dist/package.json', import.meta.url), JSON.stringify({ type: 'module', private: true }) + '\n');
 cpSync(new URL('../LICENSE', import.meta.url), new URL('../dist/LICENSE', import.meta.url));

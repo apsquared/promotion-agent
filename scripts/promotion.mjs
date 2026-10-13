@@ -2,6 +2,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { previewInstall, applyInstall, reviewHash, previewRemoval, applyRemoval, removalHash } from '../src/onboarding/install.ts';
 import { inspectProject, prepareTask, recordTaskEvidence, completeSelectedTask, setSelectedTaskDisposition, readSelectedTaskState } from '../src/interactive/tasks.ts';
+import { releaseSource } from '../src/interactive/release-source.ts';
+import { acquisitionStatus } from '../src/interactive/acquisition.ts';
 
 import { requireWorkspace, observerSource, assertObserverOutput, assertObserverOutputForSetup } from '../src/onboarding/workspace.ts';
 
@@ -12,12 +14,16 @@ const help = `Local task helpers for the CURRENT interactive agent (no AI proces
   remove --project <directory> --plan <reviewed-plan.json> --review-hash <sha256>
   inspect --project <directory>
   prepare --project <directory> --task <T-NNN>
+  release-source --project <workspace> --base <local-ref-or-commit> --head <local-ref-or-commit>
+  acquisition-status --project <workspace> --sprint <UUID> [--database <local.sqlite>]
   record --project <directory> --task <T-NNN> --expected-hash <sha256> --outcome <draft|verified-complete> --reference <path|https-url> --summary <text>
   state --project <directory> --database <local.sqlite>
   disposition --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --state <active|skipped|snoozed> [--reason <text>] [--until <UTC timestamp>]
   complete --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --evidence <record-path> --evidence-hash <sha256>
 --project for all commands except onboard selects the promotion workspace, never the product repo.
 inspect/prepare are read-only. state reads optional registry state without changing product files.
+release-source reads only the registered source's Git history: exact IDs and filtered file names, never a diff or deployment proof.
+acquisition-status reads a saved sprint and existing tasks/dispositions; it never queues or sends, or verifies payments.
 record stores an agent-supplied evidence account without SQLite.
 complete requires a matching reviewed verified-complete record; it does not verify an external action itself.
 Use one database for dispositions/completion to share P02 project locks.`;
@@ -32,6 +38,8 @@ try {
       remove: { required: ['project', 'plan', 'review-hash'] },
       inspect: { required: ['project'] },
       prepare: { required: ['project', 'task'] },
+      'release-source': { required: ['project', 'base', 'head'] },
+      'acquisition-status': { required: ['project', 'sprint'], optional: ['database'] },
       record: { required: ['project', 'task', 'expected-hash', 'outcome', 'reference', 'summary'] },
       state: { required: ['project', 'database'] },
       disposition: { required: ['project', 'task', 'expected-hash', 'database', 'state'], optional: ['reason', 'until'] },
@@ -72,7 +80,9 @@ try {
       console.log(JSON.stringify(applyRemoval(options.project, JSON.parse(readFileSync(options.plan, 'utf8')), options['review-hash']), null, 2));
     } else {
       requireWorkspace(options.project);
-      const result = command === 'inspect' ? inspectProject(options.project) : command === 'prepare' ? prepareTask(options.project, options.task)
+      const result = command === 'acquisition-status' ? acquisitionStatus(options.project, options.sprint, options.database)
+        : command === 'release-source' ? releaseSource(options.project, options.base, options.head)
+        : command === 'inspect' ? inspectProject(options.project) : command === 'prepare' ? prepareTask(options.project, options.task)
         : command === 'record' ? recordTaskEvidence(options.project, options.task, options['expected-hash'], options.outcome, options.reference, options.summary)
         : command === 'state' ? readSelectedTaskState(options.project, options.database)
         : command === 'disposition' ? setSelectedTaskDisposition(options.project, options.task, options['expected-hash'], options.database,
