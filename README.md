@@ -1,12 +1,28 @@
 # promotion-agent
 
-A marketing assistant for your projects, used through Codex, Claude Code, or OpenCode. It reads your product repository, prepares marketing work, and reviews it with you in conversation.
+**Turn your product repo into marketing drafts, demo videos, and a next-action list—using the coding agent you already have.**
 
-**Your product repository stays read only by default.** Drafts, research, tasks, and logs live in a separate private promotion workspace. Recommended product changes stay proposals until you ask the agent to apply them.
+Built for founders who ship with an AI agent and want help getting their work in front of people. Promotion-agent uses your product documentation and keeps your drafts, research, previous topics, and follow-up tasks together, so the next conversation can pick up where you left off.
+
+**Free and MIT licensed. Bring your own AI agent.** Your agent subscription or model usage and optional media or publishing services may cost money. Drafting requires no additional model API key, database, or publishing account.
+
+The workflow treats your product repository as a read-only source and saves marketing work in a separate private workspace. Helpers enforce their own file boundaries; the agent's other tools depend on your host's permissions. Review [privacy and safety](#privacy-and-safety) before using private product material.
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
-**Early access:** automated helper and build checks run on Ubuntu and macOS. Native invocation across all three agents and an outside user’s first successful draft remain acceptance work. See [release status](docs/RELEASE.md).
+**Early access:** designed for Codex, Claude Code, and OpenCode. Automated helper and build checks run on Ubuntu and macOS; native menu invocation in each host and an outside founder's first useful draft remain unverified. See [acceptance status](docs/ACCEPTANCE.md).
+
+## See the first draft
+
+For the fictional Example Desk fixture, the product fact is: “Helps a small team organize reference notes.” A draft can turn that into:
+
+> Give your small team's reference notes a home. Example Desk helps you organize them.
+
+Ask “Make it shorter”:
+
+> Example Desk helps small teams organize reference notes.
+
+Both stay drafts. The workspace keeps the versions and an open review task, so “What's the status?” can report what is ready and what needs your decision. See the [sourced walkthrough and verification limits](docs/FIRST-DRAFT.md). This is a fictional example, not a customer testimonial or a live post.
 
 ## Get started
 
@@ -22,29 +38,25 @@ git clone https://github.com/apsquared/promotion-agent.git
 
 Keep it separate from your product repositories. The agent handles dependency installation and building when needed.
 
-### 2. Tell it which project to promote
+### 2. Set up your project and get one useful draft
 
 In that chat, say:
 
 ```text
-Set up promotion for my project Example Desk.
+Set up promotion for my project Example Desk and draft one X post for review.
 ```
 
-The agent finds your local project by name, verifies the match, creates a separate promotion workspace, and tells you where it saved it. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. The product name can differ from its folder, Git repository or package name; the agent checks identifying project metadata. Nothing is installed into your product repository. Setup keeps work in draft/review mode.
+Replace Example Desk with your product's name. The agent finds your local project, verifies the match, creates a separate promotion workspace, and prepares the requested draft from sourced facts. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. The product name can differ from its folder, Git repository or package name. Setup installs into the promotion workspace and keeps work in draft/review mode.
 
-### 3. Ask for marketing work
+### 3. Review it and keep the work moving
 
 Continue in the same chat:
 
 ```text
-Draft one X post for this product.
-```
-
-Then review and revise naturally:
-
-```text
 Make it shorter and focus on the main benefit.
 ```
+
+Then check saved work:
 
 ```text
 What's the status?
@@ -54,6 +66,24 @@ For future chats, open the **promotion workspace** the agent created. It contain
 
 No database, publishing account, or additional model API key is needed for drafting. Scheduling through [Post Bridge](#posting-and-scheduling-with-optional-post-bridge) is optional. Publishing, sending outreach, spending, committing, and pushing require separate authorization.
 
+## Why keep a promotion workspace?
+
+- **Ground the copy in your product.** Use documented capabilities and label missing facts rather than inventing metrics or testimonials.
+- **Keep context across conversations.** Save drafts, prior topics, research, and pending tasks; check history before preparing another post or submission.
+- **Know the next action.** Keep review, publication, verification, and follow-up work visible, with an optional local desk for multiple products.
+
+The agent works during your conversations. Queued tasks and proposed dates remain saved work until someone acts on them; the project runs no background worker.
+
+## Privacy and safety
+
+Workspace files stay on your machine unless you share them or use an external tool. **Local storage does not mean local-only AI processing:** text the agent reads is handled under your chosen host and model provider's data policies. Choose host permissions and a provider appropriate for your source material.
+
+The shared workflow excludes environment files, keys, tokens, credentials, database dumps, and private customer records from routine context collection. Use sanitized product facts; review drafts and captured media for confidential details before sharing. These are agent instructions, not a replacement for filesystem restrictions.
+
+Public research sends search terms to external services. The bundled X search helper uses `tweetlook.com`, a third-party mirror, and sends the query to it. Use public product/category terms only; mirror results are discovery evidence and may differ from the original post. Browsing, media generation, and opt-in scheduling have their own external data flows.
+
+Keep promotion workspaces, source mappings, install plans, and account records out of public Git repositories. The local review desk's session link grants access to its configured workspaces; keep it private and use the loopback launcher. See [security boundaries and reporting](SECURITY.md).
+
 ## What you can ask for
 
 - “Prepare a directory submission kit.”
@@ -62,12 +92,18 @@ No database, publishing account, or additional model API key is needed for draft
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
+- “Prepare a launch pack for what I shipped since last Friday.”
+- “Help me find my first 10 paying customers. I have 30 minutes a day.”
 - “Schedule this post for Tuesday 9am.”
 - “Show me our drafts and pending work.”
 
 This checkout also includes `reddit-thread-search` and `x-post-search` in `.agents/skills/`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
 
 The agent uses your product documentation and marketing history to support its claims. Drafts and recommendations remain available for review; preparing them does not publish anything.
+
+Launch packs coordinate an X announcement, short release notes, a customer explanation and a demo storyboard. The [release activity](templates/activities/release/WORKFLOW.md) records the exact Git comparison or changelog, links each claim to its source, checks earlier packs and saves versioned drafts under a stable release ID. Implemented code needs separate availability evidence before the copy says customers can use it; unclear deployment stays an unresolved fact. Review tasks lead into the existing video and publishing workflows.
+
+The [first-customers sprint](templates/activities/acquisition/WORKFLOW.md) turns research into a saved audience/offer plan, a ranked opportunity history, tailored drafts and a few daily actions on the existing task board. Ask “What should I do today?” to resume it, or report results to update the plan. Paying customers, trials, signups and reported versus verified outcomes stay separate; replies remain unsent until authorized.
 
 ## X account growth and coaching
 
