@@ -97,7 +97,11 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Schedule this post for Tuesday 9am.”
 - “Show me our drafts and pending work.”
 
-This checkout also includes `reddit-thread-search` and `x-post-search` in `.agents/skills/`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
+This checkout also includes `reddit-thread-search` and `x-post-search`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
+
+For blog and SEO requests, the checkout also includes `seo-title-optimization` (audit and rewrite page titles, H1s and meta titles against search intent) and `blog-refresher` (refresh an existing post with a SERP gap analysis, with an approval checkpoint before rewriting). They save proposals in the promotion workspace and never edit your product repository on their own. Both are adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) by [Ilias Ism](https://il.ly), used under the MIT license; each folder keeps the upstream notice. Like the search skills, they are checkout resources that onboarding does not install.
+
+Every checkout skill is in both `.agents/skills/` (Codex) and `.claude/skills/` (Claude Code), with identical contents; only Codex's `agents/` UI metadata is left out of the Claude copy.
 
 The agent uses your product documentation and marketing history to support its claims. Drafts and recommendations remain available for review; preparing them does not publish anything.
 
