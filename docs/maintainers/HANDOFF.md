@@ -1,5 +1,13 @@
 # Continue here
 
+## SEO skills from Illyism/seo-skills — 2026-10-13
+
+User request: review https://github.com/Illyism/seo-skills (commit `af48ce5`) and install any skills worth having, with README attribution. Installed `seo-title-optimization` and `blog-refresher` into `.agents/skills/` with UI metadata, a shared-workflow preamble (product repo read only, proposals saved in the workspace, product edits need a separate request) and the upstream MIT notice in each folder's LICENSE. The upstream skill bodies are otherwise unchanged. README credits the source and author. Not installed: `seo-autopilot` (ships changes to the product repo and runs on a schedule, conflicting with draft/review), `blitz-seo` (daily backlink building and unsourced result claims), `linkdr` (paid backlink checkout with a promo code), `scribiz` (external transcription service), `diff-marketing` (covered more rigorously by the release activity), `blitz-copy` (fabricated example statistics and pressure tactics), `understand-customers` (covered by the acquisition activity), `customer-journey` and `intro` (small overlap with existing blog/content work; revisit if keyword or AI-answer planning becomes an activity).
+
+Verification: frontmatter names match folders and both relative workflow/LICENSE links resolve; `git diff --check` passed; `npm test` passed 98/98 including the mirror test, which also failed as expected when a mirrored file was altered (no core code changed). Native skill invocation and live SERP research were not exercised. Both are checkout resources; portable onboarding is unchanged.
+
+Follow-up user request: every checkout skill must exist for both hosts. All eight `.agents/skills/` folders (the two SEO skills, `reddit-thread-search`, `x-post-search` with its script, `x-growth`, `promotion-agent`, `promotion-competitors`, `promotion-video`) are mirrored into `.claude/skills/`, excluding the Codex-only `agents/` metadata. `tests/skills-mirror.test.mjs` fails if the folder sets or any file differ, or if a Claude skill's name or relative links break; edit `.agents/skills/` and copy to `.claude/skills/` together. The `x-growth` skill shares its name with `.claude/commands/x-growth.md`, and the three promotion skills duplicate the `/promote*` commands with equivalent instructions; the commands remain because they pass `$ARGUMENTS` and are tested entrypoints. The mirrored X script's `--help` runs from the Claude location. No commit, push or external action occurred.
+
 ## Docs split by audience — 2026-10-13
 
 User request: separate docs for using the agent from docs for maintaining it, with clear definitions of "agent users" and "agent maintainers".

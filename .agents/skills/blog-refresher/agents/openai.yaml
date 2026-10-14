@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blog Refresher"
+  short_description: "Refresh a post with a SERP gap analysis"
+  default_prompt: "Use $blog-refresher to refresh one of this product's existing blog posts."

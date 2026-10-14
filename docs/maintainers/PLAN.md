@@ -104,6 +104,10 @@ Acceptance: source/installed entrypoints resolve after relocation, upgrades pres
 
 Copied the local `reddit-thread-search` and `x-post-search` folders into `.agents/skills/`, including the Reddit query reference, skill UI metadata and X search script. Added shared-workflow guidance and replaced machine-specific script paths with skill-relative paths. These are checkout resources; portable onboarding remains unchanged. Script syntax/help and reference checks passed; live search and native skill invocation were not exercised.
 
+## SEO skills from Illyism/seo-skills — 2026-10-13 (completed)
+
+Reviewed all eleven upstream skills. Copied `seo-title-optimization` and `blog-refresher` into `.agents/skills/` and `.claude/skills/` with shared-workflow guidance, UI metadata and the upstream MIT notice; README credits Illyism/seo-skills. The rest were declined for conflicting with draft/review, requiring paid services, or duplicating existing activities (reasons in the handoff). All eight checkout skills are now mirrored into `.claude/skills/` (Codex `agents/` metadata excluded), guarded by `tests/skills-mirror.test.mjs`. Checkout resources only; portable onboarding unchanged. Link, metadata and mirror checks passed; native invocation and live research were not exercised.
+
 ## X Growth Mentor — 2026-10-10 (implemented as checkout resources)
 
 Added account audits, customized growth plans, persistent account/task/metric records and ongoing mentorship. Codex, Claude Code and OpenCode entrypoints route through WORKFLOW v0.8 to one canonical activity under templates/activities/x-growth/. Personal accounts need no product registration; product accounts retain the existing observer workspace boundary. Research notes review the requested Paul article against primary X ranking, policy and analytics sources. Planning remains interactive with applicable authorization for public actions or reminders.

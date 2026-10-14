@@ -1,0 +1,4 @@
+interface:
+  display_name: "SEO Title Optimization"
+  short_description: "Rewrite and audit page titles for search"
+  default_prompt: "Use $seo-title-optimization to audit this product's page titles and propose better ones."
