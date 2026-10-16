@@ -34,6 +34,13 @@ Cost notes refer to local or self-hosted use. Free software can still require ho
 - [HyperFrames](https://github.com/heygen-com/hyperframes) - Apache-2.0 framework that turns HTML, CSS, media and animations into MP4 videos. Includes agent workflows for product launch videos, faceless explainers, feature announcements and social clips.
   - **External costs:** No HeyGen subscription, API key or per-render fee required for basic local rendering. Requires Node.js 22+ and FFmpeg. AI-assisted authoring uses your existing agent; generated voice, images, music and other media may require paid provider credits. Optional cloud rendering uses external infrastructure/services. See the [local CLI requirements](https://github.com/heygen-com/hyperframes#manually-with-the-cli) and [optional configuration](https://github.com/heygen-com/hyperframes/blob/main/.env.example).
 
+## Design
+
+- [SuperDesign](https://github.com/superdesigndev/superdesign) - Open-source design agent extension for VS Code, Cursor, Windsurf and Claude Code that generates UI mockups, components and wireframes from prompts. Mostly AGPLv3, with some files under a separate commercial license; see the [license](https://github.com/superdesigndev/superdesign/blob/main/LICENSE). The upstream README says this original extension is no longer actively maintained and the product has moved to a hosted web app.
+  - **External costs:** No SuperDesign subscription required for the open-source extension. Uses your own AI model provider keys and credits, or your existing Claude Code/Cursor subscription; the hosted web app is a separate product.
+- [Design Taste](https://github.com/madebymustafa/design-taste) - MIT-licensed agent skills that steer AI-generated landing pages and interfaces away from generic defaults, with genre packs (editorial, brutalist, dark tech and more) plus typography, color, motion, accessibility and landing-page craft rules.
+  - **External costs:** No separate subscription required for the skills. Uses your existing AI coding agent's subscription or credits.
+
 ## Workflow Automation and Monitoring
 
 - [Activepieces](https://github.com/activepieces/activepieces) - Visual workflow automation for connecting marketing events, AI drafting, review steps and distribution tools. The Community Edition is MIT licensed; enterprise features use a commercial license.
