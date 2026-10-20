@@ -10,8 +10,11 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 | --- | --- | --- |
 | [mcp-ify](mcp-ify/SKILL.md) | Design, implement, or review customer MCP tools for an existing SaaS, including permissions, applicable spending controls, connection UX, and verification. | `Use $mcp-ify to add customer MCP access to this SaaS. Inspect the repo and suggest the first useful workflows.` |
 | [product-video](product-video/SKILL.md) | Make a short product tour, launch promo or feature clip from a product's public site, with HyperFrames or a Playwright + ffmpeg fallback, as a reviewable draft MP4. | `Use $product-video to turn https://example.com into a 30-second promo for X.` |
+| [nurture-campaign](nurture-campaign/SKILL.md) | Build and verify a short lifecycle email sequence for a product's registered users, with at-most-once delivery, a CAN-SPAM footer, one-click unsubscribe and scheduling. | `Use $nurture-campaign to build a 5-email nurture sequence for users who signed up.` |
 
 `mcp-ify` adapts to the project's stack and account model. It includes examples for read-only analytics, paid unlocks, collaboration writes, and existing MCP servers. It does not itself supply an MCP server or deploy one merely by being installed.
+
+`nurture-campaign` inspects the product, its user schema, email setup and Privacy Policy before asking only the decisions that are yours (which existing users to include, the postal address). It dry-runs by default, verifies with tests, a non-existent user and an HTML preview, and tells you how many real users the first run will email before anything is pushed, deployed or sent.
 
 `product-video` runs HyperFrames on demand through `npx` and adds no dependency to your project. It asks before signing in, using paid credits or installing HyperFrames' agent skills globally, shows you the script before building, and never publishes, commits or deploys. It is the standalone version of promotion-agent's `video` activity; its `references/` are kept identical to that activity's.
 
@@ -23,7 +26,7 @@ With Node.js and npm installed, run this from the project where you want to use 
 npx skills add apsquared/promotion-agent --skill mcp-ify
 ```
 
-Use the same command with `--skill product-video` for the video skill.
+Use the same command with `--skill product-video` or `--skill nurture-campaign` for the other skills.
 
 The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets you choose your agent and installation options. Add `--agent codex` to target Codex, or `--global` to make the skill available across your projects.
 
@@ -33,7 +36,7 @@ The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets 
 npx skills add ./skills/mcp-ify --agent codex --global
 ```
 
-or `./skills/product-video` for the video skill.
+or `./skills/product-video` or `./skills/nurture-campaign`.
 
 Run the local command from the promotion-agent repository root. It installs this local skill for your personal Codex use.
 
@@ -44,6 +47,8 @@ Open your SaaS project in your agent and ask:
 ```text
 Use $mcp-ify to add customer MCP access to this SaaS.
 ```
+
+For email, open the product's repository and ask `Use $nurture-campaign to build an email nurture sequence for registered users.`
 
 For a video, open any folder in your agent and ask `Use $product-video to make a 30-second promo of https://example.com.`
 

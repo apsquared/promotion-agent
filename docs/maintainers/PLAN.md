@@ -188,3 +188,5 @@ Run `npm test` for code changes and record current results in docs/maintainers/H
 ## Standalone AI skills collection — 2026-10-11 (implemented locally)
 
 User-requested `skills/` collection, independent of the promotion workflow and installer. First skill: `mcp-ify`, with concise Agent Skills metadata/instructions, Codex UI metadata, focused implementation references, and four adaptation examples. `skills/readme.md` documents the catalog, installation, updates, removal, and contributions; root README links it. No core/runtime changes or dependencies. Skill Creator validation and relocation/link/UI metadata checks passed; native invocation and actual SaaS implementation remain unverified. See HANDOFF.
+
+Standalone skill, 2026-10-19: added `skills/nurture-campaign/` (lifecycle email sequence for a product's registered users) from a user-supplied brief, with catalog and README entries. Docs-only; native invocation unverified. See HANDOFF.
