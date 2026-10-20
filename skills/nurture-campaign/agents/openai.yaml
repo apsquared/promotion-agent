@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nurture Campaign"
+  short_description: "Build a lifecycle email sequence for signups"
+  default_prompt: "Use $nurture-campaign to build an email nurture sequence that brings this product's registered users back and shows its value."
