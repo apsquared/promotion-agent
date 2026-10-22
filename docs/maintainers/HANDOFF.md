@@ -1,5 +1,19 @@
 # Continue here
 
+## P16a — AI visibility activity — 2026-10-21
+
+User request: research how products get recommended by AI assistants, write a design doc with user-supplied review feedback, then build it with `manual` + `session-search` probes only, default engines ChatGPT/Perplexity/Gemini/Claude, training crawlers as a per-product choice, first baseline on BarGPT.
+
+- Design and research: `docs/maintainers/AI-VISIBILITY.md` (decisions recorded; standalone `skills/` version still open).
+- Procedure: `templates/activities/ai-visibility/WORKFLOW.md` and `RECORDS.md`. WORKFLOW v0.16 adds the route, a `visibility` budget row and a duplicate rule; `tests/publishing.test.mjs` pins the new version.
+- Entrypoints: `.agents/skills/promotion-visibility/` (with `agents/openai.yaml`), mirrored `.claude/skills/promotion-visibility/`, `.claude/commands/promote-visibility.md`, `.opencode/commands/promote-visibility.md`; installer wrappers and installed-guide paragraph in `src/onboarding/install.ts`.
+- `src/core/task-prompt.ts`: category `visibility` (aliases `ai-visibility`, `geo`, `aeo`) with a prompt fallback.
+- Docs: PLAN P16, ARCHITECTURE section, README and USING request examples, `docs/README.md` link.
+
+Follow-up user request the same day: cap manual probe sheets at 20 pastes by default (aim for 10–20). Sheet 1 covers `P1` retrieval on ChatGPT, then Perplexity; later sheets take the next uncovered slots, tracked in `RUN.md`; a re-measure repeats the same slots. Updated the procedure, RECORDS, budget row, task-prompt fallback, installed guide, design doc and PLAN; the visibility test pins the cap.
+
+Validation: `npm run check` passed both typechecks, the build and 101/101 tests, including `tests/visibility.test.mjs` (three cases) and the skills mirror test. Native invocation, live probing and engine behavior were not exercised. Next: the BarGPT baseline (prompt-set approval, then the user's pasted answers). Not committed.
+
 ## Standalone skill — nurture-campaign — 2026-10-19
 
 User request: turn a pasted lifecycle-email brief into a `nurture-campaign` skill. Added `skills/nurture-campaign/` to the independent collection (not a checkout skill, so no `.claude/skills` mirror): a 71-line `SKILL.md` (`license: MIT`) with the seven-stage flow (investigate, ask only the user's decisions, design, build, update touched docs, verify without emailing real people, ship only after reporting the first-run recipient count), `agents/openai.yaml`, and three references: `sequence.md` (five-step arc, branching, copy rules), `delivery.md` (pure content module, timing, at-most-once sends, rendering/UTM, CAN-SPAM footer, HMAC + RFC 8058 unsubscribe, CLI runner, scheduler) and `verification.md`. Small additions to the brief: the unsubscribe signing secret in `.env.example`, identical responses for unknown users, handling of stale `sending` claims, and excluding admin/test accounts. `skills/readme.md` has a catalog row, a description paragraph, install and usage lines; README mentions it.

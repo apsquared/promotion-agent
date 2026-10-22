@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Visibility"
+  short_description: "Check whether AI assistants recommend your product and map the sources they cite"
+  default_prompt: "Use $promotion-visibility to run an AI visibility baseline for my product."
