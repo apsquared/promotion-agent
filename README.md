@@ -89,6 +89,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Prepare a directory submission kit.”
 - “Find relevant discussions and draft helpful replies.”
 - “Analyze our competitors and find where people discuss them.”
+- “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”

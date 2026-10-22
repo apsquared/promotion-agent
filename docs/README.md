@@ -31,6 +31,7 @@ Start with [AGENTS.md](../AGENTS.md) and [CONTRIBUTING.md](../CONTRIBUTING.md).
 - [Architecture](maintainers/ARCHITECTURE.md): design decisions.
 - [Storage](maintainers/STORAGE.md): SQLite registry, write-back and legacy APIs.
 - [Review desk internals](maintainers/REVIEW-DESK.md): code layout, security and verification.
+- [AI visibility design](maintainers/AI-VISIBILITY.md): research and decisions behind the AI visibility activity.
 - [Release checklist](maintainers/RELEASE.md): distribution status, remaining gates and compatibility evidence.
 - [Acceptance record](maintainers/ACCEPTANCE.md), [manual smoke test](maintainers/MANUAL-SMOKE-TEST.md) and [first-draft walkthrough](maintainers/FIRST-DRAFT.md).
 - [History](maintainers/history/): the original extraction record and the P05 verification.

@@ -68,6 +68,12 @@ The Next.js build and `vercel.json` support the chosen deployment technology. Th
 
 The existing string-valued task categories and records support this activity without schema changes. Task-linked Markdown research reports use the evidence helper; the review desk's copyable prompt points the agent at them. The task prompt builder supplies a research-specific fallback for tasks without custom steps. Finding a mention is not an engagement action or confirmed buying intent; report completion and recommended follow-up actions remain separate.
 
+## AI visibility activity
+
+`templates/activities/ai-visibility/WORKFLOW.md` defines activity `visibility`: whether AI assistants name a product for a stable, user-approved prompt set, which sources they cite instead, and the next plays. Research and decisions are in [AI-VISIBILITY.md](AI-VISIBILITY.md). The `promotion-visibility` skill and `/promote-visibility` commands are thin entrypoints installed like the competitor and video activities.
+
+Probing other AI systems is the one step that could cross the execution boundary, so it uses adapters as post scheduling does. `manual` (the user runs a probe sheet in their own apps and pastes answers back) and `session-search` (the current agent's own search and browser) are the only adapters; neither calls an AI provider, reads a key or drives a consumer chat interface. The current session's own model answer is not recorded as an engine result. An agent-run `engine-api` adapter is deferred. Records are Markdown under `marketing/ai-visibility/` in the workspace, recorded as draft evidence with the existing helpers; site changes are `product` proposals and outreach uses existing categories. No schema change, dependency, database table or background process; re-measurement is a queued task.
+
 ## Acquisition sprints
 
 `templates/activities/acquisition/WORKFLOW.md` routes first-paying-customer requests, daily check-ins and results updates through one persistent sprint bound to the workspace project UUID. `marketing/acquisition/<sprint-UUID>/SPRINT.json` holds audience, sourced offer, daily minutes, customer/payment definition, separately attributed baseline categories, total/additional target, opportunity assessments, historical action/outcome evidence and dated reviews. Version snapshots retain prior decisions and immutable evidence. Sprint task IDs reference the existing project TASKS.md; there is no second task board, background execution or sending adapter. Research and individual actions can complete while the customer sprint continues.

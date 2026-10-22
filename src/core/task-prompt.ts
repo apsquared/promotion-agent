@@ -37,6 +37,7 @@ export type PromptCategory =
   | 'outreach'
   | 'search'
   | 'competitor'
+  | 'visibility'
   | 'video'
   | 'release'
   | 'acquisition'
@@ -53,6 +54,7 @@ export function promptCategory(category: string): PromptCategory {
   if (c === 'directory' || c === 'backlink' || c === 'launch') return 'directory';
   if (c === 'outreach' || c === 'engagement') return 'outreach';
   if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
+  if (c === 'visibility' || c === 'ai-visibility' || c === 'geo' || c === 'aeo') return 'visibility';
   if (c === 'video') return 'video';
   if (c === 'release' || c === 'launch-pack') return 'release';
   if (c === 'acquisition' || c === 'first-customers') return 'acquisition';
@@ -149,6 +151,15 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 3. Check prior reports and task/thread history for duplicates. Save a sourced comparison and mention shortlist with URLs, evidence, relevance, and prioritized next steps in the promotion workspace’s permitted paths.
 4. Prepare useful reply drafts only where a contribution fits. Do not post, contact anyone, create a recurring monitor, or treat mentions as buying intent.
 5. Record the task-linked report for review using the local evidence helper when available. Verify research completion separately from any recommended engagement action.`,
+
+  visibility: `## How to work this task
+
+1. Follow the AI visibility activity linked from the shared WORKFLOW.md. Resume \`marketing/ai-visibility/PROMPTS.md\` and earlier runs; if no prompt set is approved yet, draft 20–30 prompts and get my approval before probing.
+2. Probe only with the \`manual\` and \`session-search\` adapters. Write the next probe sheet for me to run in my own apps: at most 20 pastes unless I ask for more, total stated at the top, taking the next uncovered slots; do not call AI provider APIs, drive chat interfaces in a browser or ask for API keys.
+3. Run the session-search checks yourself: Bing and web results for the priority prompts and fan-out queries, robots.txt and crawler access, server-rendered content, Bing indexing and identity consistency.
+4. Record my pasted answers in RUN.md with mention rates (k of N) and only the citations the engines returned; never ask a model for its sources. Build the ranked citation gap map in GAPS.md.
+5. Queue at most three follow-ups (outreach, engagement, directory, video, product or blog, plus a re-measure not before four weeks out). Training-crawler access is my per-product decision. Pitches and replies stay unsent.
+6. Record task-linked draft evidence for RUN.md and GAPS.md. The run is complete when results and the gap map exist; the visibility goal itself is never complete.`,
 
   video: `## How to work this task
 
