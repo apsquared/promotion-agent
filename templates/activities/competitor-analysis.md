@@ -10,7 +10,7 @@ Read the selected product's facts and existing competitor reports, tasks, and th
 
 ## Compare what can be verified
 
-For each competitor, record its official URL, audience/use case, positioning, and relevant capabilities or limitations. Include pricing only when it matters to the user's question and can be verified from a current official source. Capture source URLs and the date checked. Attribute vendor claims and keep your interpretation separate from documented facts. Compare against sourced facts about the user's product; do not invent superiority, market share, revenue, adoption, or missing features from silence in documentation.
+For each competitor, record its official URL, audience/use case, positioning, and relevant capabilities or limitations. Include pricing only when it matters to the user's question and can be verified from a current official source. Capture source URLs and the date checked. When site strength matters to the comparison, add each competitor domain's figures from the [domain rank check](domain-rank.md). Attribute vendor claims and keep your interpretation separate from documented facts. Compare against sourced facts about the user's product; do not invent superiority, market share, revenue, adoption, or missing features from silence in documentation.
 
 Use the comparison to decide what conversations are relevant: alternatives, switching, recommendations, frustrations, questions about a feature, or successful use cases. Include positive and neutral discussions, not only complaints.
 

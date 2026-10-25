@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Ready"
+  short_description: "Make a product usable, installable and findable by AI agents"
+  default_prompt: "Use $agent-ready to audit what AI agents can already do with this product, check its live listings, and plan the cheapest surfaces, packaging and directory listings to add. Ask before any external action."

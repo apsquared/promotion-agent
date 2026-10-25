@@ -90,6 +90,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Find relevant discussions and draft helpful replies.”
 - “Analyze our competitors and find where people discuss them.”
 - “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
+- “What’s the domain rank of example.com and our three competitors?”
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
@@ -161,7 +162,7 @@ One local web app covers all your products: a consolidated **All projects** boar
 
 ## Reusable AI skills
 
-The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, `product-video` to make a short product video from a public website without setting up promotion-agent, or `nurture-campaign` to build a lifecycle email sequence for your product's registered users. The collection includes installation instructions and is separate from promotion-agent onboarding.
+The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, `product-video` to make a short product video from a public website without setting up promotion-agent, `nurture-campaign` to build a lifecycle email sequence for your product's registered users, or `agent-ready` to make a product usable, installable and findable by AI agents. The collection includes installation instructions and is separate from promotion-agent onboarding.
 
 ## Development and details
 

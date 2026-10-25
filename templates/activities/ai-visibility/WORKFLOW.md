@@ -100,7 +100,7 @@ Classify every cited and candidate URL:
 | Reference (Wikipedia, Wikidata) | Wikidata entity if missing; Wikipedia only if genuinely notable, never self-written |
 | Open-source list | Pull request draft |
 
-A **gap** is a URL cited when a tracked competitor was named and the product was not. Rank gaps by how many prompts and engines cite them, the priority of those prompts, and how feasible it is to get in. Save the ranking in `marketing/ai-visibility/<run-date>/GAPS.md`, including gaps that won't be queued yet. Deduplicate against earlier gap lists, open and done tasks, thread history and skipped/snoozed dispositions; a gap already covered by a task is updated, not re-queued.
+A **gap** is a URL cited when a tracked competitor was named and the product was not. Rank gaps by how many prompts and engines cite them, the priority of those prompts, and how feasible it is to get in. For the top gaps, the [domain rank check](../domain-rank.md) shows how established each cited domain is; a high-authority domain is usually worth more and harder to get into. Save the ranking in `marketing/ai-visibility/<run-date>/GAPS.md`, including gaps that won't be queued yet. Deduplicate against earlier gap lists, open and done tasks, thread history and skipped/snoozed dispositions; a gap already covered by a task is updated, not re-queued.
 
 ## 5. Choose plays and queue follow-ups
 

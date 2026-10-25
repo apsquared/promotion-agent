@@ -183,6 +183,12 @@ P16a delivered: WORKFLOW v0.16 routes "How do we show up in ChatGPT?" / "Run an 
 
 Acceptance: `npm run check` passes both typechecks, the build and 101 tests, including three new fictional cases (route, budget and boundary text; source and installed entrypoints after relocation, upgrade preservation and owned removal; a `visibility` task recording draft RUN.md and GAPS.md evidence and staying open in the review handoff). Native invocation, live probing, engine behavior and actual visibility changes are not covered. Installed workspaces receive this only through a reviewed upgrade.
 
+## P17 — keyless domain rank check (implemented locally)
+
+User request, 2026-10-23: check a domain's rank using only free approaches that need no key, including public tool websites driven through the browser. WORKFLOW v0.17 routes "What's the domain rank of example.com?" to the shared lookup at templates/activities/domain-rank.md, which the competitor and AI visibility activities link for weighing competitor and cited domains. Sources: Open PageRank's top-domains lookup and Tranco's rank endpoint over plain HTTP; Ahrefs Website Authority Checker (DR), Moz Domain Analysis (DA) and Similarweb in the browser for a shortlist. No API keys, accounts, CAPTCHA solving, task category, budget row, helper code or dependency; unavailable or blocked sources are recorded as such.
+
+Acceptance: `npm run check` passes, including `tests/domain-rank.test.mjs` (route, links from the workflow and both activities, sources and boundaries). Each source was exercised live once on 2026-10-23; page layouts can change, so the procedure records `not found` rather than guessing.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script: retired on 2026-10-12 during the safety review follow-up. Contributions use reviewed, scoped changes through a pull request; no stage-all/direct-main helper remains. See HANDOFF.
@@ -198,3 +204,5 @@ Run `npm test` for code changes and record current results in docs/maintainers/H
 User-requested `skills/` collection, independent of the promotion workflow and installer. First skill: `mcp-ify`, with concise Agent Skills metadata/instructions, Codex UI metadata, focused implementation references, and four adaptation examples. `skills/readme.md` documents the catalog, installation, updates, removal, and contributions; root README links it. No core/runtime changes or dependencies. Skill Creator validation and relocation/link/UI metadata checks passed; native invocation and actual SaaS implementation remain unverified. See HANDOFF.
 
 Standalone skill, 2026-10-19: added `skills/nurture-campaign/` (lifecycle email sequence for a product's registered users) from a user-supplied brief, with catalog and README entries. Docs-only; native invocation unverified. See HANDOFF.
+
+Standalone skill, 2026-10-25: added `skills/agent-ready/` (make a product usable, installable and findable by AI agents: live audit, surfaces, packaging, discovery assets, dated directory catalog, agent-use-case marketing; MCP server work handed to `mcp-ify`) from a user-supplied brief, with catalog and README entries and a dependency-free distributable-secrets check. Docs and one skill script; native invocation unverified. See HANDOFF.
