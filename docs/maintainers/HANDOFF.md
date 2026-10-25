@@ -1,5 +1,15 @@
 # Continue here
 
+## P17 — keyless domain rank check — 2026-10-23
+
+User request: find how to check a domain's rank, then build it with free approaches that need no key; the user approved using Claude in Chrome for tool websites.
+
+- Procedure: `templates/activities/domain-rank.md`, a shared lookup (no task category or budget row). WORKFLOW v0.17 adds the route; `tests/publishing.test.mjs` pins the version. The competitor procedure and the visibility gap ranking link it.
+- Live checks on 2026-10-23 (bargpt.app unless noted): Open PageRank lookup page via `curl` (3.15, #1,231,242 of 10M, 43 referring domains); Tranco API via `curl` (github.com #32; bargpt.app not listed; a second quick request got HTTP 429); Ahrefs checker in Chrome via `?input=` with no sign-in or visible challenge (DR 29; github.com DR 97); Moz in Chrome via `?site=` (DA 27, three free reports a day); Similarweb in Chrome (global rank #1,523,101). Moz and Similarweb do not render for `curl`; Ahrefs needs the browser.
+- Follow-up run on 2026-10-25: Tranco returned bargpt.app at #1,447,257, after returning nothing on 10-23. Its API covers ranks beyond the top million, and small-site coverage changes from day to day, so the procedure now treats an empty result as "not in the list on that date". Similarweb showed a security puzzle on the first domain and was recorded as blocked.
+- Not used: Open PageRank's API (now needs a Keywords Everywhere key), Moz/Ahrefs APIs, Cloudflare Radar API (token), Ahrefs' free DR API (account).
+- Docs: installed-guide paragraph in `src/onboarding/install.ts`, README example, PLAN P17. Test: `tests/domain-rank.test.mjs`.
+
 ## P16a — AI visibility activity — 2026-10-21
 
 User request: research how products get recommended by AI assistants, write a design doc with user-supplied review feedback, then build it with `manual` + `session-search` probes only, default engines ChatGPT/Perplexity/Gemini/Claude, training crawlers as a per-product choice, first baseline on BarGPT.

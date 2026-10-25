@@ -90,6 +90,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Find relevant discussions and draft helpful replies.”
 - “Analyze our competitors and find where people discuss them.”
 - “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
+- “What’s the domain rank of example.com and our three competitors?”
 - “Propose a blog article.”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
