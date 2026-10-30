@@ -1,5 +1,29 @@
 # Continue here
 
+## P18 — high-quality promotion opportunities — 2026-10-30
+
+User request: build the reviewed promotion/SEO opportunity skill, considering only high-quality sites with traffic or SEO value and verifying that opportunities remain valid. Implemented locally as `promotion-opportunities`, with `/promote-opportunities` for Claude Code/OpenCode.
+
+- `templates/activities/promotion-opportunities/WORKFLOW.md`: three required gates (site quality/relevance, evidenced referral traffic or SEO value, current first-party availability and product eligibility). Unknown checks exclude a prospect; a high DR, famous domain, old approval or third-party listing cannot establish qualification. Requires comparable placements, live rules/form/invitation inspection, dated evidence and another check before acting. Distinguishes availability from untested submission delivery and acceptance, qualification from execution state, and expected value from measured results. No ranking or traffic guarantees.
+- `SOURCES.md`: dated caveats for the supplied X article and linked database, with primary Google guidance rechecked on 2026-10-30. Discovery only; no bulk import or preapproved sites. Product reports, exclusion logs and task links belong in the selected private workspace under `marketing/research/promotion-opportunities/`.
+- Thin `.agents/skills/promotion-opportunities/` entrypoint with generated Codex UI metadata, identical `.claude/skills/` copy without Codex metadata, and Claude Code/OpenCode commands. `src/onboarding/install.ts` installs the skill/commands and shared references using existing ownership and upgrade gates. Existing installations are unchanged until a reviewed upgrade.
+- WORKFLOW v0.18 routes research through existing activity `directory`, caps recommendations at five and kits at one or two, and applies qualification to ordinary kits and saved tasks. The link-tracker template points to dated qualification reports. `src/core/task-prompt.ts` adds qualification outside custom task steps for directory/backlink/launch categories. README, USING, PLAN and ARCHITECTURE describe the behavior. No dependency, provider, schema, model runner, automated score or background process.
+
+Validation: `npm run check` passed both typechecks, the helper build and **105/105 tests**. New portability/ownership integration coverage checks source and installed links after relocation, byte-identical shared resources, preservation of customized wrappers/procedures, removal of unchanged owned entrypoints and unchanged marketing tasks. The core regression covers custom/default task steps and legacy directory/backlink/launch aliases, while leaving release tasks outside the placement block. Both checkout skills passed Skill Creator `quick_validate.py`; the mirror tests and `git diff --check` passed.
+
+Manual instruction review only (fictional evidence; not independent behavioral execution):
+
+| Inputs | Required decision |
+| --- | --- |
+| High-DR, auto-accept directory with unrelated bulk links | Rejected for quality; metric cannot rescue it. |
+| Relevant moderated community, current substantive participation, allowed link and open thread | Qualified through referral value when all observed evidence passes; `nofollow` is not claimed as SEO credit. |
+| Credible publisher with a followed/indexed sample, but only a generic contact page and no verified invitation | Unverified availability; no pitch/submission task. |
+| Previously approved free listing, now gated by payment before requirements can be inspected | Unverified pending required checks; old approval cannot establish the current route. |
+| Online-only product with a third-party claim of instant Google Business Profile approval | Rejected for eligibility using Google's current primary rules. |
+| Potentially good site returning a challenge, with no equivalent accessible first-party route | Unverified; excluded from recommendations rather than guessed. |
+
+Limits: structural tests and instruction review do not prove an agent's real-world judgments, native host invocation, form delivery, publication, traffic or search-performance improvement. No real product repository was read or changed, no existing promotion workspace was upgraded, and no external submission, account, outreach, spending, commit or push occurred.
+
 ## Standalone skill — agent-ready — 2026-10-25
 
 User request: add an `agent-ready` skill to the independent `skills/` collection (no `.claude/skills` mirror) that makes any product usable by AI agents, packaged where agents install from, and listed where agents and their users look. Distilled from Nevo David's Postiz playbooks (figures cited as his claims) and a real Idea Launch run. MCP server design and implementation stay in `mcp-ify`; agent-ready hands that step off and gives mcp-ify's install line when it is missing.

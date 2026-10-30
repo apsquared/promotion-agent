@@ -1,4 +1,4 @@
-# Marketing workflow contract — version 0.17
+# Marketing workflow contract — version 0.18
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
 
@@ -35,6 +35,7 @@ Handle desk requests yourself: launch/open the review desk following its documen
 - **"Set up my product for promotion" / "Install this in my project":** follow [conversational setup](SETUP.md). Setup installs into a separate promotion workspace and reads product context; it never installs into the observed repo or authorizes publication.
 - **"Prepare a post" / "Start promotion":** use the context and selection rules below to produce reviewable work. A draft request alone does not authorize installing a runtime. Missing helper configuration or an incompatible task format must not block an independent draft; leave task files untouched and explain any task-tracking limitation.
 - **"Analyze competitors" / "Where are competitors being talked about?":** use activity `competitor` and follow [competitor analysis and mention discovery](activities/competitor-analysis.md). Prepare a sourced comparison and verified conversation shortlist; posting and recurring monitoring are separate actions.
+- **"Find high-quality promotion opportunities" / "Find backlink opportunities" / "Prepare a directory submission kit":** use activity `directory` and follow [promotion opportunity qualification](activities/promotion-opportunities/WORKFLOW.md). Only recommend high-quality sites with evidenced traffic or SEO value and a specific opportunity verified live as open and eligible for this product. Unknowns stay off the shortlist; recheck before acting. Return fewer results, including zero, when necessary.
 - **"How do we show up in ChatGPT?" / "Run an AI visibility check":** use activity `visibility` and follow [AI visibility](activities/ai-visibility/WORKFLOW.md). Get approval of a stable prompt set, probe it with the `manual` (user-pasted answers) and `session-search` adapters only, record mention rates and returned citations, rank the citation gaps and queue the next few plays plus a re-measure. No AI provider APIs, no browser-driven chat interfaces; pitches and replies stay unsent.
 - **"What's the domain rank of example.com?" / "Check these sites' DR":** follow the [domain rank check](activities/domain-rank.md). Use only keyless public sources: Open PageRank and Tranco over plain HTTP, then Ahrefs DR, Moz DA or Similarweb in the browser for a shortlist. Never use API keys or accounts, never solve a CAPTCHA, and record a blocked source instead of guessing. Other activities use the same check to weigh competitor, citation and outreach domains.
 - **"Make a video" / "Turn the site into a demo video":** use activity `video` and follow [product video](activities/video/WORKFLOW.md). The project lives in the promotion workspace; the user approves the script before any voice is generated, paid credits need confirmation, and a render is a draft until approved. Posting it is a separate task.
@@ -59,6 +60,8 @@ One run performs one activity. An explicit user choice wins; otherwise a due sea
 
 ## Duplicate prevention
 
+Before recommending or preparing any directory, backlink, profile or launch placement, apply [promotion opportunity qualification](activities/promotion-opportunities/WORKFLOW.md), including for previously saved tasks and task-specific instructions. A saved target or old approval does not establish current quality, benefit, eligibility or availability.
+
 Social: compare the last 20 entries and rotate angles/categories. Content: check all recorded slugs and keywords. Directories: skip already prepared/submitted/live entries. Engagement: check open/done tasks and thread URLs. Competitor research: check prior reports and canonical mention/thread URLs; label meaningful updates to earlier findings. Video: check existing projects under `marketing/assets/videos/` and reuse their captures, script or audio for variants and cutdowns. Release: check all previous packs under `marketing/releases/`, included commit IDs, canonical changes and claim references, including overlapping ranges and cherry-picks; resume a pack or label a deployment update instead of repeating an announcement. AI visibility: reuse the current prompt-set version and compare against earlier runs under `marketing/ai-visibility/`; a gap already covered by an open or done task is updated, not re-queued. Include local skipped/snoozed dispositions when choosing work.
 
 ## Default activity budgets and outputs
@@ -66,7 +69,7 @@ Social: compare the last 20 entries and rotate angles/categories. Content: check
 | Activity | Default budget | Output |
 |---|---|---|
 | social | 2–3 drafts | Platform copy, asset references, proposed future times, source facts |
-| directory | 1–2 kits | Exact target URL, complete submission materials, task-specific steps |
+| directory | At most 5 qualified prospects; 1–2 kits | Quality and traffic/SEO evidence, live eligibility/availability checks, exact submission URLs and materials; zero recommendations when no prospect qualifies |
 | engagement | 2–4 relevant live threads | Verified source URLs, fit explanation, draft replies; no posting |
 | blog | 1 article proposal | Draft, keyword, metadata, destination and validation plan |
 | competitor | 3–5 competitors, 5–10 verified mentions | Sourced comparison, discussion URLs and context, ranked opportunities, optional reply drafts; follow the [research activity](activities/competitor-analysis.md) |

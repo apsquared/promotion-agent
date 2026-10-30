@@ -189,6 +189,14 @@ User request, 2026-10-23: check a domain's rank using only free approaches that 
 
 Acceptance: `npm run check` passes, including `tests/domain-rank.test.mjs` (route, links from the workflow and both activities, sources and boundaries). Each source was exercised live once on 2026-10-23; page layouts can change, so the procedure records `not found` rather than guessing.
 
+## P18 — high-quality promotion opportunities (implemented locally)
+
+User request, 2026-10-30: build the reviewed opportunity-research skill; consider only high-quality sites with traffic or SEO benefit and verify that every opportunity remains valid. Depends on the shared workflow, directory/link tracking, P06 evidence, P09 research and P17's supporting domain lookup.
+
+One canonical procedure under `templates/activities/promotion-opportunities/` admits a prospect only after quality/relevance, at least one evidenced value route and current first-party availability/eligibility checks pass. Unknowns stay outside the shortlist; later actions require revalidation. Dated source notes retain the supplied X article as discovery only. Thin Codex/Claude Code/OpenCode entrypoints, mirrored checkout skills, installer support and a placement-qualification prompt section that survives custom task steps share this contract. Existing categories, evidence and private workspace records are reused; no provider, dependency, metric threshold, schema or background action.
+
+Acceptance: Skill Creator validated both checkout skill copies; `npm run check` passed both typechecks, build and 105/105 tests. New integration coverage checks source/installed reference portability after relocation, preservation of customized wrappers/procedures and marketing tasks, and removal of unchanged owned entrypoints. The prompt regression checks that custom instructions and legacy directory/backlink/launch categories retain qualification. A manual instruction review covered six fictional evidence cases; see HANDOFF for decisions and limits. Native invocation, an independent behavioral evaluation, real product research, submission and traffic/SEO outcomes remain unverified. Existing workspaces receive the skill through a reviewed upgrade.
+
 ## Deferred unless separately requested
 
 Commit/push convenience script: retired on 2026-10-12 during the safety review follow-up. Contributions use reviewed, scoped changes through a pull request; no stage-all/direct-main helper remains. See HANDOFF.
