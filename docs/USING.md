@@ -18,6 +18,8 @@ For setup details, the agent follows templates/SETUP.md. A preview-only request 
 
 To track tasks visually, ask for [the review desk](REVIEW-UI.md).
 
+For listings, backlinks or other promotion placements, ask “Find high-quality promotion opportunities for this product” or invoke `$promotion-opportunities` (Codex) or `/promote-opportunities` (Claude Code/OpenCode). The agent verifies site quality, evidence of traffic or SEO value, and the current submission route and product eligibility. It returns only qualified prospects, possibly none, with dated evidence and drafts. Directory kits and saved submission tasks follow the same checks; a past listing or third-party directory entry cannot establish that an opportunity still exists. The agent rechecks before any later authorized action. Existing workspaces receive this skill through a reviewed upgrade.
+
 ## Upgrade, relocation and removal
 
 Ask the agent to upgrade, move or remove a workspace; it runs the [helpers](HELPERS.md#upgrade-relocation-and-removal) and shows you what will change before applying it. Upgrades update unmodified managed files and preserve your customized files and marketing data. Moving a whole workspace keeps its identity. Removal takes out only unchanged managed runtime files; your context, tasks, logs and customized files remain.

@@ -68,6 +68,12 @@ The Next.js build and `vercel.json` support the chosen deployment technology. Th
 
 The existing string-valued task categories and records support this activity without schema changes. Task-linked Markdown research reports use the evidence helper; the review desk's copyable prompt points the agent at them. The task prompt builder supplies a research-specific fallback for tasks without custom steps. Finding a mention is not an engagement action or confirmed buying intent; report completion and recommended follow-up actions remain separate.
 
+## Promotion opportunity qualification
+
+`templates/activities/promotion-opportunities/WORKFLOW.md` is the canonical quality, traffic-or-SEO value and current-availability gate for directory/backlink/profile/launch placements. `SOURCES.md` keeps dated discovery-source caveats and primary guidance, with no preapproved target list. WORKFLOW v0.18 routes prospect research through activity `directory` and makes qualification apply to existing kits/tasks as well. The `promotion-opportunities` skill and `/promote-opportunities` commands are thin source/installed entrypoints; checkout skills are mirrored for Claude Code. The task prompt builder includes placement qualification outside custom execution steps, including for legacy backlink/launch aliases.
+
+The agent verifies first-party rules, selected-product eligibility and the exact live route in the current session, inspects comparable placements and evidence of a relevant audience or earned-link value, and withholds unknowns. Reports and exclusions live under `marketing/research/promotion-opportunities/` in the private workspace; qualification (`qualified`, `rejected`, `unverified`) remains distinct from submission/publication and measured outcomes. The existing task board, link tracker, evidence helpers and review gates are reused. No automated quality scorer, crawler, provider, credential, schema, dependency or background process is added. Installed workspaces need a reviewed upgrade; instruction and packaging checks do not prove live research quality or traffic/ranking outcomes.
+
 ## AI visibility activity
 
 `templates/activities/ai-visibility/WORKFLOW.md` defines activity `visibility`: whether AI assistants name a product for a stable, user-approved prompt set, which sources they cite instead, and the next plays. Research and decisions are in [AI-VISIBILITY.md](AI-VISIBILITY.md). The `promotion-visibility` skill and `/promote-visibility` commands are thin entrypoints installed like the competitor and video activities.

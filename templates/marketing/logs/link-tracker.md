@@ -6,4 +6,6 @@ Statuses: `todo` → `prepared` (materials written, task filed) → `submitted` 
 
 Format: `- YYYY-MM-DD | site | url | type(directory|backlink|profile|launch) | status | task-id / notes`
 
+Only add actionable targets after the shared promotion opportunity qualification procedure passes. Link the dated report in notes; qualification and execution status are separate, and a saved target must be rechecked before a later action.
+
 ## Targets

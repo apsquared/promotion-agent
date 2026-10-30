@@ -1,0 +1,4 @@
+interface:
+  display_name: "Promotion Opportunities"
+  short_description: "Qualify valuable sites and verify live opportunities"
+  default_prompt: "Use $promotion-opportunities to find high-quality promotion opportunities for my product, with evidence of traffic or SEO value and live verification of eligibility and availability."

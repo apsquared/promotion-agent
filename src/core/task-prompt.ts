@@ -265,6 +265,11 @@ ${contextBlock(task)}`);
 ${task.materials.trim()}`);
   }
 
+  // Qualification survives custom execution steps and old saved tasks.
+  if (cat === 'directory') parts.push(`## Placement qualification
+
+Before preparing or acting on this saved placement, follow promotion opportunity qualification linked from the shared WORKFLOW.md. Verify high site quality, evidence of relevant traffic or SEO value, and the exact live opportunity's current availability and product eligibility. Record dated source evidence; withhold unverified or rejected targets. A saved task, high domain rating or old approval cannot establish qualification. Recheck immediately before a later submission. These checks also apply to the task-specific steps below.`);
+
   // The owning repo's agent knows things this generator can't — real asset
   // paths, account handles, a destination site's quirks — so its steps win over
   // the generic ones. The surrounding guardrails stay either way.

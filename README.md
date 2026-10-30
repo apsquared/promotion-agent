@@ -87,6 +87,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 ## What you can ask for
 
 - “Prepare a directory submission kit.”
+- “Find high-quality backlink and promotion opportunities that are still open.”
 - “Find relevant discussions and draft helpful replies.”
 - “Analyze our competitors and find where people discuss them.”
 - “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
@@ -104,6 +105,8 @@ This checkout also includes `reddit-thread-search` and `x-post-search`, with the
 For blog and SEO requests, the checkout also includes `seo-title-optimization` (audit and rewrite page titles, H1s and meta titles against search intent) and `blog-refresher` (refresh an existing post with a SERP gap analysis, with an approval checkpoint before rewriting). They save proposals in the promotion workspace and never edit your product repository on their own. Both are adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) by [Ilias Ism](https://il.ly), used under the MIT license; each folder keeps the upstream notice. Like the search skills, they are checkout resources that onboarding does not install.
 
 Every checkout skill is in both `.agents/skills/` (Codex) and `.claude/skills/` (Claude Code), with identical contents; only Codex's `agents/` UI metadata is left out of the Claude copy.
+
+Use `$promotion-opportunities` in Codex or `/promote-opportunities` in Claude Code/OpenCode to find worthwhile placements. The [shared qualification procedure](templates/activities/promotion-opportunities/WORKFLOW.md) admits only high-quality sites with evidence of traffic or SEO value and a specific opportunity verified live as open and eligible for your product. Blocked or unknown checks stay off the shortlist; every later action needs another check. It also governs ordinary directory/backlink kits and saved submission tasks. Entrypoints and references ship with new promotion workspaces; existing workspaces need a reviewed upgrade. Research produces private evidence, drafts and follow-up tasks, without submitting or spending.
 
 The agent uses your product documentation and marketing history to support its claims. Drafts and recommendations remain available for review; preparing them does not publish anything.
 

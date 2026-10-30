@@ -53,6 +53,19 @@ test('old tasks get category fallback; unknown categories remain usable', () => 
   assert.equal(promptCategory('custom-workflow'),'other');
   assert.match(buildAgentPrompt(task), /thread as it stands/);
 });
+test('placement qualification survives custom steps and legacy directory aliases', () => {
+  const base = {...parseTasks(fixture)[0], project: 'Example Desk'};
+  for (const category of ['directory', 'backlink', 'launch']) {
+    for (const agentPrompt of ['', 'Use the previously saved listing materials.']) {
+      const prompt = buildAgentPrompt({...base, category, agentPrompt});
+      assert.match(prompt, /## Placement qualification/);
+      assert.match(prompt, /current availability and product eligibility/);
+      assert.match(prompt, /withhold unverified or rejected targets/);
+      if (agentPrompt) assert.ok(prompt.includes(agentPrompt));
+    }
+  }
+  assert.doesNotMatch(buildAgentPrompt({...base, category: 'release'}), /## Placement qualification/);
+});
 test('prompt generation does not carry context between projects', () => {
   const base = parseTasks(fixture)[0];
   buildAgentPrompt({...base, project:'First Fictional Product', materials:'First-only fact'});
