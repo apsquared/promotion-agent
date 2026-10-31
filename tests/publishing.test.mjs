@@ -58,7 +58,7 @@ test('scheduler configuration rejects unknown adapters, credential fields and un
 
 test('shared workflow routes posting to the one publishing procedure and its adapter references', () => {
   const workflow = readFileSync('templates/WORKFLOW.md', 'utf8');
-  assert.match(workflow, /^# Marketing workflow contract — version 0\.18$/m);
+  assert.match(workflow, /^# Marketing workflow contract — version 0\.19$/m);
   const route = workflow.split('\n').find(line => line.startsWith('- **"Post this"'));
   assert.ok(route, 'Publishing request route missing');
   assert.match(route, /Schedule it for Tuesday 9am/);

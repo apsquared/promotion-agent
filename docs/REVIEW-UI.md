@@ -6,7 +6,7 @@ The optional Next.js App Router app complements the conversational workflow. One
 
 ## Start from the source checkout
 
-Ask the current agent to open the review desk. The agent runs the launcher once for all products and opens its printed private session link. The local app runs separately from the portable workspace helpers; registering a product does not install Next.js into either the product or workspace.
+From an agent session in the source checkout, ask to open the review desk. The agent runs the launcher once for all products and opens its printed private session link. This is a checkout-only feature of the current distribution. The local app runs separately from the portable workspace helpers; registering a product does not install Next.js into either the product or workspace. Everyday promotion work still belongs in the selected promotion workspace.
 
 Launcher commands (the agent runs these in the promotion-agent checkout):
 
@@ -43,7 +43,7 @@ With a single workspace the desk shows its board directly.
 1. Pick a task under **To do**. Skipped or snoozed tasks (from the optional registry) sink to the bottom with a label.
 2. Read its description (the task's Materials).
 3. Check the **Paste into** label and click **Copy prompt**:
-   - **Promotion agent** — paste into your Codex, Claude Code or OpenCode session in the promotion-agent repo. The prompt names the workspace, lists the task steps and any saved drafts, and asks the agent to continue from the first unfinished step, queue follow-up tasks rather than stop at advice, and record its completion summary as Outputs / Impact / Next steps.
+   - **Promotion agent** — paste into your Codex, Claude Code or OpenCode session opened in that product's promotion workspace. The prompt names the workspace, lists the task steps and any saved drafts, and asks the agent to continue from the first unfinished step, queue follow-up tasks rather than stop at advice, and record its completion summary as Outputs / Impact / Next steps.
    - **Product repo** — shown for tasks with category `product`. Paste into an agent session opened in the product repository. The prompt includes the full description and steps, says where workspace files under `marketing/` live, and asks for no commit, push or deploy without approval.
 4. Click **Refresh** after the agent saves work. The server rereads files on every refresh.
 

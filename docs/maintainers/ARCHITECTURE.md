@@ -1,5 +1,13 @@
 # Architecture decisions
 
+## Source checkout versus usage workspace
+
+The source checkout is the development repository; its root instructions identify contributor work. The private per-product promotion workspace is the everyday usage folder, and the observed product repository is a third, read-only source. Folder identity establishes the role; no use/development mode switch or second repository is introduced.
+
+The current source-based distribution still uses the development checkout for setup, upgrades, the optional review desk and checkout-only skills. Setup explicitly hands the user the promotion workspace to open for future chats. New installations include thin root AGENTS.md/CLAUDE.md usage instructions pointing at the bundled workflow; existing unmanaged or customized instructions are preserved by the normal ownership rules. The review desk directs promotion prompts to that workspace and product implementation prompts to the product repository.
+
+A versioned, clone-free public installer is the intended distribution direction, not an available feature. Complete skill and review-desk packaging, a supported setup interface and release/native-host acceptance must precede that promise. Keep the existing private package and reviewed upgrade behavior until separately authorized release work.
+
 ## Execution: the current interactive session
 
 Codex, Claude Code or OpenCode is already running under the user's control. A repo-local skill or command loads one provider-neutral workflow from `templates/WORKFLOW.md`. The active agent reads the selected project, uses available tools, prepares artifacts and reports/reviews them with the user in that conversation.

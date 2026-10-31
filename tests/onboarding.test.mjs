@@ -89,6 +89,8 @@ test('a newer bundle updates only unmodified managed files after review', t => {
 
 test('reviewed removal keeps product data and edited wrappers, and rejects stale plans', t => {
   const { project } = setup(t); install(project);
+  const customInstructions = join(project, 'CLAUDE.md');
+  writeFileSync(customInstructions, 'My workspace instructions\n');
   const custom = join(project, '.claude/commands/promote.md');
   writeFileSync(custom, 'My custom command\n');
   const plan = previewRemoval(project);
@@ -102,6 +104,8 @@ test('reviewed removal keeps product data and edited wrappers, and rejects stale
   const result = applyRemoval(project, fresh, removalHash(fresh));
   assert.ok(result.removed.includes('.promotion-agent/templates/WORKFLOW.md'));
   assert.equal(readFileSync(custom, 'utf8'), 'My custom command\n');
+  assert.equal(readFileSync(customInstructions, 'utf8'), 'My workspace instructions\n');
+  assert.ok(!existsSync(join(project, 'AGENTS.md')));
   assert.equal(readFileSync(join(project, '.opencode/commands/promote.md'), 'utf8'), 'Changed after preview');
   assert.ok(existsSync(join(project, 'promotion-agent.json')));
   assert.ok(existsSync(join(project, 'marketing/TASKS.md')));
@@ -160,6 +164,12 @@ test('a project relocates with stable UUID and compiled helpers run without orig
   const id = inspectProject(project).project.id;
   rmSync(source, { recursive: true });
   const relocated = join(dir, 'relocated'); renameSync(project, relocated);
+  // Root usage instructions travel with the workspace and need no development checkout.
+  for (const file of ['AGENTS.md', 'CLAUDE.md']) {
+    const content = readFileSync(join(relocated, file), 'utf8');
+    for (const [, href] of content.matchAll(/\]\(([^)]+)\)/g))
+      assert.ok(existsSync(resolve(relocated, href)), `Missing workspace instruction reference: ${file} -> ${href}`);
+  }
   // The conversational setup route and guide must travel with the installed bundle.
   for (const relative of ['templates/WORKFLOW.md', 'templates/SETUP.md', 'docs/USING.md', 'docs/HELPERS.md', 'docs/REVIEW-UI.md', 'docs/COMPATIBILITY.md', 'docs/PRIVACY.md']) {
     const resource = join(relocated, '.promotion-agent', relative);
