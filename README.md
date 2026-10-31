@@ -42,11 +42,14 @@ Requires Git, Node.js 22.14 or newer with npm, and Codex, Claude Code, or OpenCo
 
 ### 1. Get the setup source
 
-Installation currently uses the source checkout; the npm package is not published and a public one-command installer is not available yet. Clone the repository and open it in your agent for setup:
+Installation currently uses the source checkout; the npm package is not published and a public one-command installer is not available yet. Clone the repository, disable accidental pushes, then open it in your agent for setup:
 
 ```sh
 git clone https://github.com/apsquared/promotion-agent.git
+git -C promotion-agent remote set-url --push origin DISABLED
 ```
+
+The second command changes only this clone's push destination. Pulling updates from GitHub still works; ordinary pushes to `origin` fail. This is an accidental-push precaution, not an access restriction: someone can change the configuration or push to an explicit URL. Local source edits can still conflict with updates.
 
 Keep it separate from your product repositories and private promotion workspaces. Using this checkout for setup does not require contributing code. The agent handles dependency installation and building when needed.
 
