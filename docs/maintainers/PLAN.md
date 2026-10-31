@@ -2,7 +2,7 @@
 
 ## Product goal and revised direction
 
-The user opens promotion-agent in an existing interactive Codex, Claude Code or OpenCode session and invokes a skill/command for one explicitly selected product. That agent performs the work and reviews it with the user. No nested AI CLI, authentication probing, mandatory web app or scheduler.
+The user opens a private promotion workspace in an existing interactive Codex, Claude Code or OpenCode session and invokes a skill/command for one explicitly selected product. The source checkout is the development repository and currently also supplies initial setup, upgrades and checkout-only features. That agent performs the work and reviews it with the user. No nested AI CLI, authentication probing, mandatory web app or scheduler.
 
 The headless P03 experiment has been removed at the user's request. Existing P01/P02 work is retained as optional deterministic infrastructure. Work through future milestones in dependency order. P10 supersedes the historical product-local ownership/installation descriptions in P04–P09 below.
 
@@ -197,7 +197,17 @@ One canonical procedure under `templates/activities/promotion-opportunities/` ad
 
 Acceptance: Skill Creator validated both checkout skill copies; `npm run check` passed both typechecks, build and 105/105 tests. New integration coverage checks source/installed reference portability after relocation, preservation of customized wrappers/procedures and marketing tasks, and removal of unchanged owned entrypoints. The prompt regression checks that custom instructions and legacy directory/backlink/launch categories retain qualification. A manual instruction review covered six fictional evidence cases; see HANDOFF for decisions and limits. Native invocation, an independent behavioral evaluation, real product research, submission and traffic/SEO outcomes remain unverified. Existing workspaces receive the skill through a reviewed upgrade.
 
+## Source checkout and promotion workspace clarity — 2026-10-31 (implemented locally)
+
+Depends on P10/P11's separate-workspace setup and P04's portable installer. The source checkout is explicitly the development repository and current setup source; the private promotion workspace is the everyday usage folder; the product repository supplies read-only facts. README has separate use/contribute paths, and contributor, user, host compatibility, setup and architecture guidance follow the same roles. WORKFLOW v0.19 requires a concrete handoff to the workspace for future chats while retaining checkout-only feature limits.
+
+The installer adds thin root AGENTS.md/CLAUDE.md usage instructions using existing reviewed ownership rules. Unmanaged/customized instructions are preserved. Review-desk promotion prompts now direct users to the selected product's promotion workspace; product tasks still target the product repository. Source-based installation, optional review-desk distribution and checkout-only skills remain accurately documented. No mode toggle, new dependency, public installer, publication or real workspace migration is introduced.
+
+Validation: `npm run check` passed both typechecks, build and 105/105 tests. Existing installation integration tests now cover root instruction portability after relocation/removal of the original bundle, preservation of customized instructions during removal, and removal of unchanged managed instructions. Existing tests retain pre-existing instruction preservation, upgrade and source-boundary coverage. Changed Markdown file links and `git diff --check` pass. Native host invocation and an outside-user setup trial remain open P07 acceptance work; see HANDOFF.
+
 ## Deferred unless separately requested
+
+Clone-free public installation: follow up after the source/workspace clarity change above. Define a supported versioned setup interface, package the remaining checkout-only skills and a supported review-desk launch path, then verify clean installation, native host invocation, workspace upgrades and preserved customizations. npm identity, nonzero version, publication and public install verification remain P07 gates. No public `init` command is implemented or advertised as available by the clarity change.
 
 Commit/push convenience script: retired on 2026-10-12 during the safety review follow-up. Contributions use reviewed, scoped changes through a pull request; no stage-all/direct-main helper remains. See HANDOFF.
 

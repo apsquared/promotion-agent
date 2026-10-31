@@ -10,6 +10,12 @@ The workflow treats your product repository as a read-only source and saves mark
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
+**Use promotion-agent:** follow [user setup](#use-promotion-agent) to create a private promotion workspace. Open that workspace for everyday marketing work.
+
+**Contribute to promotion-agent:** clone this repository as a development checkout and follow [CONTRIBUTING.md](CONTRIBUTING.md).
+
+The source checkout contains the software; a promotion workspace contains your installed workflow and saved work. Today users also need the checkout for initial setup, upgrades and the optional review desk. A clone alone is not a configured promotion workspace.
+
 **Early access:** designed for Codex, Claude Code, and OpenCode. Automated helper and build checks run on Ubuntu and macOS; native menu invocation in each host and an outside founder's first useful draft remain unverified. See [acceptance status](docs/maintainers/ACCEPTANCE.md).
 
 ## See the first draft
@@ -24,19 +30,25 @@ Ask “Make it shorter”:
 
 Both stay drafts. The workspace keeps the versions and an open review task, so “What's the status?” can report what is ready and what needs your decision. See the [sourced walkthrough and verification limits](docs/maintainers/FIRST-DRAFT.md). This is a fictional example, not a customer testimonial or a live post.
 
-## Get started
+## Use promotion-agent
 
-Requires Git, Node.js 22.14 or newer with npm, and Codex, Claude Code, or OpenCode. Install from source; the npm package is not published yet.
+Requires Git, Node.js 22.14 or newer with npm, and Codex, Claude Code, or OpenCode. Your existing agent performs the work; promotion-agent supplies its workflow and local helpers. There is no separate AI runner to start.
 
-### 1. Get promotion-agent
+| Folder | Purpose | Contents |
+| --- | --- | --- |
+| Source checkout | Develop promotion-agent; currently also used for setup and upgrades | Source, tests, build tools and contributor instructions |
+| Private promotion workspace | Use promotion-agent for one product | Installed workflow, skills, helpers, product context, drafts, tasks and history |
+| Product repository | Supply product facts | Your existing product code and documentation, read only during promotion work |
 
-Clone this repository and open its folder in your agent:
+### 1. Get the setup source
+
+Installation currently uses the source checkout; the npm package is not published and a public one-command installer is not available yet. Clone the repository and open it in your agent for setup:
 
 ```sh
 git clone https://github.com/apsquared/promotion-agent.git
 ```
 
-Keep it separate from your product repositories. The agent handles dependency installation and building when needed.
+Keep it separate from your product repositories and private promotion workspaces. Using this checkout for setup does not require contributing code. The agent handles dependency installation and building when needed.
 
 ### 2. Set up your project and get one useful draft
 
@@ -46,7 +58,7 @@ In that chat, say:
 Set up promotion for my project Example Desk and draft one X post for review.
 ```
 
-Replace Example Desk with your product's name. The agent finds your local project, verifies the match, creates a separate promotion workspace, and prepares the requested draft from sourced facts. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. The product name can differ from its folder, Git repository or package name. Setup installs into the promotion workspace and keeps work in draft/review mode.
+Replace Example Desk with your product's name. The agent finds your local project, verifies the match, creates a separate promotion workspace, and prepares the requested draft from sourced facts. If several checkouts match, it asks you to choose; you do not need to supply a filesystem path. The product name can differ from its folder, Git repository or package name. Setup installs into the promotion workspace and keeps work in draft/review mode. When finished, the agent reports the workspace to open for everyday use.
 
 ### 3. Review it and keep the work moving
 
@@ -62,7 +74,7 @@ Then check saved work:
 What's the status?
 ```
 
-For future chats, open the **promotion workspace** the agent created. It contains the workflow and your saved marketing work. If your agent does not discover the workflow, say “Read .promotion-agent/templates/WORKFLOW.md.”
+For future chats, open the **promotion workspace** the agent created. It contains workspace-specific agent instructions, the installed workflow and your saved marketing work. If your agent does not discover the workflow, say “Read .promotion-agent/templates/WORKFLOW.md.” Routine drafting and status checks use the workspace; keep the source checkout for upgrades and the checkout-only features described below.
 
 No database, publishing account, or additional model API key is needed for drafting. Scheduling through [Post Bridge](#posting-and-scheduling-with-optional-post-bridge) is optional. Publishing, sending outreach, spending, committing, and pushing require separate authorization.
 
@@ -155,24 +167,28 @@ Existing marketing files in a product repo can be read as source material. Earli
 
 ## Optional review desk
 
-From a chat in this promotion-agent checkout, ask:
+The review desk currently runs from the source checkout; it is not included in the portable workspace installation. From a chat in that checkout, ask:
 
 ```text
 Open the review desk.
 ```
 
-One local web app covers all your products: a consolidated **All projects** board and a board per product, switched at the top of the page. It lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: your promotion-agent session, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
+One local web app covers all your products: a consolidated **All projects** board and a board per product, switched at the top of the page. It lists your tasks. Each task shows its description and one prompt to copy, labeled with where to paste it: an agent session in that product's promotion workspace, or an agent session in the product repository for `product` tasks. With a local registry configured, you can also mark tasks complete, skip them, or resume them. These controls update local task records; they do not publish content or verify external outcomes. See [review desk details](docs/REVIEW-UI.md).
 
 ## Reusable AI skills
 
 The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, `product-video` to make a short product video from a public website without setting up promotion-agent, `nurture-campaign` to build a lifecycle email sequence for your product's registered users, or `agent-ready` to make a product usable, installable and findable by AI agents. The collection includes installation instructions and is separate from promotion-agent onboarding.
 
-## Development and details
+## Contribute to promotion-agent
+
+Open the source checkout when changing promotion-agent itself. Its root agent instructions describe development; installed promotion workspaces carry their own usage instructions. Contributor setup is:
 
 ```sh
 npm ci
 npm run check
 ```
+
+Follow [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow. Keep your personal promotion workspaces outside this public repository.
 
 The current agent performs the marketing work. Local helpers manage workspace files and evidence; there is no separate AI runner or background scheduler. Automated helper checks do not establish live native-menu or conversational behavior across all three hosts.
 

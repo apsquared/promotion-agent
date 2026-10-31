@@ -2,6 +2,8 @@
 
 promotion-agent documentation serves two audiences, and a document's folder says which one it is for.
 
+For everyday use, open your private promotion workspace. For development, open the promotion-agent source checkout. The current source-based installation also uses the checkout for initial setup, upgrades and checkout-only features; cloning it alone does not configure a promotion workspace. Your product repository is a third folder used as read-only source material. Start with [Using promotion-agent](USING.md) for the user setup and resume flow.
+
 ## Audiences
 
 **Agent users** are people who use promotion-agent to promote their own products: setting up a product, drafting and revising marketing work, checking status and using the review desk. This includes the AI agent acting for them in their Codex, Claude Code or OpenCode session, which reads some of these docs (such as the helper reference) while doing the work. Agent users never need to change promotion-agent's source.

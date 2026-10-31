@@ -1,5 +1,17 @@
 # Continue here
 
+## Source checkout versus everyday promotion workspace — 2026-10-31
+
+User request: clarify whether cloning promotion-agent means installing it for use or developing it. Keep one repository, separate folder roles and the existing observer-workspace architecture.
+
+- README now separates **Use promotion-agent** from **Contribute to promotion-agent**, explains all three folders and explicitly hands everyday use to the private promotion workspace. Source-based setup, upgrades, the optional review desk and checkout-only skills remain documented as current exceptions. CONTRIBUTING and root AGENTS.md/CLAUDE.md identify the checkout as development/setup source.
+- WORKFLOW v0.19, SETUP, user docs, compatibility and architecture use the same contract. Setup reports the actual workspace to open in future chats. New workspace installs carry thin root AGENTS.md/CLAUDE.md usage instructions via the existing ownership-manifest installer; existing unmanaged or customized instructions are preserved. Review-desk promotion prompts now target that product's promotion workspace; product implementation prompts still target the product repository.
+- PLAN and RELEASE record a versioned clone-free public installer as future work, requiring a supported setup interface, packaging of checkout-only features and release/native-host verification. Package remains private; no public init command or new dependency was introduced.
+
+Validation: `npm run check` passed helper/frontend typechecks, build and **105/105 tests**. The onboarding integration tests now verify root instruction links after relocation and deleting the original bundle, customized CLAUDE.md preservation on removal, and unchanged AGENTS.md removal. Existing tests verify pre-existing AGENTS.md/CLAUDE.md remain byte-identical, idempotent installs, reviewed upgrades, source isolation and other ownership gates. The publishing workflow test's pinned version was updated to 0.19 after the first full run identified the old 0.18 expectation. Relative file links in changed Markdown files resolve; `git diff --check` passes.
+
+Limits: native host discovery, a fresh user's setup/handoff experience and browser rendering were not exercised. Existing real workspaces have not been upgraded; they receive instructions through a reviewed upgrade. No other product repository was read or modified. No commit, push, package publication or external action occurred.
+
 ## P18 — high-quality promotion opportunities — 2026-10-30
 
 User request: build the reviewed promotion/SEO opportunity skill, considering only high-quality sites with traffic or SEO value and verifying that opportunities remain valid. Implemented locally as `promotion-opportunities`, with `/promote-opportunities` for Claude Code/OpenCode.

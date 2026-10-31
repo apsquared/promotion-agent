@@ -1,6 +1,14 @@
-# Marketing workflow contract — version 0.18
+# Marketing workflow contract — version 0.19
 
 This is the canonical workflow for the repo-local Codex skill and Claude Code/OpenCode commands. The current interactive agent performs the work with its existing tools and user conversation. Do not launch another AI CLI, probe CLI authentication, select another model, or create a background runner. Workflow customizations and marketing bookkeeping belong to the selected promotion workspace.
+
+## Folder roles and everyday use
+
+The promotion-agent **source checkout** contains development code and contributor instructions. The current source-based distribution also uses it for initial setup, upgrades, the optional review desk and checkout-only skills. A clone alone is not a configured promotion workspace. Product promotion requests in that checkout authorize the requested workflow, not changes to promotion-agent's source.
+
+The separate private **promotion workspace** contains the installed workflow, local helpers, usage instructions and saved marketing work. Open it for everyday drafting, revisions and status. The **product repository** supplies read-only facts. Keep these folders separate and store private marketing records in the promotion workspace. After setup, report the workspace to open for future chats; the current setup chat can continue immediately. Keep the source checkout for features that are not packaged into the workspace yet.
+
+## Activity routing
 
 For X account audits, growth plans, plan management and mentorship, follow [X Growth Mentor](activities/x-growth/WORKFLOW.md). Identify the account first. Personal accounts do not require product discovery or registration; use their private account plan records. For a product account, resolve the selected product and keep its source/workspace boundary. This route supports ongoing plan reviews across conversations; each session has a bounded requested scope.
 

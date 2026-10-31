@@ -6,6 +6,8 @@ Observer architecture supersedes the historical product-local distribution evide
 
 ## Current distribution: early-access source
 
+Cloning obtains the development/setup source, not a configured promotion workspace. User setup must end by identifying the separate private workspace to open for everyday promotion. Root usage instructions ship with new workspace installations; existing customized instructions remain preserved. The optional review desk and some skill entrypoints still require the source checkout. A public clone-free installer remains future work: package those features and verify the supported setup/resume path before advertising one-command installation. Keep release versions explicit and upgrades reviewed.
+
 Share the source checkout as early access. npm publication is optional and is not a prerequisite for trying the GitHub project. Native menu invocation in each supported agent and an outside user’s first useful draft remain open gates; record results using [the acceptance record](ACCEPTANCE.md). Automated tests cannot close those gates.
 
 Describe the project as free and MIT licensed with a user-supplied AI agent; host/model usage and optional services may cost money. Do not claim local-only inference or a global read-only sandbox. The README and [privacy procedure](../PRIVACY.md) explain external data flows and helper-versus-host boundaries. The [fictional first-draft walkthrough](FIRST-DRAFT.md) is a maintainer example, not an outside-user result or cross-host acceptance.
