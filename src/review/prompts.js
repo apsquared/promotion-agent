@@ -11,7 +11,7 @@ export function promptTarget(task) {
 export const targets = {
   promotion: {
     label: 'Promotion agent',
-    where: 'Paste into your promotion-agent session (Codex, Claude Code or OpenCode opened in the promotion-agent repo).',
+    where: 'Paste into your promotion-agent session (Codex, Claude Code or OpenCode opened in this product’s promotion workspace).',
   },
   product: {
     label: 'Product repo',

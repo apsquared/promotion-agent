@@ -2,6 +2,8 @@
 
 Set up promotion-agent for one explicitly selected local product. The current agent performs setup; do not give the user a helper-command checklist.
 
+The promotion-agent source checkout is the development repository and, for the current source-based distribution, the setup source. A clone alone is not an installation for a product. Install into a separate private promotion workspace and identify that workspace as the user's everyday agent folder. The npm package is not published; do not suggest a public one-command installer as if it exists.
+
 ## Select source and workspace
 
 Resolve the named product with [the shared project discovery procedure](WORKFLOW.md#resolve-a-project-by-name). Never ask the user for its filesystem path. Discover candidates with bounded directory/registration metadata searches, verify the selected repository, and reuse a matching registration when available. Follow [privacy and source handling](../docs/PRIVACY.md) before reading its instructions, documentation or existing marketing history as source material. The product repository stays read only: no runtime, skills, config, task updates, drafts, logs, install locks or databases belong there.
@@ -27,4 +29,4 @@ Do not remove or upgrade files in a product repository as part of observer setup
 
 ## Finish
 
-Report the product source, writable workspace, installed/preserved files, supported facts and unresolved gaps. Keep all marketing bookkeeping and recommendations in the workspace. Product code/content edits require a separate explicit request specifying the changes; a request to draft or promote does not authorize them. Continue into a requested activity without an extra permission step.
+Report the three folder roles: promotion-agent source/development checkout, read-only product source and writable promotion workspace. List installed/preserved files, supported facts and unresolved gaps. Explicitly say “Open this promotion workspace for future promotion chats,” with its actual resolved location. Explain that root usage instructions are installed only when absent or unchanged and existing custom instructions are preserved. Keep the source checkout for upgrades, the optional review desk and checkout-only skills; do not claim those features are portable yet. Keep all marketing bookkeeping and recommendations in the workspace. Product code/content edits require a separate explicit request specifying the changes; a request to draft or promote does not authorize them. Continue into a requested activity without an extra permission step.
