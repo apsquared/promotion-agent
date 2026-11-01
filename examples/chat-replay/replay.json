@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "skin": "claude",
+  "aspect": "16:9",
+  "source": "transcript.md",
+  "title": "Directories for Example Desk",
+  "connector": "Promotion Agent",
+  "disclosure": "Recreated from a real session",
+  "beats": [
+    { "id": "ask", "type": "user", "from": "T1", "text": "Find directories worth submitting Example Desk to. Only ones that are actually open right now.", "caption": { "eyebrow": "Promotion Agent in Claude", "text": "Find directories that are actually open" } },
+    { "id": "think", "type": "thinking", "from": "T2", "realSeconds": 9 },
+    { "id": "search", "type": "tool", "from": ["T3", "T4"], "name": "search_directories", "input": "category: help desk software · min DR 40", "status": "18 candidates", "duration": 1.4, "caption": { "eyebrow": "01 Search", "text": "It searches for candidates" } },
+    { "id": "verify", "type": "tool", "from": "T5", "name": "verify_listing", "input": "18 sites · live form, category, rules", "status": "5 open and eligible", "duration": 1.8, "caption": { "eyebrow": "02 Verify", "text": "Then checks every form is live" } },
+    { "id": "answer", "type": "assistant", "from": "T6", "text": "I checked **18 directories** and **5 are open** right now and accept a help desk product like Example Desk:\n\n- Toolshelf, LaunchLedger and StackAtlas\n- Helpdesk Hub and Indie Index\n\n9 were closed or paid-only, and 4 don't take help desk tools. Want me to draft the submission copy?" },
+    { "id": "table", "type": "widget", "from": "T7", "src": "assets/opportunities.svg", "label": "Promotion Agent · Qualified directories", "alt": "Table of five open directories with rating, monthly visits and status", "duration": 1.5, "caption": { "eyebrow": "03 Result", "text": "Only verified, open listings" } },
+    { "id": "proof", "type": "focus", "target": "table", "scale": 1.2, "label": "Each one checked today", "duration": 3 },
+    { "id": "next", "type": "user", "from": "T8", "text": "Yes, draft them. Start with Toolshelf." }
+  ]
+}

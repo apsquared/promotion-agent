@@ -10,6 +10,8 @@ Make one short product video as a reviewable draft: an approved script, a render
 
 HyperFrames (HeyGen's HTML-to-video framework, run on demand with `npx hyperframes`) is the preferred engine. Its own skills, chiefly `product-launch-video`, are the source of truth for its internals: composition contract, scripts, presets and motion rules. This skill orchestrates that work, adds boundaries and records pitfalls found in practice. When HyperFrames is unavailable, use the [fallback slideshow](references/fallback-slideshow.md), which needs no accounts. Whatever the engine, follow [video craft](references/craft.md) for structure, captions, motion and the pre-render checklist.
 
+For a product used through an AI assistant (its MCP server or plugin in Claude or ChatGPT), make a [chat replay](references/chat-replay.md) instead of a screen recording: a real transcript cleaned to its gist and rendered by [chat-replay.mjs](references/chat-replay.mjs) in a chat-app skin, under its own honesty rules. Its brief, script and build steps replace capture, design, storyboard and frames below; the boundaries, approval, checks, review, render and record steps still apply.
+
 Inside a promotion-agent workspace, use its `video` activity instead; it adds task tracking and evidence on top of this procedure.
 
 ## Hard boundaries
@@ -46,7 +48,7 @@ Ask only what is missing, one question at a time, each with a recommended defaul
 | Storyboard review | Yes |
 | Automation or companion | Automation, with review stops at the script and before render |
 
-Keep storyboard review and automation-versus-companion as two separate questions. Then run `npx hyperframes init "<dir>" --non-interactive --example=blank --skill=product-launch-video` and write `BRIEF.md` immediately after: init refuses a non-empty directory.
+Keep storyboard review and automation-versus-companion as two separate questions. Then run `npx hyperframes init "<dir>" --non-interactive --skip-skills --example=blank --skill=product-launch-video` (`--skip-skills` stops init from installing HyperFrames' skills globally on its own; that install is the user's decision) and write `BRIEF.md` immediately after: init refuses a non-empty directory.
 
 ## 2. Capture
 
