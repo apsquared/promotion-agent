@@ -10,7 +10,7 @@ The workflow treats your product repository as a read-only source and saves mark
 
 [Source on GitHub](https://github.com/apsquared/promotion-agent) · [MIT license](LICENSE)
 
-**Use promotion-agent:** follow [user setup](#use-promotion-agent) to create a private promotion workspace. Open that workspace for everyday marketing work.
+**Use promotion-agent:** follow [user setup](#use-promotion-agent) to create a private promotion workspace. Open that workspace for everyday marketing work. The shortest path is to give your agent [INSTALL.md](INSTALL.md): say “Help me install promotion agent using https://raw.githubusercontent.com/apsquared/promotion-agent/main/INSTALL.md”, and it will ask a few questions and do the rest.
 
 **Contribute to promotion-agent:** clone this repository as a development checkout and follow [CONTRIBUTING.md](CONTRIBUTING.md).
 
