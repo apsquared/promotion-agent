@@ -4,6 +4,8 @@ Use activity `video` under the [shared workflow](../../WORKFLOW.md). The outcome
 
 HyperFrames (HeyGen's HTML-to-video framework, run on demand with `npx hyperframes`) is the preferred engine. Its own skills, chiefly `product-launch-video`, are the source of truth for its internals: composition contract, scripts, presets and motion rules. This activity orchestrates that work, adds promotion-agent's boundaries and records the pitfalls found in practice. When HyperFrames is unavailable, use the [fallback slideshow](fallback-slideshow.md), which needs no accounts. Whatever the engine, follow [video craft](craft.md) for structure, captions, motion and the pre-render checklist.
 
+For a product used through an AI assistant (its MCP server or plugin in Claude or ChatGPT), make a [chat replay](chat-replay.md) instead of a screen recording: a real transcript cleaned to its gist and rendered by [chat-replay.mjs](chat-replay.mjs) in a chat-app skin, under its own honesty rules. Its brief, script and build steps replace capture, design, storyboard and frames below; the boundaries, approval, checks, review, render and record steps still apply.
+
 ## Hard boundaries
 
 - **Where the project lives.** The video project lives in the selected promotion workspace at `marketing/assets/videos/<project>/`. The observed product repository stays read only. Copy a finished render into the product repository (for example `public/marketing/`) only when the user explicitly asks; then follow that repository's own instructions, such as adding a README row per asset. Never commit, push or deploy.
@@ -38,7 +40,7 @@ Ask only what is missing, one question at a time, each with a recommended defaul
 | Storyboard review | Yes |
 | Automation or companion | Automation, with review stops at the script and before render |
 
-Keep storyboard review and automation-versus-companion as two separate questions. Then run `npx hyperframes init "<dir>" --non-interactive --example=blank --skill=product-launch-video` with `<dir>` = `marketing/assets/videos/<project>`, and write `BRIEF.md` immediately after: init refuses a non-empty directory.
+Keep storyboard review and automation-versus-companion as two separate questions. Then run `npx hyperframes init "<dir>" --non-interactive --skip-skills --example=blank --skill=product-launch-video` (`--skip-skills` stops init from installing HyperFrames' skills globally on its own; that install is the user's decision) with `<dir>` = `marketing/assets/videos/<project>`, and write `BRIEF.md` immediately after: init refuses a non-empty directory.
 
 ## 2. Capture
 

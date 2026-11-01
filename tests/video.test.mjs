@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { previewInstall, applyInstall, reviewHash, previewRemoval, applyRemoval, removalHash } from '../src/onboarding/install.ts';
 import { prepareTask, recordTaskEvidence } from '../src/interactive/tasks.ts';
 import { reviewData } from '../src/review/data.ts';
@@ -134,4 +135,87 @@ test('standalone product-video skill is self-contained and its references match 
   }
   for (const name of activityRefs) assert.ok(linked.has(join(copy, 'references', name)), `${name} is not linked from the skill`);
   for (const file of files) assert.doesNotMatch(readFileSync(join(copy, file), 'utf8'), /\.promotion-agent|templates\/|marketing\/logs|\/Users\//);
+});
+
+test('chat replay builds the example into a deterministic HyperFrames composition traced to its transcript', async () => {
+  const { validate, compose, markdown, snapshotTimes, MARKER } = await import('../templates/activities/video/chat-replay.mjs');
+  const dir = 'examples/chat-replay';
+  const replay = JSON.parse(readFileSync(join(dir, 'replay.json'), 'utf8'));
+  assert.deepEqual(validate(replay, dir), { errors: [], warnings: [] });
+  const { html, timing } = compose(replay, dir);
+  assert.equal(compose(replay, dir).html, html);
+  // Widgets carry their intrinsic size and the page waits for images, so scrolling is measured on the final layout.
+  assert.match(html, /<img src="assets\/opportunities\.svg" width="1360" height="520"/);
+  assert.match(html, /document\.images/);
+  assert.ok(html.includes(MARKER));
+  assert.match(html, new RegExp(`data-composition-id="main" data-start="0" data-duration="${timing.duration}"`));
+  assert.match(html, /window\.__timelines\['main'\] = tl;/);
+  assert.ok(html.includes('Recreated from a real session'));
+  assert.doesNotMatch(html, /Date\.now|Math\.random|fetch\(/);
+  for (const beat of timing.beats) if (beat.type !== 'focus' && beat.type !== 'pause') assert.ok(html.includes(`id="${beat.id}"`), beat.id);
+  // Streamed units in the page match the timing plan.
+  for (const beat of timing.beats.filter(b => b.type === 'assistant'))
+    assert.equal(markdown(replay.beats.find(b => b.id === beat.id).text).html.match(/class="w/g).length, beat.units);
+  assert.ok(timing.beats.every((b, i) => i === 0 || b.start === timing.beats[i - 1].end));
+  assert.equal(snapshotTimes(timing)[0], 0);
+  // Every cited turn exists in the transcript.
+  const transcript = readFileSync(join(dir, replay.source), 'utf8');
+  for (const beat of replay.beats) for (const turn of [beat.from ?? []].flat())
+    assert.ok(transcript.includes(`**${turn} ·`), `${beat.id} cites missing turn ${turn}`);
+});
+
+test('every chat replay skin builds the example with its own palette and chrome', async () => {
+  const { SKINS, validate, compose } = await import('../templates/activities/video/chat-replay.mjs');
+  const dir = 'examples/chat-replay';
+  const claude = JSON.parse(readFileSync(join(dir, 'replay.json'), 'utf8'));
+  const codex = JSON.parse(readFileSync(join(dir, 'replay-codex.json'), 'utf8'));
+  assert.deepEqual(Object.keys(SKINS).sort(), ['claude', 'codex']);
+  const keys = Object.keys(SKINS.claude.colors).sort();
+  for (const skin of Object.values(SKINS)) {
+    assert.deepEqual(Object.keys(skin.colors).sort(), keys);
+    assert.ok(skin.placeholder && ['rail', 'threads'].includes(skin.sidebar));
+  }
+  // The Codex example is the Claude one with a different skin, eyebrow and sidebar names.
+  const { sidebar, ...rest } = codex;
+  assert.deepEqual({ ...rest, skin: 'claude', beats: codex.beats.map(b => b.id) }, { ...claude, beats: claude.beats.map(b => b.id) });
+  assert.deepEqual(validate(codex, dir), { errors: [], warnings: [] });
+  const html = compose(codex, dir).html;
+  assert.ok(html.includes(`--app: ${SKINS.codex.colors.app};`));
+  assert.ok(html.includes('id="rail" class="threads"') && html.includes('class="win"') && html.includes('<span class="tool-verb">Called</span>'));
+  for (const name of [sidebar.project, ...sidebar.threads, ...sidebar.projects]) assert.ok(html.includes(name), name);
+  assert.ok(html.includes(SKINS.codex.placeholder) && html.includes('Worked for 9s') && html.includes('Recreated from a real session'));
+  const claudeHtml = compose(claude, dir).html;
+  assert.ok(!claudeHtml.includes('tool-verb') && !claudeHtml.includes('class="win"') && claudeHtml.includes('Thought for 9s'));
+  // Without names the thread list shows placeholder bars, and long real times read in minutes.
+  const bare = { ...rest, beats: [{ id: 'long', type: 'thinking', from: 'T2', realSeconds: 61 }] };
+  assert.ok(compose(bare, dir).html.includes('Worked for 1m 1s') && compose(bare, dir).html.includes('class="rail-bar"'));
+  assert.match(validate({ ...bare, sidebar: { threads: ['a', 'b', 'c', 'd', 'e'] } }, dir).errors.join('\n'), /up to 4 names/);
+});
+
+test('chat replay refuses unsourced or unreadable beats and never overwrites a hand-made composition', async t => {
+  const { validate } = await import('../templates/activities/video/chat-replay.mjs');
+  const base = { version: 1, skin: 'claude', source: 'transcript.md' };
+  const errors = beats => validate({ ...base, beats }).errors.join('\n');
+  assert.match(errors([{ type: 'tool', name: 'search' }]), /need "from"/);
+  assert.match(errors([{ type: 'user', from: 'T1', text: 'x'.repeat(221) }]), /shorten it to 220/);
+  assert.match(errors([{ type: 'focus', target: 'later' }, { id: 'later', type: 'user', from: 'T1', text: 'hi' }]), /earlier beat/);
+  assert.match(errors([{ type: 'widget', from: 'T1', src: '../secret.png' }]), /under assets/);
+  assert.match(errors([{ id: '01-ask', type: 'user', from: 'T1', text: 'hi' }]), /start with a letter/);
+  assert.match(validate({ ...base, skin: 'other', beats: [{ type: 'pause' }] }).errors.join('\n'), /skin must be one of/);
+  assert.match(validate({ version: 1, skin: 'claude', beats: [{ type: 'pause' }] }).errors.join('\n'), /source must name the transcript/);
+
+  const root = mkdtempSync(join(tmpdir(), 'chat-replay-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  cpSync('examples/chat-replay', root, { recursive: true });
+  const index = join(root, 'index.html');
+  writeFileSync(index, '<!doctype html><p>hand-made</p>\n');
+  const run = (...args) => spawnSync(process.execPath, [resolve('templates/activities/video/chat-replay.mjs'), join(root, 'replay.json'), root, ...args], { encoding: 'utf8' });
+  const refused = run();
+  assert.equal(refused.status, 1);
+  assert.match(refused.stderr, /--force/);
+  assert.equal(readFileSync(index, 'utf8'), '<!doctype html><p>hand-made</p>\n');
+  assert.equal(run('--force').status, 0);
+  const rebuilt = run();
+  assert.equal(rebuilt.status, 0, rebuilt.stderr);
+  assert.match(rebuilt.stdout, /Snapshot times: 0,/);
 });
