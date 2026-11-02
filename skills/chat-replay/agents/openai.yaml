@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chat Replay"
+  short_description: "Turn a real assistant session into a demo video of your MCP server or plugin"
+  default_prompt: "Use $chat-replay to turn this conversation into a demo video of my tool in Codex. Show me the cleaned-up script before building it, and render a draft."

@@ -1,5 +1,15 @@
 # Continue here
 
+## Standalone chat-replay skill — 2026-11-01
+
+User request after PR #24 merged: make chat replay its own installable skill. Built on branch `claude/chat-replay-skill` from `main`.
+
+- `skills/chat-replay/`: `SKILL.md` (self-contained: boundaries, honesty rules, availability check, eight steps from brief to record, and a try-the-example block; init happens at the end of the brief because init refuses a non-empty directory), `scripts/chat-replay.mjs`, `references/replay-format.md` (the `replay.json` format, beat table and limits, adapted from the activity guide without its "main procedure" hand-offs), `examples/` (moved from `examples/chat-replay/`) and `agents/openai.yaml`.
+- One script, two copies: the skill's `scripts/chat-replay.mjs` and the activity's `templates/activities/video/chat-replay.mjs` are byte-identical (installed workspaces need the activity copy). `skills/product-video/references/` no longer carries chat replay files; its SKILL points to the `chat-replay` skill and its install command. `skills/readme.md` lists the skill with install and use lines.
+- Bug found while testing the copied skill: the CLI decided whether it was invoked directly by comparing `import.meta.url` with the unresolved `argv[1]`, so run through a symlinked path (macOS temp folders; skill installers that symlink skills) it exited 0 without doing anything. It now compares real paths. A test runs the CLI through a symlink and was confirmed to fail on the old script.
+
+Validation: `npm run check` passed both typechecks, the build and **109/109 tests** (new: the skill's frontmatter, script identity with the activity, links staying inside a copied skill, no workspace paths, and both examples building from the copy and through a symlink; existing chat replay tests now use the skill's script and examples, and the `product-video` reference-mirror test excludes chat replay files). Frontmatter checked against the Agent Skills limits (name pattern, 486-character description); Skill Creator's `quick_validate.py` was not run because PyYAML is not installed. Native invocation through `npx skills add` and a real user transcript remain unexercised. No push or external action.
+
 ## P12 chat replay prototype — 2026-11-01
 
 User request: a tool or skill that turns a text conversation into a video that looks like real use of their MCP/plugin in Claude or ChatGPT, keeping the gist, because live agent sessions are too slow and unpredictable to record.
