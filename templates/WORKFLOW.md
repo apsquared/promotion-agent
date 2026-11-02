@@ -105,6 +105,16 @@ For product code/content recommendations: save a proposal in the workspace with 
 
 Every task includes a stable ID, exact URL, self-contained materials, verified asset references, and 3–8 task-specific steps including completion evidence and skip conditions. Tasks predating Prompt remain valid.
 
+### Write tasks as paste-ready agent prompts
+
+Whenever you write a task, whether a TASKS.md entry, a follow-up, or something you hand the user in chat, write it so the user can copy it straight into an agent and run it. Prefer that over prose instructions for the user to follow.
+
+- **Label where it runs.** Start every copyable task with one line, `Run in: promotion workspace` or `Run in: product repository`. Use the workspace for everything in the promotion workspace (research, drafts, evidence, bookkeeping, all categories except `product`). Use the product repository, where the product's source lives, only for `product` work that changes the product. Never mix the two in one prompt; split it into two tasks and link them.
+- **Make it self-contained.** The agent that receives it has only the pasted text: include exact URLs, materials, file paths, constraints, the completion evidence to return, and skip conditions. Do not refer to "the conversation" or "above".
+- **Fence it.** Put the prompt in its own fenced `text` block so it copies cleanly, with the label line inside the block.
+- **Mark human-only work.** When a step cannot be done by an agent (sign-in, 2FA, CAPTCHA, payment, email or SMS verification, a manual submission, an approval only the user can give), say `Human required:` on its own line, name exactly what the user must do and why, and list the exact values to use. Keep human steps out of agent prompts, or split them into a separate task that is clearly labeled `Human required`. If a task is entirely human, do not wrap it in an agent prompt.
+- **Say what the agent must not do.** State the approval gates (no posting, spending or account creation without the user's explicit yes) inside the prompt, as the review desk's prompt builder does.
+
 Keep a prepared task open until its actual completion criteria are met. For configured projects, `record` can save an immutable task-linked draft or `verified-complete` evidence account in the workspace's marketing logs without creating a database; it hashes local artifact references. The helper does not independently verify a provider action. Inspect the actual receipt, live destination, or validated local artifact yourself before calling the outcome verified. The `verified-complete` summary is the task's lasting result, shown on the review desk's Done tab. Write it as three labeled lines (continuation lines allowed):
 
 ```text
