@@ -180,7 +180,7 @@ One local web app covers all your products: a consolidated **All projects** boar
 
 ## Reusable AI skills
 
-The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, `product-video` to make a short product video from a public website without setting up promotion-agent, `nurture-campaign` to build a lifecycle email sequence for your product's registered users, or `agent-ready` to make a product usable, installable and findable by AI agents. The collection includes installation instructions and is separate from promotion-agent onboarding.
+The standalone [skills collection](skills/readme.md) contains useful skills you can install in your own projects. Start with `mcp-ify` to design, implement, or review customer MCP access for an existing SaaS, `product-video` to make a short product video from a public website without setting up promotion-agent, `chat-replay` to turn a real AI assistant session into a demo video of your MCP server or plugin in a Claude or Codex style chat, `nurture-campaign` to build a lifecycle email sequence for your product's registered users, or `agent-ready` to make a product usable, installable and findable by AI agents. The collection includes installation instructions and is separate from promotion-agent onboarding.
 
 ## Contribute to promotion-agent
 
