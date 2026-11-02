@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
@@ -12,6 +12,11 @@ import { promptCategory } from '../src/core/task-prompt.ts';
 
 const entrypoints = ['.agents/skills/promotion-video/SKILL.md', '.claude/commands/promote-video.md', '.opencode/commands/promote-video.md'];
 const activityDir = 'templates/activities/video';
+// Chat replay ships as its own skill; the activity keeps an identical copy of the script for installed workspaces.
+const replaySkill = 'skills/chat-replay';
+const replayScript = `${replaySkill}/scripts/chat-replay.mjs`;
+const replayExamples = `${replaySkill}/examples`;
+const chatReplayRefs = ['chat-replay.md', 'chat-replay.mjs'];
 function links(file) {
   return [...readFileSync(file, 'utf8').matchAll(/\]\(([^)#]+)(?:#[^)]*)?\)/g)].map(([, href]) => resolve(dirname(file), href));
 }
@@ -117,8 +122,9 @@ test('standalone product-video skill is self-contained and its references match 
   const skill = 'skills/product-video';
   const text = readFileSync(join(skill, 'SKILL.md'), 'utf8');
   assert.match(text, /^---\nname: product-video\ndescription: .+\nlicense: MIT\n---\n/);
-  const activityRefs = readdirSync(activityDir).filter(n => n !== 'WORKFLOW.md').sort();
+  const activityRefs = readdirSync(activityDir).filter(n => n !== 'WORKFLOW.md' && !chatReplayRefs.includes(n)).sort();
   assert.deepEqual(readdirSync(join(skill, 'references')).sort(), activityRefs);
+  assert.match(text, /`chat-replay` skill/);
   for (const name of activityRefs)
     assert.equal(readFileSync(join(skill, 'references', name), 'utf8'), readFileSync(join(activityDir, name), 'utf8'), `${name} drifted from the activity`);
   // Copied anywhere on its own, every link still resolves inside the folder.
@@ -137,9 +143,46 @@ test('standalone product-video skill is self-contained and its references match 
   for (const file of files) assert.doesNotMatch(readFileSync(join(copy, file), 'utf8'), /\.promotion-agent|templates\/|marketing\/logs|\/Users\//);
 });
 
+test('standalone chat-replay skill is self-contained and its script matches the activity', t => {
+  const text = readFileSync(join(replaySkill, 'SKILL.md'), 'utf8');
+  assert.match(text, /^---\nname: chat-replay\ndescription: .+\nlicense: MIT\n---\n/);
+  assert.equal(readFileSync(replayScript, 'utf8'), readFileSync(join(activityDir, 'chat-replay.mjs'), 'utf8'), 'chat-replay.mjs drifted from the activity');
+  assert.match(readFileSync(join(replaySkill, 'agents/openai.yaml'), 'utf8'), /\$chat-replay/);
+  for (const boundary of ['--skip-skills', 'SCRIPT.md', 'realSeconds', 'Recreated from a real session', 'Never commit, push or deploy', 'ask before installing'])
+    assert.ok(text.includes(boundary), `SKILL.md lacks: ${boundary}`);
+  // Copied anywhere on its own, every link resolves inside the folder and the example builds from there.
+  const root = mkdtempSync(join(tmpdir(), 'chat-replay-skill-'));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const copy = join(root, 'chat-replay');
+  cpSync(replaySkill, copy, { recursive: true });
+  const docs = ['SKILL.md', 'references/replay-format.md', 'examples/transcript.md'];
+  const linked = new Set();
+  for (const file of docs) for (const link of links(join(copy, file))) {
+    assert.ok(link.startsWith(copy + '/'), `${file} links outside the skill: ${link}`);
+    assert.ok(existsSync(link), `Missing linked resource: ${link}`);
+    linked.add(link);
+  }
+  for (const name of ['scripts/chat-replay.mjs', 'references/replay-format.md', 'examples/transcript.md', 'examples/replay.json', 'examples/replay-codex.json'])
+    assert.ok(linked.has(join(copy, name)), `${name} is not linked from the skill`);
+  for (const file of [...docs, 'scripts/chat-replay.mjs']) assert.doesNotMatch(readFileSync(join(copy, file), 'utf8'), /\.promotion-agent|templates\/|marketing\/logs|\/Users\/|main procedure/);
+  const project = join(root, 'demo');
+  cpSync(join(copy, 'examples'), project, { recursive: true });
+  for (const replay of ['replay.json', 'replay-codex.json']) {
+    const built = spawnSync(process.execPath, [join(copy, 'scripts/chat-replay.mjs'), join(project, replay), project], { encoding: 'utf8' });
+    assert.equal(built.status, 0, built.stderr);
+    assert.equal(built.stderr, '');
+  }
+  assert.match(readFileSync(join(project, 'index.html'), 'utf8'), /Worked for 9s/);
+  // Skill installers often symlink the folder; the CLI must still run through the link.
+  symlinkSync(copy, join(root, 'linked'));
+  const linkedRun = spawnSync(process.execPath, [join(root, 'linked/scripts/chat-replay.mjs'), join(project, 'replay.json'), project, '--check'], { encoding: 'utf8' });
+  assert.equal(linkedRun.status, 0, linkedRun.stderr);
+  assert.match(linkedRun.stdout, /Duration: /);
+});
+
 test('chat replay builds the example into a deterministic HyperFrames composition traced to its transcript', async () => {
-  const { validate, compose, markdown, snapshotTimes, MARKER } = await import('../templates/activities/video/chat-replay.mjs');
-  const dir = 'examples/chat-replay';
+  const { validate, compose, markdown, snapshotTimes, MARKER } = await import(`../${replayScript}`);
+  const dir = replayExamples;
   const replay = JSON.parse(readFileSync(join(dir, 'replay.json'), 'utf8'));
   assert.deepEqual(validate(replay, dir), { errors: [], warnings: [] });
   const { html, timing } = compose(replay, dir);
@@ -165,8 +208,8 @@ test('chat replay builds the example into a deterministic HyperFrames compositio
 });
 
 test('every chat replay skin builds the example with its own palette and chrome', async () => {
-  const { SKINS, validate, compose } = await import('../templates/activities/video/chat-replay.mjs');
-  const dir = 'examples/chat-replay';
+  const { SKINS, validate, compose } = await import(`../${replayScript}`);
+  const dir = replayExamples;
   const claude = JSON.parse(readFileSync(join(dir, 'replay.json'), 'utf8'));
   const codex = JSON.parse(readFileSync(join(dir, 'replay-codex.json'), 'utf8'));
   assert.deepEqual(Object.keys(SKINS).sort(), ['claude', 'codex']);
@@ -193,7 +236,7 @@ test('every chat replay skin builds the example with its own palette and chrome'
 });
 
 test('chat replay refuses unsourced or unreadable beats and never overwrites a hand-made composition', async t => {
-  const { validate } = await import('../templates/activities/video/chat-replay.mjs');
+  const { validate } = await import(`../${replayScript}`);
   const base = { version: 1, skin: 'claude', source: 'transcript.md' };
   const errors = beats => validate({ ...base, beats }).errors.join('\n');
   assert.match(errors([{ type: 'tool', name: 'search' }]), /need "from"/);
@@ -206,10 +249,10 @@ test('chat replay refuses unsourced or unreadable beats and never overwrites a h
 
   const root = mkdtempSync(join(tmpdir(), 'chat-replay-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));
-  cpSync('examples/chat-replay', root, { recursive: true });
+  cpSync(replayExamples, root, { recursive: true });
   const index = join(root, 'index.html');
   writeFileSync(index, '<!doctype html><p>hand-made</p>\n');
-  const run = (...args) => spawnSync(process.execPath, [resolve('templates/activities/video/chat-replay.mjs'), join(root, 'replay.json'), root, ...args], { encoding: 'utf8' });
+  const run = (...args) => spawnSync(process.execPath, [resolve(replayScript), join(root, 'replay.json'), root, ...args], { encoding: 'utf8' });
   const refused = run();
   assert.equal(refused.status, 1);
   assert.match(refused.stderr, /--force/);

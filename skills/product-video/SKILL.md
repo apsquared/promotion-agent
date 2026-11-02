@@ -10,7 +10,7 @@ Make one short product video as a reviewable draft: an approved script, a render
 
 HyperFrames (HeyGen's HTML-to-video framework, run on demand with `npx hyperframes`) is the preferred engine. Its own skills, chiefly `product-launch-video`, are the source of truth for its internals: composition contract, scripts, presets and motion rules. This skill orchestrates that work, adds boundaries and records pitfalls found in practice. When HyperFrames is unavailable, use the [fallback slideshow](references/fallback-slideshow.md), which needs no accounts. Whatever the engine, follow [video craft](references/craft.md) for structure, captions, motion and the pre-render checklist.
 
-For a product used through an AI assistant (its MCP server or plugin in Claude or ChatGPT), make a [chat replay](references/chat-replay.md) instead of a screen recording: a real transcript cleaned to its gist and rendered by [chat-replay.mjs](references/chat-replay.mjs) in a chat-app skin, under its own honesty rules. Its brief, script and build steps replace capture, design, storyboard and frames below; the boundaries, approval, checks, review, render and record steps still apply.
+For a product used through an AI assistant (its MCP server or plugin in Claude or Codex), use the separate `chat-replay` skill instead of a screen recording: it rebuilds a real transcript, cleaned to its gist, in a chat-app skin. Install it with `npx skills add apsquared/promotion-agent --skill chat-replay`.
 
 Inside a promotion-agent workspace, use its `video` activity instead; it adds task tracking and evidence on top of this procedure.
 

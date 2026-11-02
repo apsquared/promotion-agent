@@ -10,6 +10,7 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 | --- | --- | --- |
 | [mcp-ify](mcp-ify/SKILL.md) | Design, implement, or review customer MCP tools for an existing SaaS, including permissions, applicable spending controls, connection UX, and verification. | `Use $mcp-ify to add customer MCP access to this SaaS. Inspect the repo and suggest the first useful workflows.` |
 | [product-video](product-video/SKILL.md) | Make a short product tour, launch promo or feature clip from a product's public site, with HyperFrames or a Playwright + ffmpeg fallback, as a reviewable draft MP4. | `Use $product-video to turn https://example.com into a 30-second promo for X.` |
+| [chat-replay](chat-replay/SKILL.md) | Turn a real AI assistant session into a demo video of your MCP server, plugin or skill in a Claude or Codex style chat, with HyperFrames, as a reviewable draft MP4. | `Use $chat-replay to turn this conversation into a demo video of my MCP server in Claude.` |
 | [nurture-campaign](nurture-campaign/SKILL.md) | Build and verify a short lifecycle email sequence for a product's registered users, with at-most-once delivery, a CAN-SPAM footer, one-click unsubscribe and scheduling. | `Use $nurture-campaign to build a 5-email nurture sequence for users who signed up.` |
 | [agent-ready](agent-ready/SKILL.md) | Make a product usable, installable and findable by AI agents: audit live, add a skill, CLI or plugin packaging, discovery assets and directory listings, with MCP work handed to `mcp-ify`. | `Use $agent-ready to audit what agents can do with this product and plan how to get it into the Claude and ChatGPT marketplaces.` |
 
@@ -21,6 +22,8 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 
 `product-video` runs HyperFrames on demand through `npx` and adds no dependency to your project. It asks before signing in, using paid credits or installing HyperFrames' agent skills globally, shows you the script before building, and never publishes, commits or deploys. It is the standalone version of promotion-agent's `video` activity; its `references/` are kept identical to that activity's.
 
+`chat-replay` rebuilds a real assistant session instead of recording one: you supply the transcript, it drafts a cleaned-up script with every beat traced to a transcript turn and shows you the list of changes before building. The video carries a "Recreated from a real session" label by default, uses no vendor logos, and its generator is one Node.js script with no dependencies. It needs no HeyGen sign-in; rendering needs FFmpeg, and it asks before installing it. Try it on the bundled fictional example first. Pair it with `mcp-ify` or `agent-ready` for a marketplace or launch demo.
+
 ## Install
 
 With Node.js and npm installed, run this from the project where you want to use the skill:
@@ -29,7 +32,7 @@ With Node.js and npm installed, run this from the project where you want to use 
 npx skills add apsquared/promotion-agent --skill mcp-ify
 ```
 
-Use the same command with `--skill product-video`, `--skill nurture-campaign` or `--skill agent-ready` for the other skills.
+Use the same command with `--skill product-video`, `--skill chat-replay`, `--skill nurture-campaign` or `--skill agent-ready` for the other skills.
 
 The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets you choose your agent and installation options. Add `--agent codex` to target Codex, or `--global` to make the skill available across your projects.
 
@@ -39,7 +42,7 @@ The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets 
 npx skills add ./skills/mcp-ify --agent codex --global
 ```
 
-or `./skills/product-video`, `./skills/nurture-campaign` or `./skills/agent-ready`.
+or `./skills/product-video`, `./skills/chat-replay`, `./skills/nurture-campaign` or `./skills/agent-ready`.
 
 Run the local command from the promotion-agent repository root. It installs this local skill for your personal Codex use.
 
@@ -56,6 +59,8 @@ For email, open the product's repository and ask `Use $nurture-campaign to build
 To make a product agent friendly, open its repository and ask `Use $agent-ready to audit what AI agents can already do with this product.`
 
 For a video, open any folder in your agent and ask `Use $product-video to make a 30-second promo of https://example.com.`
+
+For an assistant demo, paste or attach the conversation and ask `Use $chat-replay to turn this conversation into a demo video.`
 
 For `mcp-ify` you can also ask for a plan only or a review of an existing MCP server. Use your host's skill selector if it uses a different invocation syntax. If Codex does not show the installed skill, restart it.
 
