@@ -18,6 +18,7 @@ Documentation has two audiences, defined in docs/README.md: agent users (people 
 - A failed or invalid task import must never authorize archival or deletion.
 - Use stable project IDs, not mutable display-name slugs, for identity.
 - Run npm test for core changes; add relevant integration/UI tests as those layers arrive.
+- Write every task, follow-up or handoff as a prompt that can be copied into an agent. Open it with `Run in: promotion-agent source checkout`, `Run in: promotion workspace` or `Run in: product repository`, make it self-contained, and put it in a fenced block. Mark work only a person can do (sign-in, payment, approval, manual steps) as `Human required:` and keep it out of the agent prompt. Details for promotion tasks are in `templates/WORKFLOW.md` under "Write tasks as paste-ready agent prompts".
 - Do not add subagents, paid services, dependencies, or complexity without a concrete need.
 - Treat reference/ as design source, not production code. Do not restore hosted admin or database-only completion behavior.
 

@@ -17,7 +17,7 @@ Use it when the product's value shows up inside an assistant conversation. For a
 - **Where the project lives.** Keep the video project in its own directory, outside the product's repository by default (recommended: `~/product-videos/<project>/`). Use another location only when the user chooses it. Treat the product repository as read only. Never commit, push or deploy.
 - **No publishing.** Nothing is published or scheduled. A rendered video is a draft until the user approves it; posting it is a separate request.
 - **Accounts and spending.** A chat replay needs no HeyGen sign-in or paid credits. Never create accounts, sign in, paste API keys or trigger paid generation for the user.
-- **Dependencies.** Add no dependency to the user's projects. HyperFrames runs through `npx`, and the generator is a single Node.js script with no dependencies. Installing FFmpeg or HyperFrames' agent skills changes the user's machine, so ask first.
+- **Dependencies.** Add no dependency to the user's projects. HyperFrames runs through `npx`, and the generator is a single Node.js script with no dependencies. Installing FFmpeg changes the user's machine, so ask first. Installing or updating HyperFrames' agent skills is the user's step: name `npx hyperframes skills update` and do not run it yourself.
 - **Agents.** Do not launch another AI CLI.
 
 ## Honesty rules
