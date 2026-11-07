@@ -12,6 +12,7 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 | [product-video](product-video/SKILL.md) | Make a short product tour, launch promo or feature clip from a product's public site, with HyperFrames or a Playwright + ffmpeg fallback, as a reviewable draft MP4. | `Use $product-video to turn https://example.com into a 30-second promo for X.` |
 | [chat-replay](chat-replay/SKILL.md) | Turn a real AI assistant session into a demo video of your MCP server, plugin or skill in a Claude or Codex style chat, with HyperFrames, as a reviewable draft MP4. [Sample video](../assets/samples/chat-replay-sample.mp4). | `Use $chat-replay to turn this conversation into a demo video of my MCP server in Claude.` |
 | [nurture-campaign](nurture-campaign/SKILL.md) | Build and verify a short lifecycle email sequence for a product's registered users, with at-most-once delivery, a CAN-SPAM footer, one-click unsubscribe and scheduling. | `Use $nurture-campaign to build a 5-email nurture sequence for users who signed up.` |
+| [ahrefs-domain-rating](ahrefs-domain-rating/SKILL.md) | Look up Ahrefs Domain Rating for one or many domains through Ahrefs' free public API endpoint, with your own free APIv3 key, and report each figure with its date and status. | `Use $ahrefs-domain-rating to check the DR of example.com and these competitors.` |
 | [agent-ready](agent-ready/SKILL.md) | Make a product usable, installable and findable by AI agents: audit live, add a skill, CLI or plugin packaging, discovery assets and directory listings, with MCP work handed to `mcp-ify`. | `Use $agent-ready to audit what agents can do with this product and plan how to get it into the Claude and ChatGPT marketplaces.` |
 
 `mcp-ify` adapts to the project's stack and account model. It includes examples for read-only analytics, paid unlocks, collaboration writes, and existing MCP servers. It does not itself supply an MCP server or deploy one merely by being installed.
@@ -21,6 +22,8 @@ These skills are independent of promotion-agent's marketing workflow. They requi
 `agent-ready` audits the repo and the live state (MCP endpoint, registry, directory listings, public repo metadata, `llms.txt`) before proposing anything, picks the cheapest surfaces for the gap, and hands MCP server work to `mcp-ify`. It prepares submission packets and names blockers, but never creates accounts, signs in or pays, and asks before each submission, push, deploy, post or repo-metadata change. It includes a dependency-free script that fails on credential-shaped values in files you distribute.
 
 `product-video` runs HyperFrames on demand through `npx` and adds no dependency to your project. It asks before signing in, using paid credits or installing HyperFrames' agent skills globally, shows you the script before building, and never publishes, commits or deploys. It is the standalone version of promotion-agent's `video` activity; its `references/` are kept identical to that activity's.
+
+`ahrefs-domain-rating` calls `GET https://api.ahrefs.com/v3/public/domain-rating-free`, which is free but needs an Ahrefs APIv3 key. You create the key in your free Ahrefs account and export it as `AHREFS_API_KEY`; the skill never asks for it in chat, never takes it as an argument and never prints it. Its script has no dependencies, paces requests a second apart, retries a rate limit once, and keeps Ahrefs' required "Domain Rating by Ahrefs" attribution. promotion-agent's own domain rank check stays keyless and does not use it.
 
 `chat-replay` rebuilds a real assistant session instead of recording one: you supply the transcript, it drafts a cleaned-up script with every beat traced to a transcript turn and shows you the list of changes before building. The video carries a "Recreated from a real session" label by default, uses no vendor logos, and its generator is one Node.js script with no dependencies. It needs no HeyGen sign-in; rendering needs FFmpeg, and it asks before installing it. Try it on the bundled fictional example first. Pair it with `mcp-ify` or `agent-ready` for a marketplace or launch demo.
 
@@ -36,7 +39,7 @@ With Node.js and npm installed, run this from the project where you want to use 
 npx skills add apsquared/promotion-agent --skill mcp-ify
 ```
 
-Use the same command with `--skill product-video`, `--skill chat-replay`, `--skill nurture-campaign` or `--skill agent-ready` for the other skills.
+Use the same command with `--skill product-video`, `--skill chat-replay`, `--skill nurture-campaign`, `--skill agent-ready` or `--skill ahrefs-domain-rating` for the other skills.
 
 The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets you choose your agent and installation options. Add `--agent codex` to target Codex, or `--global` to make the skill available across your projects.
 
@@ -46,7 +49,7 @@ The [skills.sh CLI](https://github.com/vercel-labs/skills#install-a-skill) lets 
 npx skills add ./skills/mcp-ify --agent codex --global
 ```
 
-or `./skills/product-video`, `./skills/chat-replay`, `./skills/nurture-campaign` or `./skills/agent-ready`.
+or `./skills/product-video`, `./skills/chat-replay`, `./skills/nurture-campaign`, `./skills/agent-ready` or `./skills/ahrefs-domain-rating`.
 
 Run the local command from the promotion-agent repository root. It installs this local skill for your personal Codex use.
 
