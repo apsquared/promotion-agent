@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ahrefs Domain Rating"
+  short_description: "Look up Ahrefs DR for domains with the free API endpoint"
+  default_prompt: "Use $ahrefs-domain-rating to look up the Ahrefs Domain Rating of these domains with my AHREFS_API_KEY and report each figure with its date and status."
