@@ -1,0 +1,16 @@
+{
+  "name": "Tidepool",
+  "tagline": "Turn customer support threads into a searchable FAQ",
+  "description": "Support teams answer the same questions every week. Tidepool reads your resolved Zendesk and Intercom threads, groups repeat questions, and drafts FAQ entries your team approves before they go live. Built for small SaaS teams without a docs writer. Free for up to 500 threads a month.",
+  "productUrl": "https://tidepool.example.com",
+  "firstComment": "<p>Hi Product Hunt! I'm Sam, and I ran support at a 12-person SaaS for three years.</p><p>Every Monday we answered the same ten questions, and our help center was always out of date. Tidepool fixes that:</p><ul><li>connects to Zendesk or Intercom in two clicks</li><li>groups resolved threads into repeat questions</li><li>drafts FAQ entries you approve before they publish</li></ul><p>One question for you: would you rather approve entries one by one or in a weekly batch?</p><p>Everyone from Product Hunt gets the Team plan free for three months.</p>",
+  "promoText": "3 months of Team, free",
+  "promoCode": "HUNT3",
+  "galleryCount": 4,
+  "shoutouts": [
+    { "note": "Postmark made sending our approval emails painless from day one." }
+  ],
+  "outreach": [
+    "We launched Tidepool on Product Hunt today. If your team answers the same support questions every week, I'd love your honest take: https://www.producthunt.com/products/tidepool"
+  ]
+}

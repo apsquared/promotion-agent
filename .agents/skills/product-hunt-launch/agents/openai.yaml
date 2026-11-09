@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Hunt Launch"
+  short_description: "Plan, stage and run a Product Hunt launch through the official MCP"
+  default_prompt: "Use $product-hunt-launch to plan our Product Hunt launch: check the Product Hunt connection and any earlier launches, agree goals and a day, draft the page and outreach, and stage a private draft. Ask before anything on Product Hunt and never submit without my approval of the preview."
