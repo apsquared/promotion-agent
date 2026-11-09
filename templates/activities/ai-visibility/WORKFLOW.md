@@ -114,7 +114,7 @@ Order plays by return on effort:
    - be the primary source for facts about the product: a public pricing page, docs and changelog with exact figures in server-rendered HTML, since entity prompts ("is it free?", "does it do X?") are often answered from those pages;
    - original statistics, expert quotes and citations on key pages;
    - where it genuinely helps the reader, a table, checklist, template or small calculator on key pages: something quotable for the assistant and a reason for the reader who already saw the summary to click;
-   - refresh key pages every 8–14 weeks;
+   - refresh key pages every 8–14 weeks, following the [blog activity](../blog/WORKFLOW.md#mode-2-refresh);
    - one identical name, description and category everywhere, with schema.org `Organization`/`SoftwareApplication` and `sameAs` links;
    - comparison and alternatives pages, and one section per recurring fan-out sub-question.
    Whether to allow training crawlers is a **per-product decision**. Present both options (allowing them is needed for future memory-layer inclusion; blocking them keeps content out of training) and record the user's choice in the workspace's marketing context. Don't recommend a default.

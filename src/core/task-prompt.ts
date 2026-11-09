@@ -38,6 +38,7 @@ export type PromptCategory =
   | 'search'
   | 'competitor'
   | 'visibility'
+  | 'blog'
   | 'video'
   | 'release'
   | 'acquisition'
@@ -55,6 +56,7 @@ export function promptCategory(category: string): PromptCategory {
   if (c === 'outreach' || c === 'engagement') return 'outreach';
   if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
   if (c === 'visibility' || c === 'ai-visibility' || c === 'geo' || c === 'aeo') return 'visibility';
+  if (c === 'blog' || c === 'content' || c === 'article' || c === 'refresh' || c === 'pseo') return 'blog';
   if (c === 'video') return 'video';
   if (c === 'release' || c === 'launch-pack') return 'release';
   if (c === 'acquisition' || c === 'first-customers') return 'acquisition';
@@ -160,6 +162,14 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 4. Record my pasted answers in RUN.md with mention rates (k of N) and only the citations the engines returned; never ask a model for its sources. Build the ranked citation gap map in GAPS.md.
 5. Queue at most three follow-ups (outreach, engagement, directory, video, product or blog, plus a re-measure not before four weeks out). Training-crawler access is my per-product decision. Pitches and replies stay unsent.
 6. Record task-linked draft evidence for RUN.md and GAPS.md. The run is complete when results and the gap map exist; the visibility goal itself is never complete.`,
+
+  blog: `## How to work this task
+
+1. Follow the blog activity linked from the shared WORKFLOW.md. Read the content ledger, earlier briefs under \`marketing/blog/\` and the product's published posts first; if an existing page already targets this keyword, refresh that page instead of writing a new one.
+2. Work from evidence: the real question this answers (with source URLs and dates) and the live top search results for its keyword. Product claims come only from the product's source or approved facts; mark unknown figures \`[[VERIFY: ...]]\`. No invented statistics, quotes or testimonials.
+3. Save the brief and answer-first draft, or for a refresh the dated refresh plan, under \`marketing/blog/<slug>/\` in the promotion workspace. For a refresh, show me the plan and wait for my approval before rewriting; keep the URL and slug.
+4. Do not publish, commit or deploy, and keep the product repository read only. Publishing is a separate \`product\` task with the destination path, internal links and validation steps.
+5. Record task-linked draft evidence and a ledger line, then queue the publish task and, once the page is live, a refresh not before about 10 weeks out.`,
 
   video: `## How to work this task
 

@@ -9,7 +9,7 @@ metadata:
 
 # SEO Title Optimization
 
-For promotion work, first follow [the shared workflow](../../../templates/WORKFLOW.md). Read titles from the explicitly selected product's source or live site; the product repository stays read only. Save before/after tables as a proposal in the selected promotion workspace, with the destination files and a validation plan, and check the content ledger for existing slugs and keywords. Editing the product's titles, H1s, metadata or slugs requires a separate explicit implementation request. Adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) (MIT, see [LICENSE](LICENSE)).
+For promotion work, first follow [the shared workflow](../../../templates/WORKFLOW.md); for a title in a new article or refresh, use the [blog activity](../../../templates/activities/blog/WORKFLOW.md). Read titles from the explicitly selected product's source or live site; the product repository stays read only. Save before/after tables as a proposal in the selected promotion workspace, with the destination files and a validation plan, and check the content ledger for existing slugs and keywords. Editing the product's titles, H1s, metadata or slugs requires a separate explicit implementation request. Adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) (MIT, see [LICENSE](LICENSE)).
 
 Use this skill to improve page titles for search rankings and click-through rate.
 
