@@ -13,7 +13,7 @@ The current installation uses a source checkout. Clone promotion-agent, open tha
 ## Everyday use
 
 1. Open the **promotion workspace** reported by setup in your agent. It contains workspace-specific agent instructions and the installed workflow. Your product repo stays read only.
-2. Ask: “Draft one X post,” “Prepare a directory submission kit,” “Analyze our competitors,” “Run an AI visibility check,” or “Turn the site into a demo video.” You can also continue immediately in the original setup chat.
+2. Ask: “Draft one X post,” “Prepare a directory submission kit,” “Analyze our competitors,” “Run an AI visibility check,” “Refresh our post on X,” or “Turn the site into a demo video.” You can also continue immediately in the original setup chat.
 3. Review with “Make it shorter” or check progress with “What's the status?” Drafts stay drafts until a separately authorized action is verified.
 
 For future chats, open the **promotion workspace** containing your saved work. If workflow discovery is unavailable, ask the agent to read .promotion-agent/templates/WORKFLOW.md. No slash command, database, publishing account or extra model API key is required for drafting.

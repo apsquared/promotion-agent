@@ -107,7 +107,8 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Analyze our competitors and find where people discuss them.”
 - “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
 - “What’s the domain rank of example.com and our three competitors?”
-- “Propose a blog article.”
+- “Propose a blog article that answers what people keep asking.”
+- “Which blog posts need refreshing?”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
 - “Prepare a launch pack for what I shipped since last Friday.”
@@ -117,7 +118,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 
 This checkout also includes `reddit-thread-search` and `x-post-search`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
 
-For blog and SEO requests, the checkout also includes `seo-title-optimization` (audit and rewrite page titles, H1s and meta titles against search intent) and `blog-refresher` (refresh an existing post with a SERP gap analysis, with an approval checkpoint before rewriting). They save proposals in the promotion workspace and never edit your product repository on their own. Both are adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) by [Ilias Ism](https://il.ly), used under the MIT license; each folder keeps the upstream notice. Like the search skills, they are checkout resources that onboarding does not install.
+Blog requests follow one activity: each run prepares one article from a question real people ask, or one refresh whose plan you approve before the rewrite, and queues the next refresh about 10 weeks after a page goes live. For blog and SEO requests, the checkout also includes `seo-title-optimization` (audit and rewrite page titles, H1s and meta titles against search intent) and `blog-refresher` (refresh an existing post with a SERP gap analysis, with an approval checkpoint before rewriting). They save proposals in the promotion workspace and never edit your product repository on their own. Both are adapted from [Illyism/seo-skills](https://github.com/Illyism/seo-skills) by [Ilias Ism](https://il.ly), used under the MIT license; each folder keeps the upstream notice. Like the search skills, they are checkout resources that onboarding does not install.
 
 For a Product Hunt launch, the checkout also includes `product-hunt-launch`, the same skill as in the [skills collection](skills/readme.md): it plans the launch, drafts the page and outreach, and stages a private draft through Product Hunt's official MCP server, submitting only after you approve Product Hunt's preview. It is a checkout resource that onboarding does not install.
 

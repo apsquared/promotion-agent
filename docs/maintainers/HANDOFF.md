@@ -1,5 +1,17 @@
 # Continue here
 
+## P19 — blog articles and refreshes — 2026-11-09
+
+User request: after comparing a public SEO/AEO playbook with the repository, build the "blog + refresh" recommendation. The `blog` and `pseo` activities had only budget rows, and `blog-refresher`/`seo-title-optimization` were checkout-only skills nothing routed to; the AI visibility activity advised 8–14 week refreshes that nothing queued.
+
+- `templates/activities/blog/WORKFLOW.md` (new, ships via the existing `templates/` walk): principles (real question with evidence, quality over volume with scaled content abuse named, an angle only this product has, sourced claims with `[[VERIFY: ...]]` placeholders, fair comparisons, no date-bumping), Mode 1 new article (ledger and live-post check, keyword already targeted → refresh, 3–5 evidenced candidates, SERP check, BRIEF.md, answer-first DRAFT.md, destination plan), Mode 2 refresh (triggers, audit, dated REFRESH plan, approval before rewriting, URL kept), follow-ups (publish `product` task, refresh `Not before` ~10 weeks only once live, disclosed reply in the source thread) and records.
+- `templates/WORKFLOW.md` v0.20: blog route, content duplicate rule (existing target keyword becomes a refresh), blog and pseo budget rows link the activity.
+- `templates/activities/ai-visibility/WORKFLOW.md` refresh bullet links Mode 2; `templates/marketing/logs/content-ledger.md` adds `refreshed` (new workspaces only; existing ledgers update through a reviewed upgrade).
+- `src/core/task-prompt.ts`: `blog` prompt category (aliases content, article, refresh, pseo; `pseo` previously fell to `other`). `src/onboarding/install.ts`: installed guide paragraph.
+- Both copies of `blog-refresher` and `seo-title-optimization` link the activity (copies kept identical). README and docs/USING.md examples updated; PLAN P19.
+
+Validation: `npm run check` passed both typechecks, the build and **123/123 tests** (4 new in `tests/blog.test.mjs`; `tests/publishing.test.mjs` now pins workflow version 0.20); `git diff --check` passed. Not exercised: native host invocation, a real article or refresh on a live product, existing-workspace upgrade.
+
 ## Standalone skill — product-hunt-launch — 2026-11-09
 
 User request: a new skill for Product Hunt launches based on general Product Hunt best practices and Product Hunt's new MCP connection (`https://www.producthunt.com/mcp/install`). Added to the independent `skills/` collection. Follow-up request the same day: the skill is also a checkout skill, so it is copied to `.agents/skills/product-hunt-launch/` (byte-identical to `skills/`, guarded by a test) and `.claude/skills/product-hunt-launch/` (without the Codex `agents/` metadata, guarded by the mirror test). Edit `skills/product-hunt-launch/` first and copy to both. The README lists it next to the other checkout resources; onboarding does not install it.
