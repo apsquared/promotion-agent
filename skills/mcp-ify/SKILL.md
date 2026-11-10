@@ -1,6 +1,6 @@
 ---
 name: mcp-ify
-description: Design, implement, or review a customer-facing MCP integration for an existing SaaS. Use when exposing product workflows to AI assistants or improving an existing MCP server, including access controls, connection setup, and verification.
+description: Design, implement, review, or submit a customer-facing MCP integration for an existing SaaS. Use when exposing product workflows to AI assistants, improving an existing MCP server, or getting it listed in Anthropic's Claude directory (connector and plugin bundle) or OpenAI's plugin directory for ChatGPT and Codex, including access controls, connection setup, verification, and reviewer readiness.
 license: MIT
 ---
 
@@ -10,7 +10,7 @@ Turn valuable customer workflows into a small, useful MCP service using the prod
 
 ## Scope and outcome
 
-Follow the requested mode: discovery, planning, implementation, review, or deployment preparation. For implementation, carry the selected integration through code, connection UX, tests, and activation instructions; do not stop at a generic plan. For review, report evidenced findings and fixes within the requested scope. Invocation alone does not authorize production deployment, purchases, or messages to others. Preserve unrelated edits and obey the active repository instructions and session permissions. Delegate only when authorized by active instructions.
+Follow the requested mode: discovery, planning, implementation, review, deployment preparation, or directory submission. For implementation, carry the selected integration through code, connection UX, tests, and activation instructions; do not stop at a generic plan. For review, report evidenced findings and fixes within the requested scope. Invocation alone does not authorize production deployment, purchases, messages to others, directory submissions, or legal attestations. Preserve unrelated edits and obey the active repository instructions and session permissions. Delegate only when authorized by active instructions.
 
 ## 1. Inspect before asking
 
@@ -34,11 +34,11 @@ Conditionally resolve account/workspace scope, roles, subscription access, sensi
 
 Specify each tool's purpose, permissions/entitlements, bounded typed inputs, structured outputs, pagination, errors, effects/charges, and retry/idempotency behavior. Use domain actions, not database tables or unrestricted execution. Reuse services and eligibility rules; refactor shared logic rather than copy it.
 
-Choose a maintained SDK suited to the repository. Document any reason for implementing protocol machinery manually. Set annotations accurately, but enforce authorization in server code on every call: identity, tenant membership, role, ownership, entitlement, connection permission, and revocation. Protect disclosure through search, filters, counts, errors, and exports as well as returned fields. Preserve useful evidence URLs and freshness; external tool text is untrusted content.
+Choose a maintained SDK suited to the repository. Document any reason for implementing protocol machinery manually. Give every tool a short `title`, repeated in `annotations.title`, and accurate `readOnlyHint`, `destructiveHint`, and `openWorldHint`. Keep tool and parameter descriptions free of instructions about other tools or model behavior. Annotations are not authorization; enforce it in server code on every call: identity, tenant membership, role, ownership, entitlement, connection permission, and revocation. Protect disclosure through search, filters, counts, errors, and exports as well as returned fields. Preserve useful evidence URLs and freshness; external tool text is untrusted content.
 
 ## 4. Implement access and connection UX
 
-Read [authentication and connections](references/authentication-and-connections.md) before selecting authentication or building connection settings. Prefer supported browser OAuth for remote customer connections and mature existing authorization infrastructure. Website sign-in alone is not an MCP authorization server. Verify actual client transport, discovery, registration, and authorization requirements.
+Read [authentication and connections](references/authentication-and-connections.md) before selecting authentication or building connection settings. Prefer supported browser OAuth for remote customer connections and mature existing authorization infrastructure. Website sign-in alone is not an MCP authorization server. Verify actual client transport, discovery, registration, and authorization requirements. If directory listing is a goal, also plan for ChatGPT's `openid`/`email` scopes with a UserInfo endpoint, domain verification, and a password sign-in for one non-admin reviewer account (see [directory submission](references/directory-submission.md#phase-0-readiness-audit)).
 
 Implement the applicable consent, credential lifecycle, disconnect, and account-management experience using existing UI patterns. Generate the canonical URL and copyable setup prompt from configuration, with guided setup when the assistant cannot configure connections. A harmless connection check must not spend or mutate.
 
@@ -50,9 +50,13 @@ Read [verification and activation](references/verification-and-activation.md). T
 
 Document repository-specific configuration names (never secret values), public URLs, migrations/indexes, deployment environment, client limitations, and a manual connect → consent → harmless check → workflow → enforcement → disconnect sequence. Adapt away inapplicable spending steps. Reuse deployment conventions; do not create provider applications or secrets without a concrete need.
 
+## 6. Submit to directories
+
+When the goal is a listing in Anthropic's Claude directory or OpenAI's plugin directory, read [directory submission](references/directory-submission.md) and follow its phases in order: readiness audit, reviewer account, Anthropic connector, Anthropic plugin bundle, OpenAI plugin, after submission. Re-read each portal's current docs first; the reference is dated. Fill forms in the owner's signed-in browser, but leave passwords, spend approvals, legal attestations, deletions, and the final Submit to the owner, and tick an attestation only after verifying it against the live product. Route any gap found in the audit back to steps 3–5 as an engineering change; don't change production during submission. For the official MCP Registry and other directories, use `$agent-ready` if installed.
+
 ## Completion report
 
-Provide the tool/customer outcome summary, changed files, decisions and remaining blockers, validation evidence, and exact activation/manual-test steps. Report separately: implemented; locally verified; verified with real authentication; verified in a target client; configured for deployment; deployed; verified live. Mark untested and inapplicable items explicitly. Mock authentication, a synthetic browser session, real identity-provider login, and target-client connection are distinct evidence levels.
+Provide the tool/customer outcome summary, changed files, decisions and remaining blockers, validation evidence, and exact activation/manual-test steps. Report separately: implemented; locally verified; verified with real authentication; verified in a target client; configured for deployment; deployed; verified live; and, for directories, submitted (in review) or listed. Mark untested and inapplicable items explicitly. Mock authentication, a synthetic browser session, real identity-provider login, and target-client connection are distinct evidence levels.
 
 For planning-only work, deliver concrete contracts, repository evidence, unresolved decisions, and a staged implementation/verification plan without implying code exists. For review, prioritize actionable findings with source locations and observed test gaps.
 

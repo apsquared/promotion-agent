@@ -1,5 +1,15 @@
 # Continue here
 
+## mcp-ify — directory submission — 2026-11-09
+
+User request: extend `mcp-ify` with how to submit to directories, as defined in a user-supplied prompt written after submitting a real product to Anthropic's Claude directory and OpenAI's plugin directory.
+
+- `skills/mcp-ify/references/directory-submission.md` (new, dated 2026-11-09): hard rules (no credentials typed or stored, owner submits and ticks attestations, attestations verified first, no spend, no production changes, no deletes, bookkeeping outside the product repo), phases 0–5 (readiness audit of listing, live MCP server, OpenAI UserInfo and domain verification, privacy policy, paid-action note and package manifests; reviewer account; Claude connector; Claude plugin bundle; OpenAI ZIP with exactly 5 positive and 3 negative test cases, findings table, MCPs tab, review information and video shot list; after submission), owner-only steps, report format and a per-product values checklist. The prompt's product-specific appendix (URLs, emails, reviewer account) was generalized, not copied.
+- `skills/mcp-ify/SKILL.md`: description and modes include directory submission; step 3 requires `title` plus `annotations.title`, the three hints and descriptions free of cross-tool or model instructions; step 4 flags listing prerequisites; new step 6; completion report adds submitted/listed.
+- `skills/agent-ready/references/directories.md`: Claude connector, Claude plugin and ChatGPT rows give the portal paths checked 2026-11-09 and point to mcp-ify's reference. `skills/readme.md`: catalog row and description.
+
+Validation: **123/123 tests**; `check-distributable.mjs` clean on `skills/mcp-ify`; SKILL.md links resolve; description 398 characters. Not exercised: a run against either portal, native invocation.
+
 ## P19 — blog articles and refreshes — 2026-11-09
 
 User request: after comparing a public SEO/AEO playbook with the repository, build the "blog + refresh" recommendation. The `blog` and `pseo` activities had only budget rows, and `blog-refresher`/`seo-title-optimization` were checkout-only skills nothing routed to; the AI visibility activity advised 8–14 week refreshes that nothing queued.
