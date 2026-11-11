@@ -109,6 +109,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “What’s the domain rank of example.com and our three competitors?”
 - “Propose a blog article that answers what people keep asking.”
 - “Which blog posts need refreshing?”
+- “Here’s our Search Console export: which pages are closest to page one?”
 - “Recommend SEO improvements.”
 - “Turn the site into a short demo video.”
 - “Prepare a launch pack for what I shipped since last Friday.”
