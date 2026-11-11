@@ -39,6 +39,8 @@ Resume `marketing/ai-visibility/PROMPTS.md` when it exists. Otherwise draft one:
 | Constraint | "free / no sign-up / for iPhone …" |
 | Entity | "what is [product]?", "is [product] free?", "is [product] any good?" |
 
+Check that the set follows the buyer's journey, not just the category: people who feel the problem but don't know the category exists ask problem prompts without category words; people who know the category ask category and constraint prompts; people choosing between tools ask alternative and comparison prompts; people who already know the product ask entity prompts. A set made only of "best X" prompts misses the earlier stages, where assistants often decide which tools get named at all.
+
 Seed wording from the product's marketing context and source facts, the latest competitor report, and real phrasing found with the checkout's `reddit-thread-search` and `x-post-search` skills when available. Tag each prompt with intent, persona and priority: mark the 8–10 prompts that matter most `P1`, the rest `P2`. Record the competitors and alternatives to track in every answer.
 
 Show the user the prompt set and get approval before the first probe; it defines the target. Afterwards keep it stable so runs stay comparable. A change creates a new prompt-set version; never edit a version that runs have used.
