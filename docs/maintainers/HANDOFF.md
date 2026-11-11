@@ -1,5 +1,15 @@
 # Continue here
 
+## SEO gaps from Illyism/seo-skills — 2026-11-11
+
+User request: review https://github.com/Illyism/seo-skills for gaps in our promotion/SEO knowledge and update the skills. See PLAN P19a for what was adopted and rejected.
+
+- `templates/activities/blog/WORKFLOW.md`: new principles (one primary query per page, concentrate before spreading, conversion fit), top-five SERP rule, reader phrasing in the brief, intro shape, ≥3 internal links, Search Console refresh patterns, **Mode 3: site check** (read only), post-live checks and a `social` follow-up.
+- `templates/WORKFLOW.md` v0.21: route and budget row include the site check. `templates/activities/ai-visibility/WORKFLOW.md`: awareness-stage coverage of the prompt set. `templates/activities/competitor-analysis.md`: competitor sitemap diff for content/SEO requests.
+- Tests: new case in `tests/blog.test.mjs`; pinned sentence and version updated.
+
+Validation: `npm run check` passed both typechecks, the build and **124/124 tests**; `git diff --check` passed. Not exercised: a real site check or ranking-data refresh on a live product, existing-workspace upgrade. No commit.
+
 ## mcp-ify — directory submission — 2026-11-09
 
 User request: extend `mcp-ify` with how to submit to directories, as defined in a user-supplied prompt written after submitting a real product to Anthropic's Claude directory and OpenAI's plugin directory.

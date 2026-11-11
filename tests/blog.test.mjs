@@ -44,7 +44,7 @@ test('shared workflow routes blog and refresh requests to the blog activity with
 
 test('blog procedure keeps its boundaries and its links and anchors resolve', () => {
   const text = readFileSync(procedure, 'utf8');
-  for (const boundary of ['One run prepares **one new article proposal or one refresh**', 'Start from a real question', 'scaled content abuse', 'Never mass-produce', '[[VERIFY: ...]]', 'wait for the user\'s approval before rewriting', 'Never bump a "last updated" date', 'Keep the URL and slug', 'Never queue a refresh for a page that is not live', 'Not before', 'marketing/blog/<slug>/', 'Human required:', 'read only'])
+  for (const boundary of ['One run prepares **one new article proposal, one refresh or one site check**', 'Start from a real question', 'scaled content abuse', 'Never mass-produce', '[[VERIFY: ...]]', 'wait for the user\'s approval before rewriting', 'Never bump a "last updated" date', 'Keep the URL and slug', 'Never queue a refresh for a page that is not live', 'Not before', 'marketing/blog/<slug>/', 'Human required:', 'read only'])
     assert.ok(text.includes(boundary), `Blog procedure lacks: ${boundary}`);
   for (const file of [procedure, resolve('templates/WORKFLOW.md'), resolve('templates/activities/ai-visibility/WORKFLOW.md'), ...['.claude', '.agents'].flatMap(d => [resolve(d, 'skills/blog-refresher/SKILL.md'), resolve(d, 'skills/seo-title-optimization/SKILL.md')])]) {
     for (const link of links(file)) assert.ok(existsSync(link), `Missing linked resource from ${file}: ${link}`);
@@ -84,4 +84,21 @@ test('blog task prompt carries the activity rules and a refresh draft stays open
   assert.equal(task.status, 'open');
   assert.deepEqual(task.drafts.map(d => d.reference), [plan]);
   assert.equal(readFileSync(taskFile, 'utf8'), markdown);
+});
+
+test('blog procedure covers one primary query per page, ranking-data refresh triggers and a read-only site check', () => {
+  const text = readFileSync(procedure, 'utf8');
+  for (const rule of [
+    'One primary query per page', '301 redirect', 'needs the user\'s explicit approval',
+    'top five results', 'none of the five has', 'at least three links',
+    'positions 8–20', 'Rewrite the title and meta description only',
+    '## Mode 3: site check', 'Read only', 'up to 200 URLs', 'server HTML', 'The product is right',
+    '"not verified"', 'site-check-<YYYY-MM-DD>.md', 'single most interesting thing'])
+    assert.ok(text.includes(rule), `Blog procedure lacks: ${rule}`);
+  assert.ok(slugs(procedure).includes('mode-3-site-check'));
+  const route = readFileSync('templates/WORKFLOW.md', 'utf8').split('\n').find(line => line.startsWith('- **"Propose a blog article"'));
+  assert.match(route, /Check our site's SEO health/);
+  assert.match(route, /read-only site check/);
+  assert.match(readFileSync('templates/activities/ai-visibility/WORKFLOW.md', 'utf8'), /follows the buyer's journey/);
+  assert.match(readFileSync('templates/activities/competitor-analysis.md', 'utf8'), /diff its sitemap or blog index/);
 });
