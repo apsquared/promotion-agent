@@ -1,5 +1,16 @@
 # Continue here
 
+## Daily brief — 2026-11-13
+
+User request: a daily brief or summary skill for checking in on tasks (PLAN P21).
+
+- **Helper:** `brief [--project <workspace>] [--database <registry>] [--since <UTC>]` in `scripts/promotion.mjs`, implemented in `src/interactive/brief.ts` on top of `reviewBoard`. Buckets: `needsYou`, `verifyPosts`, `ready`, `waiting`, `upcomingPosts`, `snoozed`, plus `recent` and counts. Precedence for an open, active task: scheduled-post record, future `Not before`, `Human required:`, newest record is a draft, `After …` condition, otherwise ready. Skipped tasks are only counted; an expired snooze is treated as active and noted. Dates compare in the project timezone.
+- **Procedure:** `templates/brief/WORKFLOW.md` (scope, window, helper, field table, checks before reporting, report shape, one closing offer). WORKFLOW v0.23 route. Strictly read only: no queuing, which differs from "What's the status?", because the brief spans every product and is meant to be quick.
+- **Entry points:** `.agents/skills/promotion-brief/` (with `agents/openai.yaml`) and the identical `.claude/skills/promotion-brief/SKILL.md`, `.claude/commands/promote-brief.md`, installed guide paragraph and helper line in `src/onboarding/install.ts`, `docs/HELPERS.md`, `docs/USING.md`, README.
+- **Heuristic limits:** the draft-awaiting-review and condition buckets come from task text and record outcomes, so the procedure asks the agent to re-sort an item that is really the user's step and to say "recorded as done" rather than "live".
+
+Validation: `npm run check` passed both typechecks, the build and **133/133 tests**, including four new ones in `tests/brief.test.mjs`. Run read-only against the six registered workspaces in the real portfolio registry: all six read, 17 items needing the user, 1 scheduled post past its time, 3 ready, 2 waiting. Not exercised: native `/promote-brief` or `$promotion-brief` invocation, existing-workspace upgrade.
+
 ## Search Console knowledge from Illyism/seo-skills — 2026-11-11
 
 User request: add six Search Console improvements from a review of Illyism/seo-skills (`seo-autopilot`, `blitz-seo`). The Search Console activity did not exist in this checkout, so it was created first at the user's request (PLAN P20).
