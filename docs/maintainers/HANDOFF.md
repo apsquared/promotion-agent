@@ -1,5 +1,20 @@
 # Continue here
 
+## Search Console knowledge from Illyism/seo-skills — 2026-11-11
+
+User request: add six Search Console improvements from a review of Illyism/seo-skills (`seo-autopilot`, `blitz-seo`). The Search Console activity did not exist in this checkout, so it was created first at the user's request (PLAN P20).
+
+- **New activity** `templates/activities/search-console/WORKFLOW.md`: export from the user (no account access or keys), check earlier reports, find candidates, verify a shortlist, propose changes, save and queue, reading the numbers, records. Wiring: WORKFLOW v0.22 route and `search-console` budget row; blog Mode 2 links it; `src/core/task-prompt.ts` `search-console` category (alias `gsc`); installed guide paragraph in `src/onboarding/install.ts`; README example; `tests/search-console.test.mjs`; `tests/publishing.test.mjs` pins v0.22.
+- **Review improvements in the activity:**
+  1. Shortlist priority: buying-intent queries on conversion pages, concentrated on one to three pages.
+  2. Live-page check covers technical basics (200 without redirect chain, self-canonical, no `noindex` in meta or `X-Robots-Tag`, robots.txt, sitemap, inbound link, server-rendered content); a failure is the fix before copy; "indexing not verified" without URL Inspection.
+  3. Proposals: the three-part striking-distance change (answer first, add what the top three cover, descriptive internal links), title/description only for low click rate; no repeated indexing requests, daily resubmission or bought links.
+  4. Save and queue: no third same-kind change after two shipped without measured improvement; look for another cause.
+  5. "Site-wide health check" section before "Reading the numbers". It was first added as its own checklist, then merged at the user's request: it now hands off to the blog activity's Mode 3 site check, the one procedure. Mode 3 absorbed its additions: the "broken for search" and pages-dropping-out triggers, no crawling beyond the sitemap or parallel requests, a count of skipped URLs, the orphan caveat, and most-trafficked fixes first when an export exists.
+- **Deliberately left out:** daily Search Console resubmission, blitz-seo's daily backlink building and LinkDR's paid links, because they are link schemes or spending.
+
+Validation: `npm run check` passed both typechecks, the build and **129/129 tests**; `git diff --check` passed (new files checked separately for trailing whitespace). Not exercised: a real export or live site, native invocation, existing-workspace upgrade. No commit.
+
 ## SEO gaps from Illyism/seo-skills — 2026-11-11
 
 User request: review https://github.com/Illyism/seo-skills for gaps in our promotion/SEO knowledge and update the skills. See PLAN P19a for what was adopted and rejected.

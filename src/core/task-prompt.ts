@@ -39,6 +39,7 @@ export type PromptCategory =
   | 'competitor'
   | 'visibility'
   | 'blog'
+  | 'search-console'
   | 'video'
   | 'release'
   | 'acquisition'
@@ -57,6 +58,7 @@ export function promptCategory(category: string): PromptCategory {
   if (c === 'competitor' || c === 'competitor-analysis') return 'competitor';
   if (c === 'visibility' || c === 'ai-visibility' || c === 'geo' || c === 'aeo') return 'visibility';
   if (c === 'blog' || c === 'content' || c === 'article' || c === 'refresh' || c === 'pseo') return 'blog';
+  if (c === 'search-console' || c === 'gsc') return 'search-console';
   if (c === 'video') return 'video';
   if (c === 'release' || c === 'launch-pack') return 'release';
   if (c === 'acquisition' || c === 'first-customers') return 'acquisition';
@@ -170,6 +172,14 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 3. Save the brief and answer-first draft, or for a refresh the dated refresh plan, under \`marketing/blog/<slug>/\` in the promotion workspace. For a refresh, show me the plan and wait for my approval before rewriting; keep the URL and slug.
 4. Do not publish, commit or deploy, and keep the product repository read only. Publishing is a separate \`product\` task with the destination path, internal links and validation steps.
 5. Record task-linked draft evidence and a ledger line, then queue the publish task and, once the page is live, a refresh not before about 10 weeks out.`,
+
+  'search-console': `## How to work this task
+
+1. Follow the Search Console activity linked from the shared WORKFLOW.md. Work only from a Search Console export I provide; never sign in to my account or ask for passwords, API keys or tokens. If there is no export, ask me for one, or run the site-wide health check if that is what this task asks for.
+2. Read earlier reports under \`marketing/search-console/\`, the content ledger and done tasks first, so shipped changes are measured rather than proposed again.
+3. Verify at most five pages or queries on the live page and in the current top results before proposing anything; say "indexing not verified" without URL Inspection data. No traffic predictions, repeated indexing requests or paid links.
+4. Save the dated \`REPORT.md\` in the promotion workspace and keep the product repository read only. Blog rewrites go through the blog refresh with its approval step; other page changes are separate \`product\` tasks.
+5. Record task-linked draft evidence and queue at most three follow-ups, including a re-check not before four weeks after the first change ships.`,
 
   video: `## How to work this task
 
