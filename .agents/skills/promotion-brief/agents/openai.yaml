@@ -1,0 +1,4 @@
+interface:
+  display_name: "Promotion Brief"
+  short_description: "Daily check-in on what needs you across every product's promotion tasks"
+  default_prompt: "Use $promotion-brief to give me today's brief across my products."

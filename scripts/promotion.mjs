@@ -4,6 +4,7 @@ import { previewInstall, applyInstall, reviewHash, previewRemoval, applyRemoval,
 import { inspectProject, prepareTask, recordTaskEvidence, completeSelectedTask, setSelectedTaskDisposition, readSelectedTaskState } from '../src/interactive/tasks.ts';
 import { releaseSource } from '../src/interactive/release-source.ts';
 import { acquisitionStatus } from '../src/interactive/acquisition.ts';
+import { promotionBrief } from '../src/interactive/brief.ts';
 
 import { requireWorkspace, observerSource, assertObserverOutput, assertObserverOutputForSetup } from '../src/onboarding/workspace.ts';
 
@@ -16,6 +17,7 @@ const help = `Local task helpers for the CURRENT interactive agent (no AI proces
   prepare --project <directory> --task <T-NNN>
   release-source --project <workspace> --base <local-ref-or-commit> --head <local-ref-or-commit>
   acquisition-status --project <workspace> --sprint <UUID> [--database <local.sqlite>]
+  brief [--project <workspace>] [--database <registry.sqlite>] [--since <UTC timestamp>]
   record --project <directory> --task <T-NNN> --expected-hash <sha256> --outcome <draft|verified-complete> --reference <path|https-url> --summary <text>
   state --project <directory> --database <local.sqlite>
   disposition --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --state <active|skipped|snoozed> [--reason <text>] [--until <UTC timestamp>]
@@ -24,6 +26,7 @@ const help = `Local task helpers for the CURRENT interactive agent (no AI proces
 inspect/prepare are read-only. state reads optional registry state without changing product files.
 release-source reads only the registered source's Git history: exact IDs and filtered file names, never a diff or deployment proof.
 acquisition-status reads a saved sprint and existing tasks/dispositions; it never queues or sends, or verifies payments.
+brief reads one workspace, or with only --database every registered workspace; it never queues, completes, snoozes or posts.
 record stores an agent-supplied evidence account without SQLite.
 complete requires a matching reviewed verified-complete record; it does not verify an external action itself.
 Use one database for dispositions/completion to share P02 project locks.`;
@@ -40,6 +43,7 @@ try {
       prepare: { required: ['project', 'task'] },
       'release-source': { required: ['project', 'base', 'head'] },
       'acquisition-status': { required: ['project', 'sprint'], optional: ['database'] },
+      brief: { required: [], optional: ['project', 'database', 'since'] },
       record: { required: ['project', 'task', 'expected-hash', 'outcome', 'reference', 'summary'] },
       state: { required: ['project', 'database'] },
       disposition: { required: ['project', 'task', 'expected-hash', 'database', 'state'], optional: ['reason', 'until'] },
@@ -75,6 +79,9 @@ try {
       const plan = previewRemoval(options.project);
       writeFileSync(options.plan, JSON.stringify(plan, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
       console.log(JSON.stringify({ plan: options.plan, reviewHash: removalHash(plan), entries: plan.entries.map(({ path, action, reason }) => ({ path, action, reason })) }, null, 2));
+    } else if (command === 'brief') {
+      if (options.project) requireWorkspace(options.project);
+      console.log(JSON.stringify(promotionBrief(options.project ? [options.project] : [], options.database, options.since), null, 2));
     } else if (command === 'remove') {
       requireWorkspace(options.project);
       console.log(JSON.stringify(applyRemoval(options.project, JSON.parse(readFileSync(options.plan, 'utf8')), options['review-hash']), null, 2));

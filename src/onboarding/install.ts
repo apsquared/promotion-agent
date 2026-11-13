@@ -101,6 +101,8 @@ In the current session use $promotion-agent (Codex), /promote (Claude/OpenCode),
 
 Ask "Draft one X post for this product", "Make it shorter", or "What's the status?" The agent reads the product's facts and history, saves reviewable drafts, and reports actual outcomes. For setup or upgrades it follows .promotion-agent/templates/SETUP.md and handles the local commands and review hashes. Drafting needs no database; a draft request does not authorize publication.
 
+For a daily check-in, ask "Give me my daily brief" or "What needs me today?", or read .promotion-agent/templates/brief/WORKFLOW.md. The agent runs the read-only brief helper over this workspace, or every registered workspace when you pass the portfolio registry, and reports what needs you, scheduled posts to check, what it can do next, what is coming up and what was recorded since yesterday. The brief changes nothing; it ends with one offer.
+
 For competitor comparisons and mention discovery, ask "Analyze our competitors and find where people discuss them", use $promotion-competitors in Codex or /promote-competitors in Claude Code/OpenCode, or read .promotion-agent/templates/activities/competitor-analysis.md. Research produces a sourced report and optional reply drafts; it does not post or start a recurring monitor.
 
 For high-quality promotion placements, ask "Find backlink opportunities", use $promotion-opportunities in Codex or /promote-opportunities in Claude Code/OpenCode, or read .promotion-agent/templates/activities/promotion-opportunities/WORKFLOW.md. Every recommendation needs site-quality evidence, traffic or SEO value, and current first-party verification that the exact opportunity is open and the product is eligible. Blocked or unknown checks exclude a prospect from the shortlist. Existing directory tasks and kits use the same gate, and later actions need a fresh recheck. Research stays draft-only.
@@ -136,6 +138,10 @@ Only after you have independently verified the completed action, record the evid
 
     node .promotion-agent/scripts/promotion.mjs record --project . --task T-001 --expected-hash REVIEWED_TASK_HASH --outcome verified-complete --reference https://example.com/receipt --summary "Verified receipt and destination"
     node .promotion-agent/scripts/promotion.mjs complete --project . --task T-001 --expected-hash REVIEWED_TASK_HASH --database /chosen/private/state.sqlite --evidence RETURNED_RECORD_PATH --evidence-hash RETURNED_RECORD_HASH
+
+For a read-only daily brief of this workspace (add the portfolio registry as --database to count snoozed and skipped tasks; with only --database it covers every registered workspace):
+
+    node .promotion-agent/scripts/promotion.mjs brief --project . --since 2026-01-01T00:00:00Z
 
 For local skipped/snoozed state, use state and disposition with the same chosen database; drafts do not need one. Snoozing requires a reason and future UTC until timestamp.
 
