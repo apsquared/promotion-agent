@@ -18,6 +18,7 @@ User documentation lives directly in `docs/` and ships in each installed promoti
 
 - [Using promotion-agent](USING.md): setup, everyday requests, upgrades and boundaries.
 - [Review desk](REVIEW-UI.md): the optional local task board.
+- [Autopilot](AUTOPILOT.md): two scheduled routines for every product, a CMO review that files new ideas and a runner that works the queue, and how aggressive it is.
 - [Compatibility](COMPATIBILITY.md): how to invoke it in each agent host, and supported platforms.
 - [Helper reference](HELPERS.md): local helper commands, run by the agent in your session.
 - [Privacy and source handling](PRIVACY.md): what the agent reads, sends out and keeps private.

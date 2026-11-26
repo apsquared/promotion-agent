@@ -1,0 +1,4 @@
+interface:
+  display_name: "Promotion Autopilot"
+  short_description: "Work the promotion task queue across products within a set autonomy level"
+  default_prompt: "Use $promotion-autopilot to work the promotion task queue."

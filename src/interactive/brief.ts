@@ -18,11 +18,11 @@ export type BriefItem = {
   date: string | null;
 };
 
-const notBeforePattern = /\bNot before (\d{4}-\d{2}-\d{2})\b/i;
-const followUpPattern = /\bFollow-up to (T-\d+)\b/i;
+export const notBeforePattern = /\bNot before (\d{4}-\d{2}-\d{2})\b/i;
+export const followUpPattern = /\bFollow-up to (T-\d+)\b/i;
 // A sentence that opens with "After …", e.g. "After the post goes live, verify …".
-const triggerPattern = /(?:^|[.;:]\s+|\n\s*)(After [^.\n]{3,160})/;
-const humanPattern = /\bHuman required:/i;
+export const triggerPattern = /(?:^|[.;:]\s+|\n\s*)(After [^.\n]{3,160})/;
+export const humanPattern = /\bHuman required:/i;
 const day = 24 * 60 * 60 * 1000;
 const staleDays = 30;
 
@@ -98,6 +98,11 @@ function projectBrief(data: ReviewProject, now: Date, since: Date) {
     }
     const startsToday = notBefore && notBefore <= today && notBefore >= localDate(since, project.timezone)
       ? ` Became due ${notBefore}.` : '';
+    // A handoff packet the autopilot prepared: everything the user needs for the human step.
+    if (latest?.outcome === 'draft' && latest.reference.startsWith('marketing/handoffs/')) {
+      buckets.needsYou.push(item(task, `Handoff ready ${latest.recordedAt.slice(0, 10)}: ${latest.reference}${startsToday}${woke}`));
+      continue;
+    }
     if (humanPattern.test(text)) {
       buckets.needsYou.push(item(task, `Has a Human required step.${startsToday}${woke}`, notBefore ?? null));
       continue;

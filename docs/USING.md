@@ -16,6 +16,7 @@ The current installation uses a source checkout. Clone promotion-agent, open tha
 2. Ask: “Draft one X post,” “Prepare a directory submission kit,” “Analyze our competitors,” “Run an AI visibility check,” “Refresh our post on X,” or “Turn the site into a demo video.” You can also continue immediately in the original setup chat.
 3. Review with “Make it shorter” or check progress with “What's the status?” Drafts stay drafts until a separately authorized action is verified.
 4. For a check-in across all your products, ask “Give me my daily brief” (or `/promote-brief`, `$promotion-brief` from the source checkout). It lists what needs you, scheduled posts to check, what the agent can do next and what changed since yesterday, and changes nothing.
+5. To run promotion on a schedule across all your products, set up the two routines in [Autopilot](AUTOPILOT.md): a weekly CMO review that files new ideas per product, and a runner that works the queue within the autonomy level you choose (off, cautious, standard or aggressive) and hands you only the steps that need you, as ready-to-follow packets.
 
 For future chats, open the **promotion workspace** containing your saved work. If workflow discovery is unavailable, ask the agent to read .promotion-agent/templates/WORKFLOW.md. No slash command, database, publishing account or extra model API key is required for drafting.
 
