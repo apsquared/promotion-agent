@@ -96,6 +96,27 @@ Use these as seed topics. Combine them with `reddit`, `past week`, and the patte
 - `side project validation reddit`
 - `micro saas validation reddit`
 
+## Evergreen (Google-Ranked) Queries
+
+For the evergreen pass: search without a date filter and keep only threads on Google's first page. Replace the placeholders with the selected product's category, audience, job and competitors. These are buyer decision searches, so use the buyer's words, not the product's.
+
+- `best [category] reddit`
+- `best [category] for [audience] reddit`
+- `best [category] [year] reddit`
+- `[competitor] alternatives reddit`
+- `[competitor] vs [competitor] reddit`
+- `is [competitor] worth it reddit`
+- `what do you use for [job] reddit`
+- `cheapest way to [job] reddit`
+- `how do you [job] without [painful workaround] reddit`
+
+Idea Launch examples:
+
+- `best way to validate a startup idea reddit`
+- `best landing page builder for validation reddit`
+- `Carrd alternatives reddit`
+- `what do you use to validate startup ideas reddit`
+
 ## Subreddits To Watch
 
 - `r/SaaS`
