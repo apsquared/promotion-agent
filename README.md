@@ -107,6 +107,8 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Analyze our competitors and find where people discuss them.”
 - “Run an AI visibility check: do ChatGPT, Perplexity, Gemini and Claude recommend us?”
 - “What’s the domain rank of example.com and our three competitors?”
+- “Can we post this in r/SideProject? Check its rules and draft the post.”
+- “Which of these promotion tasks actually matter at our stage?”
 - “Propose a blog article that answers what people keep asking.”
 - “Which blog posts need refreshing?”
 - “Here’s our Search Console export: which pages are closest to page one?”

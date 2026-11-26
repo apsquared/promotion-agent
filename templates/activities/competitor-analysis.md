@@ -39,7 +39,7 @@ Default to 5–10 verified mentions across the selected competitors, not a minim
 
 Rank opportunities by audience fit, specificity of need, recency/activity, and whether a contribution would add value. A competitor mention or complaint is not confirmed buying intent. Do not infer trend frequency, market sentiment, or channel performance from a small search sample. Distinguish observed evidence from hypotheses about positioning or content opportunities.
 
-Recommend an appropriate next step for each strong finding: helpful reply, watch for updates, content idea, positioning lesson, or skip. "Watch" is a recommendation only; do not create an automation unless asked. For up to 2–3 suitable conversations, include a concise draft reply with its exact destination and rationale. Avoid pretending to be a customer or independent reviewer. Disclose affiliation when relevant and follow the community's rules. Prepare drafts only; the shared workflow governs any separately authorized action.
+Recommend an appropriate next step for each strong finding: helpful reply, watch for updates, content idea, positioning lesson, or skip. "Watch" is a recommendation only; do not create an automation unless asked. For up to 2–3 suitable conversations, include a concise draft reply with its exact destination and rationale. Avoid pretending to be a customer or independent reviewer. Disclose affiliation when relevant and follow the community's rules; run the [Reddit post check](reddit-post-check.md) on any reply drafted for Reddit. Prepare drafts only; the shared workflow governs any separately authorized action.
 
 ## Save a reviewable report
 
