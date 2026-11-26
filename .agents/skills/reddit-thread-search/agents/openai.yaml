@@ -1,4 +1,4 @@
 interface:
   display_name: "Reddit Thread Search"
-  short_description: "Find timely Reddit threads for outreach"
+  short_description: "Find timely and Google-ranked Reddit threads"
   default_prompt: "Use $reddit-thread-search to find recent Reddit threads worth engaging for this product or topic."

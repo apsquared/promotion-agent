@@ -1,5 +1,16 @@
 # Continue here
 
+## Evergreen Reddit threads — 2026-11-26
+
+User request: after comparing a commercial Reddit marketing tool's discovery pipeline with ours, add its one legitimate advantage, a pass for older Reddit threads that rank on Google (PLAN P24). That tool watches up to 15 "… reddit" Google searches per product and reports a large share of its comments on first-page threads; our `reddit-thread-search` only searched the past week.
+
+- **Skill:** both `reddit-thread-search` copies (still identical) gain an "Evergreen Pass (Google-Ranked Threads)" section: 3–6 buying-intent queries with no `tbs` filter, first-page Reddit threads only, the organic position and date recorded as seen in that session (not a ranking and never a traffic estimate), a check that the thread is not archived or locked and that a reply would fill a gap in the top replies, an unverified list with no drafts for threads that cannot be opened, strong/medium/weak scoring, deduplication against the recent pass and earlier work, and an output block. The overview runs it on request, for evergreen/SEO/AI-citation asks or for a full search for a product.
+- **Boundaries:** one reply per thread from the user's own account with disclosure, no votes, vote requests or second accounts, and the Reddit post check on every draft. Ranking changes which threads are worth answering, not how.
+- **Reference and metadata:** `references/search-topics.md` gains "Evergreen (Google-Ranked) Queries" with placeholder patterns and Idea Launch examples; `agents/openai.yaml` short description now reads "Find timely and Google-ranked Reddit threads".
+- **Not borrowed:** posting accounts, upvotes, staged threads, logged-out polling and background monitoring.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **143/143 tests**, including three new ones in `tests/reddit-thread-search.test.mjs`. Not exercised: a live evergreen search or native invocation.
+
 ## Buyer-first priorities — 2026-11-26
 
 User request: review a supplied `entrepreneur-brain` skill (`SKILL.md` plus `mistakes.md`, 100 builder mistakes beside what money-makers do) and incorporate the concepts that help this project (PLAN P23). Concepts were adapted, not copied; the source skill's personal references (its owner's memory search and a separate task-sorting skill) do not apply here.

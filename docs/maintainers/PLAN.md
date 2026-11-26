@@ -243,6 +243,12 @@ User request, 2026-11-26: review a supplied "entrepreneur brain" skill and its l
 
 Acceptance: `tests/buyer-first.test.mjs` covers the route, selection and queue wording, links and anchors from every user, the context template fields, the guide's test, stages, verdicts and boundaries, and the installed copy after relocation; `tests/publishing.test.mjs` pins v0.25. Not exercised: a live ranking on a real workspace, existing workspaces (whose marketing/AGENT.md is preserved and so lacks the new section until filled).
 
+## P24 — evergreen Reddit threads that rank on Google (implemented locally)
+
+User request, 2026-11-26, after comparing a commercial Reddit marketing tool's discovery with ours: its separate channel for older Reddit threads on Google's first page was the main gap, because our thread search used only a past-week filter. Both reddit-thread-search copies gain an evergreen pass: buying-intent queries without a date filter, first-page Reddit threads only, the position recorded as seen on the date checked (never a tracked ranking or traffic estimate), a check that the thread is not archived or locked and that the reply would add something the top replies lack, unverified handling for threads that cannot be opened, its own scoring, deduplication, and an output block. Boundaries: one disclosed reply from the user's own account, no votes or second accounts, and the Reddit post check on every draft. search-topics.md gains placeholder evergreen seeds; the Codex short description mentions Google-ranked threads. No workflow version change: the skill stays a checkout resource.
+
+Acceptance: `tests/reddit-thread-search.test.mjs` covers identical copies, the evergreen rules and boundaries, the output block, and that every local link and anchor resolves. Not exercised: a live evergreen search (Claude in Chrome refused reddit.com on 2026-11-26, so thread checks fall back to pasted pages), native invocation.
+
 ## Deferred unless separately requested
 
 Clone-free public installation: follow up after the source/workspace clarity change above. Define a supported versioned setup interface, package the remaining checkout-only skills and a supported review-desk launch path, then verify clean installation, native host invocation, workspace upgrades and preserved customizations. npm identity, nonzero version, publication and public install verification remain P07 gates. No public `init` command is implemented or advertised as available by the clarity change.
