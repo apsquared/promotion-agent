@@ -5,7 +5,7 @@ description: Find recent Reddit threads worth engaging for marketing, customer d
 
 # Reddit Thread Search
 
-For promotion work, first follow [the shared workflow](../../../templates/WORKFLOW.md). Use the explicitly selected product and its audience to choose queries; the founder/Idea Launch examples below are seeds, not defaults for every product. Keep product repositories read only and save research only in the selected promotion workspace or return it in chat. Research prepares opportunities and draft replies; it does not authorize posting or recurring monitoring.
+For promotion work, first follow [the shared workflow](../../../templates/WORKFLOW.md). Use the explicitly selected product and its audience to choose queries; the founder/Idea Launch examples below are seeds, not defaults for every product. Keep product repositories read only and save research only in the selected promotion workspace or return it in chat. Research prepares opportunities and draft replies; it does not authorize posting or recurring monitoring. Before any reply or post drafted for a subreddit goes to the user, run [the Reddit post check](../../../templates/activities/reddit-post-check.md).
 
 ## Overview
 

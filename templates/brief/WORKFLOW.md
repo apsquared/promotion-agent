@@ -52,7 +52,7 @@ Keep it to one screen. Lead with one line of totals, then these sections, leavin
 
 1. **Needs you:** up to five items across products, P1 first. Each line has product, task ID, the decision or step, and why it matters now.
 2. **Check scheduled posts:** each post whose time passed, with channel, local time and task ID.
-3. **I can do next:** the top three `ready` tasks, P1 first, with one line on what doing it produces.
+3. **I can do next:** the top three `ready` tasks, P1 first, with one line on what doing it produces. Among equal priorities, put first the task that reaches or keeps a buyer under [buyer-first priorities](../activities/buyer-first.md). When none of a product's open work would reach a buyer (it is all research, polish or content for other builders), say so in one line for that product.
 4. **Coming up:** `Not before` dates and scheduled posts in the next seven days.
 5. **Since <day>:** what was recorded, grouped by product, one line each with the outcome (draft or recorded as done).
 6. **Quiet:** products with nothing open in one line, plus skipped, snoozed and stale counts when they are not zero.

@@ -1,5 +1,29 @@
 # Continue here
 
+## Buyer-first priorities — 2026-11-26
+
+User request: review a supplied `entrepreneur-brain` skill (`SKILL.md` plus `mistakes.md`, 100 builder mistakes beside what money-makers do) and incorporate the concepts that help this project (PLAN P23). Concepts were adapted, not copied; the source skill's personal references (its owner's memory search and a separate task-sorting skill) do not apply here.
+
+- **Guide:** `templates/activities/buyer-first.md`, a shared guide like `domain-rank.md`. Sections: the test, the product's stage (table of four stages with fitting and usually-later activities), marketing that is building in disguise (eight patterns with what to do instead), proof is behavior not opinion, judging a list of tasks (six verdicts, advice only, dispositions only after the user agrees), boundaries.
+- **Wiring:** WORKFLOW v0.25 (task-judgment route, stage-aware selection, follow-ups ranked by the buyer test, context reads the stage); `templates/marketing/AGENT.md` Stage and buyer section; brief ordering plus a one-line note when a product's open work reaches no buyer; acquisition discovery questions about past behavior; release judged by sign-ups and payments with drafted follow-ups to new sign-ups; blog prefers buyers' questions; Reddit post check asks whether the subreddit holds buyers or other builders. Installed-guide paragraph in `src/onboarding/install.ts`; README example.
+- **Already covered, so not repeated:** acquisition's distinct paying/trial/signup outcomes and its refusal to count interest as a customer; X growth's outcome-first goals; Product Hunt's goals and follow-ups; the bans on bought engagement and auto-sent outreach.
+- **Left out:** pricing, sales-call and product-building advice from the source (outside a promotion agent's scope), and its single-founder statistics, which are anecdotes.
+- **Existing workspaces:** setup preserves a customized `marketing/AGENT.md`, so older workspaces have no Stage and buyer section; the guide falls back to asking one question or labelling the stage assumed.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **140/140 tests**, including four new ones in `tests/buyer-first.test.mjs`. Not exercised: a live ranking against a real workspace or native invocation.
+
+## Reddit post check — 2026-11-26
+
+User request: build the Reddit post check suggested by a review of bookmarked X posts (PLAN P22). Source: Drake (@Copypaster3000), "The indie builder's guide to organic marketing on Reddit", X article, 2026-11-23.
+
+- **Procedure:** `templates/activities/reddit-post-check.md`, a shared check like `domain-rank.md` (no category, budget row or helper). Sections: boundaries, account readiness, rule capture, eligibility (rule table with `meets`/`fails`/`needs user`/`unknown`; verdicts `allowed`, `allowed with conditions`, `not allowed`, `unknown`), writing for Reddit, record, after posting.
+- **Wiring:** WORKFLOW v0.24 route plus a Reddit line in duplicate prevention; links from `competitor-analysis.md` (reply drafts), `acquisition/WORKFLOW.md` (community rules) and both `reddit-thread-search` skill copies; installed-guide paragraph in `src/onboarding/install.ts`; README example.
+- **Checked on 2026-11-26:** anonymous `curl` of `reddit.com/r/<sub>/about/rules.json`, `about.json` and wiki JSON returned HTTP 403; `old.reddit.com` pages redirected to a login page; Claude in Chrome refused reddit.com ("not allowed due to safety restrictions"). So the procedure asks the user to paste rules when they cannot be read, and never relies on snippets or memory.
+- **CQS facts and limits:** five tiers (lowest to highest), usable by moderators in AutoModerator (`contributor_quality`), not shown to users or moderators; an admin called moderate or above good standing (r/modnews, 2023-09-14, read through mirrors). r/WhatIsMyCQS is community-run, so its reply is labelled unofficial, and checking it is a `Human required:` post from the user's account.
+- **Deliberately left out:** drafting comments to build karma or CQS (the source says AI comments lower the score, and it would be manipulation), cross-posting one post to several subreddits, and any automated posting.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **136/136 tests**, including three new ones in `tests/reddit-post-check.test.mjs`. The install test needs a fresh build because installation copies from `dist/`. Not exercised: a live subreddit check, native invocation, existing-workspace upgrade.
+
 ## Daily brief — 2026-11-13
 
 User request: a daily brief or summary skill for checking in on tasks (PLAN P21).
