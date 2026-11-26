@@ -1,0 +1,4 @@
+interface:
+  display_name: "Promotion CMO"
+  short_description: "Plan new marketing ideas across every product and queue them as tasks"
+  default_prompt: "Use $promotion-cmo to run the CMO review across my products."

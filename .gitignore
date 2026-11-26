@@ -14,6 +14,7 @@ coverage/
 *.sqlite-*
 *.sqlite.locks/
 *.db.locks/
+*.sqlite.autopilot/
 # Interrupted task write-back staging files
 .promotion-agent-*.tmp
 

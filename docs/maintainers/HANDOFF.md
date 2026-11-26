@@ -1,5 +1,16 @@
 # Continue here
 
+## Portfolio autopilot — 2026-11-26
+
+User request: two scheduled tasks defined by the project instead of one per product: (1) a CMO pass that walks each product, considers its skills and workflow, avoids duplicates of open tasks and tries new things; (2) a runner that automates those tickets, lets multiple agents grab tickets, has an aggressiveness setting, and makes human steps easy (copyable prompts, links). PLAN P25.
+
+- **Helper:** `src/interactive/autopilot.ts`; CLI `autopilot-settings`, `coverage`, `claim [--purpose ideation]`, `renew`, `release`. Leases, history and settings live in `<registry>.autopilot/` (gitignored pattern added); locking reuses `withProjectLock` on `<registry>.locks`. No registry migration. Claims fail over to the next product when a project is leased or its lock is busy. `prepareTask` failure after a claim releases the lease as failed.
+- **Levels:** see `levels` in the module and the table in `docs/AUTOPILOT.md`. The run limit counts claims per agent name in 24 hours, so procedures require a unique name per run.
+- **Brief:** patterns exported for reuse; a draft record whose reference is under `marketing/handoffs/` shows as "Handoff ready", checked before the Human-required rule.
+- **Docs and entry points:** `templates/autopilot/CMO.md`, `templates/autopilot/RUNNER.md`, `docs/AUTOPILOT.md` (shipped via `scripts/build.mjs`), skills `promotion-cmo`/`promotion-autopilot` in `.agents/skills` (with `agents/openai.yaml`) and `.claude/skills`, commands `promote-cmo`/`promote-autopilot`. WORKFLOW v0.26.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **151/151 tests**, including eight new ones in `tests/autopilot.test.mjs`. Read-only `coverage` against the real portfolio registry read all seven workspaces and created nothing. Not exercised: scheduled sessions in a host, real concurrent runners, a level-3 product pull request. Scheduled tasks could not be created from this session (the scheduler tool was unavailable here); the prompts are in `docs/AUTOPILOT.md`.
+
 ## Evergreen Reddit threads — 2026-11-26
 
 User request: after comparing a commercial Reddit marketing tool's discovery pipeline with ours, add its one legitimate advantage, a pass for older Reddit threads that rank on Google (PLAN P24). That tool watches up to 15 "… reddit" Google searches per product and reports a large share of its comments on first-page threads; our `reddit-thread-search` only searched the past week.

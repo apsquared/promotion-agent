@@ -119,6 +119,7 @@ Keep promotion workspaces, source mappings, install plans, and account records o
 - “Schedule this post for Tuesday 9am.”
 - “Show me our drafts and pending work.”
 - “Give me my daily brief: what needs me today across all my products?”
+- “Run the CMO review” (new ideas for every product) and “Run the autopilot” (work the queue); schedule both with the prompts in [Autopilot](docs/AUTOPILOT.md) and set how aggressive it is: “Set the autopilot to cautious”.
 
 This checkout also includes `reddit-thread-search` and `x-post-search`, with their query reference and search script. Use them to find relevant discussions for the selected product under the shared workflow. These copied skills are currently checkout resources; portable workspace onboarding does not install them.
 
@@ -169,7 +170,7 @@ Promotion-agent runs no background timer and adds no dependency: Post Bridge hol
 
 ## Multiple projects
 
-Repeat the setup request with another product's name. Each product gets its own workspace, context, tasks, drafts, and logs. One chat works on one selected product at a time. The one exception is the read-only daily brief (`/promote-brief` in Claude Code, `$promotion-brief` in Codex, from this checkout), which checks in on every product's tasks at once and changes nothing; see the [daily brief](templates/brief/WORKFLOW.md).
+Repeat the setup request with another product's name. Each product gets its own workspace, context, tasks, drafts, and logs. One chat works on one selected product at a time. The one exception is the read-only daily brief (`/promote-brief` in Claude Code, `$promotion-brief` in Codex, from this checkout), which checks in on every product's tasks at once and changes nothing; see the [daily brief](templates/brief/WORKFLOW.md). The two [autopilot](docs/AUTOPILOT.md) routines (`/promote-cmo` and `/promote-autopilot`) also span every product: a weekly CMO review files new ideas, and runner sessions work the queue under per-product leases.
 
 Workspaces default to `~/.local/share/promotion-agent/projects/<UUID>/`. You can request a different location outside your product repositories. Keep workspaces private: they contain local paths and product-specific marketing records.
 
