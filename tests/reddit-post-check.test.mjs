@@ -49,6 +49,17 @@ test('Reddit post check keeps its boundaries, verdicts and record', () => {
   assert.match(text, /does not show the tier to users or moderators/);
 });
 
+test('Reddit post check covers post craft and a paced series across subreddits', () => {
+  const text = readFileSync(procedure, 'utf8');
+  const craft = text.slice(text.indexOf('## 4. Write it for Reddit'), text.indexOf('## 5.'));
+  for (const rule of ['Spend most of the effort on the title', 'Lead with the use case, not the product', 'first person', 'Facts, not adjectives', 'If a line can be cut without losing meaning, cut it', 'not a copy problem to rewrite around'])
+    assert.ok(craft.includes(rule), `Writing guidance lacks: ${rule}`);
+  const series = text.slice(text.indexOf('## 5. A series across subreddits'), text.indexOf('## Record'));
+  for (const rule of ['Write one core story', '/top/?t=month', 'Adapt, do not copy', 'Each version needs its own check', 'One subreddit a day at most', 'Learn before the next post', 'Stop the series when moderators remove a post', '`Not before`'])
+    assert.ok(series.includes(rule), `Series guidance lacks: ${rule}`);
+  assert.ok(craft.includes('](#5-a-series-across-subreddits)'), 'Writing guidance must link the series section');
+});
+
 test('Reddit post check ships into an installed workspace and survives relocation', t => {
   const root = mkdtempSync(join(tmpdir(), 'promotion-reddit-'));
   t.after(() => rmSync(root, { recursive: true, force: true }));

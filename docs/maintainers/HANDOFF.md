@@ -1,5 +1,16 @@
 # Continue here
 
+## Reddit post craft and series — 2026-11-27
+
+User request: review a founder's Reddit post on getting an open-source framework seen through organic Reddit posts, and add its useful lessons to our skills. PLAN P22 follow-up.
+
+- **Already covered** in `templates/activities/reddit-post-check.md`: lead with value, sound like the user, one subreddit per post, searchable titles, stay for comments.
+- **Added to section 4:** the title as the hook (two or three options, matched to the subreddit's top posts), use case before product, first person from the builder, facts over adjectives, a hook → example → result → product detail → proof structure with a cut-the-line test, and "copy cannot fix a product readers do not want".
+- **New section 5, a series across subreddits:** one core story, study each subreddit's top posts of the month (pasted when Reddit cannot be read), adapt rather than copy with a separate check per version, at most one subreddit a day, learn from comments before the next, stop on a spam removal or call-out, later posts queued with `Not before`. The record links each version to the core story.
+- Not adopted: the post's view and star counts (one self-reported case, not a benchmark).
+
+Validation: `npm run build` then `npm test` passed **155/155**, including the new craft-and-series test. Not exercised: a live series on real subreddits.
+
 ## Autopilot run names and work summary — 2026-11-27
 
 User request: require a per-agent prefix on run names so Claude and Codex runs pointed at the same registry never collide, and make sure the data for a daily summary of all agent work (scheduled or manual) is captured. PLAN P25 follow-up.

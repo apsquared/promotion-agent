@@ -63,19 +63,36 @@ Only `allowed` or `allowed with conditions` lets a draft go to the user for appr
 
 ## 4. Write it for Reddit
 
-- **Lead with value.** Open with the problem, the result or the interesting thing about the work. Where the rules allow, the product does not need to be the headline; disclose it in the body as the rules require. Every line should earn its place, and a short post beats a padded one.
+Marketing on Reddit only helps a product that is already useful. If comments show readers do not want it, that is a product finding to record, not a copy problem to rewrite around.
+
+- **Spend most of the effort on the title.** Most readers decide from the title alone. It should say at a glance what happened and why it matters to this subreddit, in plain words, as something specific the user did or found. Where it can also read the way someone would search, better: Reddit threads often rank on the first page of Google, so a searchable title can bring readers for years. Reddit marks outbound links so search engines do not count them, so the value is readers and search visibility, not link equity. Offer two or three title options and say which fits this subreddit's top posts best.
+- **Lead with the use case, not the product.** Readers upvote what was done and what it made possible, not a product name. Open with the problem, the result or the interesting thing about the work. Where the rules allow, the product does not need to be the headline; disclose it in the body as the rules require.
+- **Write in the first person, from the person who built it.** "I built", "I ran", "I tried", never "we're excited to announce" or a company voice. Draft it to be posted from the user's own account, and only with facts the user did.
+- **Facts, not adjectives.** Concrete numbers, steps, commands, settings and what went wrong persuade, especially in technical subreddits. Cut every claim a reader cannot check: "powerful", "seamless", "game-changing". It should read like something the user made and wants to share, not a launch announcement.
+- **Tell it as a short story:** the hook, one concrete example, the result, just enough product detail to trust it (how it works, what it costs, that it is open source), then the proof (a measured result, a repository, a demo). Keep it short. If a line can be cut without losing meaning, cut it.
 - **Sound like the user, not a model.** Redditors downvote text that reads as AI-written: generic greetings, hype words, tidy marketing bullet lists, a summary line that restates the post. Draft from the user's own facts and phrasing, keep it plain, and ask them to rewrite any line in their own words before posting. A reply should answer the thread's actual question first.
-- **Title it like a search.** Reddit threads often rank on the first page of Google, so a title phrased the way someone would search can keep bringing readers for years. Reddit marks outbound links so search engines do not count them, so the value is readers and search visibility, not link equity.
 - **Use media well.** When an image or video helps, attach it through the post's own media field so it shows in the feed without a click, not as a link in the body. Crop images cleanly. Give a video sound and captions, because Reddit starts videos muted.
-- **One subreddit per post.** Write each post for its community. Do not post the same text or link to several subreddits at once.
+- **One subreddit per post.** Write each post for its community. Do not post the same text or link to several subreddits at once; see [a series across subreddits](#5-a-series-across-subreddits).
 - **Plan to stay.** Tell the user the post works best when they answer comments in the first hours, and note any questions the draft is likely to get.
+
+## 5. A series across subreddits
+
+When the same work suits several subreddits, plan a series rather than one post:
+
+1. **Write one core story.** Save the user's facts, the use case, the result and the proof once, as the source every version draws from. It holds only what the user did and can show.
+2. **Study each subreddit first.** Look at its top posts of the past month (`https://www.reddit.com/r/<subreddit>/top/?t=month`): which posts draw comments, what readers complain about and praise, and the words they use for the problem. Ask the user to paste the titles when the page cannot be read. Note which kind of community it is under [eligibility](#3-eligibility).
+3. **Adapt, do not copy.** Keep the core story's facts; write a new title, hook, example and framing for each subreddit, in its own language. Each version needs its own check, with its own rules and verdict.
+4. **One subreddit a day at most,** and later when a subreddit's rules set a cooldown or a showcase day. Overlapping audiences notice the same story arriving everywhere at once, and so do moderators.
+5. **Learn before the next post.** After each post, read its comments with the user: questions the story left open, objections, what readers found most interesting. Update the core story before adapting it for the next subreddit, and drop subreddits where the post landed badly for the same audience.
+
+Stop the series when moderators remove a post as spam or readers call it out as promotion, and take it up with the user before posting anywhere else. Queue each later post as its own task with a `Not before` date, carrying the lessons from the earlier ones in its materials.
 
 ## Record
 
-Save the check with the draft it covers, in the same workspace location, or in the chat for a direct question without a selected workspace. Include: the subreddit, the rule sources and capture date, the rule table, the account readiness values and where each came from, the verdict with any conditions and earliest permitted time, and the date by which the rules must be checked again. Keep the user's username out of the record unless they list it in the workspace's publishing account references.
+Save the check with the draft it covers, in the same workspace location, or in the chat for a direct question without a selected workspace. Include: the subreddit, the rule sources and capture date, the rule table, the account readiness values and where each came from, the verdict with any conditions and earliest permitted time, and the date by which the rules must be checked again. For a series, link the core story and note what changed from the previous version and why. Keep the user's username out of the record unless they list it in the workspace's publishing account references.
 
 When queuing the posting step as a task, carry the verdict and conditions into its materials, put posting itself under `Human required:`, and include the recheck date as a skip condition: if the rules changed or the verdict no longer holds, do not post.
 
 ## After posting
 
-Ask the user for the live post URL. A removed post still shows to its author, so ask them to confirm it is visible while signed out or in a private window. Record a removal or a moderator message as the outcome, with the reason given. Do not repost to get around a removal; respect the moderators' decision and treat the reason as a rule for next time. Record views, comments and sign-ups only as the user or their analytics report them, and never present an expected effect as a measured one.
+Ask the user for the live post URL. A removed post still shows to its author, so ask them to confirm it is visible while signed out or in a private window. Record a removal or a moderator message as the outcome, with the reason given. Do not repost to get around a removal; respect the moderators' decision and treat the reason as a rule for next time. Record views, comments and sign-ups only as the user or their analytics report them, and note what the comments taught for the next post in a series, and never present an expected effect as a measured one.
