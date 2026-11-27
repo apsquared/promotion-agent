@@ -141,7 +141,9 @@ The [first-customers sprint](templates/activities/acquisition/WORKFLOW.md) turns
 
 Ask “Review @myhandle and create a customized X growth plan,” then “What should I do today?” or “Review this week’s results.” Use `$x-growth` in Codex or `/x-growth` in Claude Code/OpenCode. The shared procedure audits available account evidence, adapts the routine to your time budget, saves tasks and metrics, and revises the plan through ongoing coaching. Personal and brand accounts are supported; personal accounts need no product registration.
 
-These entrypoints are checkout resources; portable onboarding does not install them yet. Account plans and analytics stay in private user data or the selected promotion workspace. Public actions and recurring reminders require applicable explicit authorization. See [X growth workflow](templates/activities/x-growth/WORKFLOW.md) and its [research sources](templates/activities/x-growth/research.md).
+For daily replies, say “Run my reply routine” or use `$x-replies` / `/x-replies`. The first run sets up saved searches and candidate peer accounts for a private X List; each later run returns 3–6 fresh posts with a reply draft in its own copy block, for you to adjust and send yourself. See the [reply routine](templates/activities/x-growth/reply-routine.md).
+
+These entrypoints are checkout resources; portable onboarding does not install them yet. Account plans and analytics stay in private user data, the checkout's git-ignored `.local/`, or the selected promotion workspace. Public actions and recurring reminders require applicable explicit authorization. See [X growth workflow](templates/activities/x-growth/WORKFLOW.md) and its [research sources](templates/activities/x-growth/research.md).
 
 ## Product videos
 

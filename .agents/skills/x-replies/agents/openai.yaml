@@ -1,0 +1,4 @@
+interface:
+  display_name: "X Reply Routine"
+  short_description: "Find today's best X posts to reply to, with copy-paste drafts"
+  default_prompt: "Use $x-replies to run my X reply routine for today."

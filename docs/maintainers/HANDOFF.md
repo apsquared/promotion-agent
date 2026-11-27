@@ -1,5 +1,16 @@
 # Continue here
 
+## X reply routine — 2026-11-27
+
+User request: make the X reply strategy a generic, repeatable routine in this repository, easy to run, with output the user can copy and paste; account-specific records belong in the user's own checkout, not here.
+
+- **Added `templates/activities/x-growth/reply-routine.md`:** one-time setup (audience searches with X operators, List candidates sized roughly 2–50× the account and under ~25k, checked on their profiles) and a daily run (own-post replies first, then the List and searches; 3–6 picks; drafts only from the account's `Facts I can use`). A fixed copy-paste layout: post URL on its own line, each draft alone in a `text` block, a "make it yours" hint, a skipped line, and a closing ask to report what was sent so it can be logged.
+- **Records:** new `REPLIES.md` (audience, facts, voice, searches with URLs, List, skip rules, log) and `evidence/replies/<date>.md`. `plan-records.md` now looks for personal records in the checkout's git-ignored `.local/x-growth/accounts/<UUID>/` before `~/.local/share/x-growth/`, creates there only when `git check-ignore` confirms it, and never in a tracked path.
+- **Entrypoints:** `x-replies` skill (mirrored for Codex and Claude Code, with Codex UI metadata) and `/x-replies` commands for Claude Code and OpenCode; `x-growth/WORKFLOW.md` and README route reply requests to the routine.
+- **Boundaries kept:** the user sends every reply; no automation, likes, follows or list edits; no invented facts; link-dump threads skipped.
+
+Validation: `npm run build` then `npm test` passed **159/159**, including the new `tests/x-replies.test.mjs`. Not exercised: the routine end to end from a fresh session via `/x-replies`, or a Codex run.
+
 ## Blog stages, editor review and house rules — 2026-11-27
 
 User request: read Nicholas Dulait's X article "SEO Engineering: One Bot, Five Departments, an Entire Agency" and fold its useful lessons into the blog workflow. PLAN P19b, WORKFLOW v0.27.
