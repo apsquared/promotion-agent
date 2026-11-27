@@ -16,7 +16,7 @@ Use the selected promotion workspace and its canonical workflow if working insid
 Deliver an evidence-based diagnosis, the three highest-value priorities, and a 30-day direction with a concrete first week. Adapt the horizon when requested. Include:
 
 - The target audience, reason to follow, primary outcome, baseline, and an initial measurable target. Treat unsupported numerical outcomes as hypotheses; use process and learning targets when history is sparse.
-- Profile/bio/pinned-post recommendations, two to four content themes grounded in the user's expertise, repeatable formats, and audience-specific conversation searches.
+- Profile/bio/pinned-post recommendations, two to four content themes grounded in the user's expertise, repeatable formats, and audience-specific conversation searches set up as a daily [reply routine](reply-routine.md) when conversations are part of the plan.
 - A weekly calendar with actual dates, timezone, task owners, time estimates, draft IDs and dependencies. Proposed slots are not scheduled posts. Fit drafting, research, conversation and review into the total time budget.
 - A few ready-to-review drafts in the user's voice, supported by real facts, and context-specific reply opportunities when live evidence is available. Do not fill a calendar with fabricated anecdotes or unverified links.
 - One or two experiments tied to the main bottleneck, with comparison, metric, review date and keep/change/stop criteria.
@@ -27,6 +27,8 @@ Choose tactics by bottleneck and capacity, not automatic follower-count phases. 
 ## Manage the plan and mentor
 
 Read [coaching and review](coaching-and-review.md) for check-ins, stalled growth, draft critique and experiment decisions.
+
+For reply work ("run my reply routine", "find me posts to reply to", "set up my reply list" or `/x-replies`), follow the [reply routine](reply-routine.md). It sets up saved searches and a private List once, then returns a few fresh posts each day with replies the user can copy, adjust and send themselves.
 
 When the user says “what should I do today?”, return a short list from the existing plan, with usable drafts and verified opportunities where feasible. When they report results, update the relevant tasks and measurements, review the evidence, revise the plan with a dated rationale, and leave a concrete next action. Do the local bookkeeping yourself.
 
