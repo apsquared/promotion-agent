@@ -44,7 +44,7 @@ test('shared workflow routes blog and refresh requests to the blog activity with
 
 test('blog procedure keeps its boundaries and its links and anchors resolve', () => {
   const text = readFileSync(procedure, 'utf8');
-  for (const boundary of ['One run prepares **one new article proposal, one refresh or one site check**', 'Start from a real question', 'scaled content abuse', 'Never mass-produce', '[[VERIFY: ...]]', 'wait for the user\'s approval before rewriting', 'Never bump a "last updated" date', 'Keep the URL and slug', 'Never queue a refresh for a page that is not live', 'Not before', 'marketing/blog/<slug>/', 'Human required:', 'read only'])
+  for (const boundary of ['One run prepares **one new article proposal, one refresh, one site check or one editor review**', 'Start from a real question', 'scaled content abuse', 'Never mass-produce', '[[VERIFY: ...]]', 'wait for the user\'s approval before rewriting', 'Never bump a "last updated" date', 'Keep the URL and slug', 'Never queue a refresh for a page that is not live', 'Not before', 'marketing/blog/<slug>/', 'Human required:', 'read only'])
     assert.ok(text.includes(boundary), `Blog procedure lacks: ${boundary}`);
   for (const file of [procedure, resolve('templates/WORKFLOW.md'), resolve('templates/activities/ai-visibility/WORKFLOW.md'), ...['.claude', '.agents'].flatMap(d => [resolve(d, 'skills/blog-refresher/SKILL.md'), resolve(d, 'skills/seo-title-optimization/SKILL.md')])]) {
     for (const link of links(file)) assert.ok(existsSync(link), `Missing linked resource from ${file}: ${link}`);
@@ -101,4 +101,27 @@ test('blog procedure covers one primary query per page, ranking-data refresh tri
   assert.match(route, /read-only site check/);
   assert.match(readFileSync('templates/activities/ai-visibility/WORKFLOW.md', 'utf8'), /follows the buyer's journey/);
   assert.match(readFileSync('templates/activities/competitor-analysis.md', 'utf8'), /diff its sitemap or blog index/);
+});
+
+test('blog procedure separates the stages, reviews each page in a fresh session, caps repairs and keeps house rules', () => {
+  const text = readFileSync(procedure, 'utf8');
+  for (const rule of [
+    'SERP.md', '**Keep:**', '**Avoid:**', '**Ours:**', 'OUTLINE.md', 'what it has to prove',
+    'never mock up a screenshot', 'an article is the wrong format', 'raw HTML without running scripts',
+    'Ask for indexing only after the raw HTML passes',
+    '## Mode 4: editor review', 'in a new session', 'never passes its own review',
+    'Do not read the writing run\'s notes', 'block by block with its parent', 'REVIEW-<YYYY-MM-DD>.md',
+    '`pass`', '`fix`', '`back to brief`', 'smallest fix', 'never regenerates the page',
+    'At most two repair rounds', 'wait for their decision',
+    '### House rules', 'marketing/blog/HOUSE-RULES.md', 'remove any they reject',
+    'Not before` four weeks after it went live'])
+    assert.ok(text.includes(rule), `Blog procedure lacks: ${rule}`);
+  for (const anchor of ['mode-4-editor-review', 'repairs', 'house-rules']) assert.ok(slugs(procedure).includes(anchor), `Missing heading for #${anchor}`);
+  const order = ['3. **Read the results page.**', '4. **Write the brief**', '5. **Outline**', '6. **Draft**', '7. **Plan the destination**', '8. **Bookkeeping.**'].map(step => text.indexOf(step));
+  assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), 'Mode 1 stages are missing or out of order');
+  const followUps = text.slice(text.indexOf('## Follow-ups'));
+  assert.ok(followUps.indexOf('editor review task') < followUps.indexOf('to publish or apply the refresh'), 'Publish task is queued before the editor review');
+  const workflow = readFileSync('templates/WORKFLOW.md', 'utf8');
+  assert.match(workflow.split('\n').find(line => line.startsWith('- **"Propose a blog article"')), /reviewed in a separate session by a run that did not write it/);
+  assert.match(workflow.split('\n').find(line => line.startsWith('| blog |')), /one editor review of one page/);
 });
