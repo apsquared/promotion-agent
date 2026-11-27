@@ -260,6 +260,15 @@ User request, 2026-11-26: replace one scheduled task per product with two define
 
 Acceptance: `tests/autopilot.test.mjs` covers settings, priority/level/category gating, one lease per product, daily and run limits, failure-based stuck tasks, renew and expiry takeover, outcome checks, handoffs reaching the brief, coverage and ideation budgets, the CLI and the docs' links; `tests/publishing.test.mjs` pins v0.26. Read-only `coverage` ran against the real registry on 2026-11-26. Not exercised: a live scheduled CMO or runner session, concurrent sessions on real workspaces, level-3 product pull requests.
 
+Follow-up, 2026-11-27 (user request: Claude and Codex runs must never share a name; a daily summary of all work by scheduled or manual runs):
+
+- **Agent names** must be `<agent>-<run|cmo|task>-<unique part>` (`claude-run-…`, `codex-cmo-…`); the helper rejects other shapes and a kind that does not match the claim. Renew and release still accept any well-formed name.
+- **Run data:** claims carry `--trigger scheduled|manual` and the product name; a claim that finds nothing logs `no-claim` with its reason; releases take `--filed` (checked against the task list; required for ideation `ideas`).
+- **One-task claims:** `claim --project <workspace> --task T-NNN --agent <agent>-task-…` for ordinary sessions. The user's request sets the scope, so the level, limits and waiting rules do not apply and it uses none of the limits; the never-allowed list does. It may end `stopped`, which never counts toward a stuck task. WORKFLOW asks ordinary sessions to claim before working a task when a registry exists.
+- **Summary:** read-only `work-summary` helper (runs by agent, kind and trigger; each lease with outcome, minutes, note, filed tasks and the records saved during it; records and tasks outside any lease; CMO memos; quiet products) and `templates/autopilot/SUMMARY.md`, routed through WORKFLOW and the `promotion-brief` skill; `docs/AUTOPILOT.md` gains an optional third scheduled prompt and a section on running Claude and Codex together.
+
+Acceptance: three new tests (names, one-task claims, the work summary) and extended CLI and docs tests. Read-only `work-summary` ran against the real registry on 2026-11-27 and wrote nothing.
+
 ## Deferred unless separately requested
 
 Clone-free public installation: follow up after the source/workspace clarity change above. Define a supported versioned setup interface, package the remaining checkout-only skills and a supported review-desk launch path, then verify clean installation, native host invocation, workspace upgrades and preserved customizations. npm identity, nonzero version, publication and public install verification remain P07 gates. No public `init` command is implemented or advertised as available by the clarity change.

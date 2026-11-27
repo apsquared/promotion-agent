@@ -1,5 +1,15 @@
 # Continue here
 
+## Autopilot run names and work summary — 2026-11-27
+
+User request: require a per-agent prefix on run names so Claude and Codex runs pointed at the same registry never collide, and make sure the data for a daily summary of all agent work (scheduled or manual) is captured. PLAN P25 follow-up.
+
+- **Names:** `parseAgent`/`checkAgent` in `src/interactive/autopilot.ts` enforce `<agent>-<run|cmo|task>-<unique>` per claim kind; `checkHolder` keeps renew/release lenient.
+- **What was missing and is now captured:** which agent and whether scheduled (`--trigger`, stored on claim and `no-claim` events); runs that found nothing (`no-claim`); tasks filed by a run (`--filed` on release); work in ordinary sessions (`claimDirect`, `claim --task`, outcome `stopped`, lease field `direct`, excluded from limits). Already captured before: claim/release/expiry times, outcomes, notes, and evidence records with their references and `Outputs:`/`Impact:` lines.
+- **Summary:** `workSummary` and CLI `work-summary`; procedure `templates/autopilot/SUMMARY.md`; route in WORKFLOW (still v0.26, unreleased) and in the `promotion-brief` skill and `/promote-brief`. RUNNER, CMO, AUTOPILOT, HELPERS, the autopilot and CMO skills and commands use the new names, `--trigger scheduled` and `--filed`.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **154/154 tests**. Read-only `work-summary --since 2026-11-20T00:00:00Z` against the real registry read all seven workspaces (53 records and 31 filed tasks, all outside any run since nothing has claimed yet) and created no autopilot directory. Not exercised: a live Codex session writing under `~/.local/share/promotion-agent/`, simultaneous claims from separate processes.
+
 ## Portfolio autopilot — 2026-11-26
 
 User request: two scheduled tasks defined by the project instead of one per product: (1) a CMO pass that walks each product, considers its skills and workflow, avoids duplicates of open tasks and tries new things; (2) a runner that automates those tickets, lets multiple agents grab tickets, has an aggressiveness setting, and makes human steps easy (copyable prompts, links). PLAN P25.

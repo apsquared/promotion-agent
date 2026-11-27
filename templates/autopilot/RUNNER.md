@@ -8,12 +8,14 @@ What the runner may do depends on the autopilot level, which every claim returns
 
 Use the portfolio registry at `~/.local/share/promotion-agent/portfolio.sqlite`, or the registry this conversation already uses. Helpers are in [the local helper reference](../../docs/HELPERS.md); in the source checkout run them as `npm run promotion -- <command>`.
 
-Pick a unique agent name for this run, such as `run-2026-11-30T1400Z-k3`. The run limit counts claims per agent name over 24 hours, so never reuse a name from another run.
+Name this run `<agent>-run-<UTC start time>-<two random characters>`, where `<agent>` is your own product name in lowercase: `claude-run-2026-11-30T1400Z-k3` in Claude, `codex-run-2026-11-30T1400Z-k3` in Codex. The helper rejects any other shape. The prefix keeps a Claude run and a Codex run that start in the same minute apart, the run limit counts claims per agent name over 24 hours, and the [work summary](SUMMARY.md) reports what each name did, so never reuse a name from another run.
+
+Pass `--trigger scheduled` on every claim when your agent's scheduler started this session, and leave it out (it defaults to `manual`) when the user asked in the conversation.
 
 ## 2. Claim a task
 
 ```sh
-npm run promotion -- claim --database <registry> --agent <name>
+npm run promotion -- claim --database <registry> --agent <name> --trigger scheduled
 ```
 
 Add `--project <workspace>` when the user named one product. The helper picks the highest-priority task the level allows, preferring the product with the fewest claims today, and returns:
@@ -46,7 +48,7 @@ npm run promotion -- renew --database <registry> --lease <lease-id> --agent <nam
 
 If renewing fails because the lease is not held, stop working on that task at once: another session may have taken it over. Record nothing further for it.
 
-While you hold the lease you may file follow-up tasks in that workspace under [Keep the work moving](../WORKFLOW.md#keep-the-work-moving): at most three, ranked by the buyer test. Run `inspect --project <workspace>` after editing TASKS.md; fix only your own entries if it is not `valid`. If a helper reports that the task file changed, the user edited it meanwhile: inspect again and use the new revision.
+While you hold the lease you may file follow-up tasks in that workspace under [Keep the work moving](../WORKFLOW.md#keep-the-work-moving): at most three, ranked by the buyer test. List them on the release with `--filed`, so the work summary shows where each came from. Run `inspect --project <workspace>` after editing TASKS.md; fix only your own entries if it is not `valid`. If a helper reports that the task file changed, the user edited it meanwhile: inspect again and use the new revision.
 
 ## 4. Finish and release
 
@@ -62,8 +64,10 @@ Release every lease with what actually happened. The helper checks the outcome a
 | `failed` | A tool, site or fact blocked the work | nothing; `--note` says what blocked it |
 
 ```sh
-npm run promotion -- release --database <registry> --lease <lease-id> --agent <name> --outcome draft
+npm run promotion -- release --database <registry> --lease <lease-id> --agent <name> --outcome draft --filed T-014,T-015
 ```
+
+Leave out `--filed` when you filed nothing. Give `--note` with any outcome when one line would help the user read the day's summary, such as what you changed your mind about; `failed` always needs one.
 
 Do not skip a task on your own judgment. When a task no longer seems worth doing, snooze it for 14 days with the reason starting `Proposed skip:` so the user sees it in the brief and decides. A task that fails or expires twice in a week stops being claimed until someone looks at it.
 

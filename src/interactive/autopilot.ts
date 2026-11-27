@@ -87,15 +87,33 @@ export type Lease = {
   schemaVersion: 1; leaseId: string; agent: string; purpose: 'task' | 'ideation';
   projectId: string; displayName: string; workspace: string; taskId: string | null; mode: ClaimMode | null;
   claimedAt: string; expiresAt: string;
+  /** A task the user asked for in an ordinary session, outside the queue. */
+  direct?: boolean;
 };
 
+export type Trigger = 'scheduled' | 'manual';
+
+/**
+ * One line of `history.jsonl`. A run that ends without a claim logs `no-claim`, so the work summary shows runs that
+ * found nothing to do. `direct` marks a claim for one task the user asked for, which skips the level and the limits.
+ */
 type HistoryEvent = {
-  at: string; event: 'claim' | 'release' | 'expired'; leaseId: string; agent: string; purpose: 'task' | 'ideation';
-  projectId: string; taskId: string | null; mode?: ClaimMode | null; outcome?: string; note?: string;
+  at: string; event: 'claim' | 'release' | 'expired' | 'no-claim'; leaseId: string | null; agent: string; purpose: 'task' | 'ideation';
+  projectId: string | null; taskId: string | null; mode?: ClaimMode | null; outcome?: string; note?: string;
+  trigger?: Trigger; direct?: boolean; project?: string; filed?: string[];
 };
 
 const day = 24 * 60 * 60 * 1000;
-const agentPattern = /^[A-Za-z0-9][\w.:@-]{0,79}$/;
+/**
+ * `<agent>-<kind>-<unique part>`, e.g. `claude-run-2026-11-30T1400Z-k3` or `codex-cmo-2026-11-30T1300Z-q8`.
+ * The agent prefix keeps two products' sessions (Claude and Codex) from ever sharing a name, and with the kind
+ * it tells the work summary who did what: `run` claims from the queue, `cmo` claims for ideation, `task` claims
+ * one task the user asked for in an ordinary session.
+ */
+const agentPattern = /^([a-z][a-z0-9]{1,19})-(run|cmo|task)-([A-Za-z0-9][\w.:@-]{0,59})$/;
+const legacyAgentPattern = /^[A-Za-z0-9][\w.:@-]{0,79}$/;
+const agentKinds = { task: 'run', ideation: 'cmo', direct: 'task' } as const;
+const filedPattern = /^T-\d{3,}$/;
 const taskOutcomes = ['completed', 'draft', 'handoff', 'snoozed', 'skipped', 'failed'] as const;
 const ideationOutcomes = ['ideas', 'none', 'failed'] as const;
 const stuckFailures = 2;
@@ -270,8 +288,27 @@ function liveLease(dir: string, projectId: string, now: Date): Lease | null {
   return null;
 }
 
-function checkAgent(agent: string) {
-  if (!agentPattern.test(agent ?? '')) throw new Error('--agent must be 1-80 letters, digits or . _ : @ -, starting with a letter or digit; use a unique name per run');
+/** Agent and kind from a run name, or null for a name from before the naming rule. */
+export function parseAgent(name: string) {
+  const m = agentPattern.exec(name ?? '');
+  return m ? { host: m[1], kind: m[2] as 'run' | 'cmo' | 'task' } : null;
+}
+
+function checkAgent(agent: string, kind: 'run' | 'cmo' | 'task') {
+  const parsed = parseAgent(agent);
+  const example = `claude-${kind}-2026-11-30T1400Z-k3 or codex-${kind}-2026-11-30T1400Z-k3`;
+  if (!parsed) throw new Error(`--agent must be <agent>-${kind}-<unique part>: your agent's name in lowercase (claude, codex, ...), then "${kind}", then a part no other run uses, such as ${example}`);
+  if (parsed.kind !== kind) throw new Error(`This claim needs an agent name of kind "${kind}", such as ${example}`);
+}
+
+/** Releasing and renewing accept any well-formed name, so a lease taken before the naming rule can still be ended. */
+function checkHolder(agent: string) {
+  if (!legacyAgentPattern.test(agent ?? '')) throw new Error('--agent must be the name the lease was claimed with');
+}
+
+function checkTrigger(trigger: string): Trigger {
+  if (trigger !== 'scheduled' && trigger !== 'manual') throw new Error('--trigger must be scheduled or manual');
+  return trigger;
 }
 
 // ---------- task classification ----------
@@ -304,8 +341,9 @@ function failures(history: HistoryEvent[], projectId: string, taskId: string, no
     && (e.outcome === 'failed' || e.outcome === 'expired') && now.valueOf() - Date.parse(e.at) < stuckWindow).length;
 }
 
+/** Queue claims only: a task the user asked for directly does not use up the autopilot's limits. */
 const claimsSince = (history: HistoryEvent[], test: (e: HistoryEvent) => boolean, since: number) =>
-  history.filter(e => e.event === 'claim' && Date.parse(e.at) >= since && test(e)).length;
+  history.filter(e => e.event === 'claim' && !e.direct && Date.parse(e.at) >= since && test(e)).length;
 
 /** Why the runner may not take this task at this level, or null when it may. */
 function gate(task: ReviewTask, mode: ClaimMode, e: ReturnType<typeof effective>) {
@@ -326,18 +364,24 @@ function leaseRecord(agent: string, purpose: Lease['purpose'], data: ReviewProje
  * Claim the next task for one runner session: highest priority first, then the product with the fewest
  * claims today, then the oldest task. Projects another agent holds, or whose lock is busy, are passed over.
  */
-export function claimTask(database: string, agent: string, directories: string[] = [], now = new Date()) {
-  checkAgent(agent);
+export function claimTask(database: string, agent: string, directories: string[] = [], now = new Date(), trigger: Trigger = 'manual') {
+  checkAgent(agent, agentKinds.task);
+  checkTrigger(trigger);
   const { lockRoot, dir } = registry(database);
+  const none = <T extends { reason: string }>(result: T) => {
+    appendHistory(dir, { at: now.toISOString(), event: 'no-claim', leaseId: null, agent, purpose: 'task', projectId: null, taskId: null,
+      outcome: result.reason.slice(0, 200), trigger });
+    return { claim: null, ...result };
+  };
   const settings = readSettings(database);
   const portfolio = effective(settings);
   let history = readHistory(dir);
   const used = claimsSince(history, e => e.agent === agent && e.purpose === 'task', now.valueOf() - day);
   const runLimit = { used, max: portfolio.limits.maxTasksPerRun };
   const anyOn = portfolio.level > 0 || Object.values(settings.projects).some(p => (p.level ?? 0) > 0);
-  if (!anyOn) return { claim: null, reason: 'Autopilot is off (level 0).', runLimit, passedOver: [], unavailable: [] };
+  if (!anyOn) return none({ reason: 'Autopilot is off (level 0).', runLimit, passedOver: [], unavailable: [] as string[] });
   if (used >= portfolio.limits.maxTasksPerRun)
-    return { claim: null, reason: `This run has claimed ${used} of ${runLimit.max} tasks; stop here.`, runLimit, passedOver: [], unavailable: [] };
+    return none({ reason: `This run has claimed ${used} of ${runLimit.max} tasks; stop here.`, runLimit, passedOver: [], unavailable: [] as string[] });
 
   const board = reviewBoard(directories, database);
   const passedOver: { project: string; taskId: string | null; reason: string }[] = [];
@@ -383,7 +427,8 @@ export function claimTask(database: string, agent: string, directories: string[]
         const record = leaseRecord(agent, 'task', fresh, task.taskId, c.mode, e.limits.leaseMinutes, now);
         ensureDir(dir);
         writeFileSync(leaseFile(dir, projectId), JSON.stringify(record, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
-        appendHistory(dir, { at: now.toISOString(), event: 'claim', leaseId: record.leaseId, agent, purpose: 'task', projectId, taskId: task.taskId, mode: c.mode });
+        appendHistory(dir, { at: now.toISOString(), event: 'claim', leaseId: record.leaseId, agent, purpose: 'task', projectId, taskId: task.taskId, mode: c.mode,
+          trigger, project: data.project.displayName });
         return record;
       });
     } catch (error) {
@@ -409,12 +454,65 @@ export function claimTask(database: string, agent: string, directories: string[]
       unavailable: board.unavailable,
     };
   }
-  return { claim: null, reason: candidates.length ? 'Every product with claimable work is held by another session.' : 'Nothing claimable at the current level.', runLimit, passedOver, unavailable: board.unavailable };
+  return none({ reason: candidates.length ? 'Every product with claimable work is held by another session.' : 'Nothing claimable at the current level.', runLimit, passedOver, unavailable: board.unavailable });
+}
+
+/**
+ * Claim one task the user asked for in an ordinary session ("work on T-005 for TVFoodMaps"). The user's request sets
+ * the scope, so the level, the limits and the waiting rules do not apply, and the claim uses none of the autopilot's
+ * limits; the never-allowed list still does. The lease keeps runners out of the workspace while the session works,
+ * and the history puts the work in the daily summary.
+ */
+export function claimDirect(database: string, agent: string, directory: string, taskId: string, now = new Date(), trigger: Trigger = 'manual') {
+  checkAgent(agent, agentKinds.direct);
+  checkTrigger(trigger);
+  if (!filedPattern.test(taskId ?? '')) throw new Error('--task must be a task ID such as T-005');
+  const { lockRoot, dir } = registry(database);
+  const data = reviewData(directory, database);
+  const projectId = data.project.id;
+  const lease = withProjectLock(lockRoot, projectId, () => {
+    const current = liveLease(dir, projectId, now);
+    if (current) return { held: current };
+    const task = data.tasks.find(t => t.taskId === taskId);
+    if (!task) throw new Error(`${taskId} is not in this workspace's task list`);
+    if (task.status !== 'open') throw new Error(`${taskId} is already done`);
+    if (task.disposition?.state === 'skipped') throw new Error(`${taskId} is skipped; reactivate it with the disposition helper first if the user wants it done`);
+    const c = classify(task, new Map(data.tasks.map(t => [t.taskId, t.status])), localDate(now, data.project.timezone), now);
+    const mode: ClaimMode = 'mode' in c ? c.mode : 'work';
+    const record = { ...leaseRecord(agent, 'task', data, taskId, mode, effective(readSettings(database), projectId).limits.leaseMinutes, now), direct: true };
+    ensureDir(dir);
+    writeFileSync(leaseFile(dir, projectId), JSON.stringify(record, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
+    appendHistory(dir, { at: now.toISOString(), event: 'claim', leaseId: record.leaseId, agent, purpose: 'task', projectId, taskId, mode,
+      trigger, direct: true, project: data.project.displayName });
+    return { record };
+  });
+  if ('held' in lease) {
+    const held = lease.held!;
+    return { claim: null, reason: `${data.project.displayName} is being worked by ${held.agent}${held.taskId ? ` (${held.taskId})` : ''} until ${held.expiresAt}. Wait for it to finish, or work on another product.` };
+  }
+  const record = lease.record!;
+  let prepared: ReturnType<typeof prepareTask>;
+  try { prepared = prepareTask(data.project.root, taskId); }
+  catch (error) {
+    releaseLease(database, record.leaseId, agent, 'failed', `Could not prepare the task: ${(error as Error).message}`, now);
+    throw error;
+  }
+  const task = data.tasks.find(t => t.taskId === taskId)!;
+  return {
+    claim: {
+      leaseId: record.leaseId, agent, expiresAt: record.expiresAt, mode: record.mode!, modeInstructions: modeInstructions[record.mode!],
+      project: { id: projectId, displayName: data.project.displayName, workspace: data.project.root, sourceRoot: data.project.sourceRoot, timezone: data.project.timezone },
+      task: { taskId, priority: task.priority, category: task.category, title: task.title, revision: prepared.revision },
+      level: { level: null, name: 'user request', allows: 'What the user asked for in this conversation, with the shared workflow\'s usual approvals.', neverAllowed },
+      prompt: prepared.prompt,
+    },
+  };
 }
 
 /** Claim one product for a CMO ideation pass: the product idle longest since its last pass, or the one named. */
-export function claimIdeation(database: string, agent: string, directories: string[] = [], now = new Date()) {
-  checkAgent(agent);
+export function claimIdeation(database: string, agent: string, directories: string[] = [], now = new Date(), trigger: Trigger = 'manual') {
+  checkAgent(agent, agentKinds.ideation);
+  checkTrigger(trigger);
   const { lockRoot, dir } = registry(database);
   const report = coverage(database, directories, now);
   const eligible = report.projects.filter(p => p.ideation.eligible)
@@ -431,7 +529,8 @@ export function claimIdeation(database: string, agent: string, directories: stri
           expiresAt: new Date(now.valueOf() + effective(settings, projectId).limits.leaseMinutes * 60_000).toISOString() };
         ensureDir(dir);
         writeFileSync(leaseFile(dir, projectId), JSON.stringify(record, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
-        appendHistory(dir, { at: now.toISOString(), event: 'claim', leaseId: record.leaseId, agent, purpose: 'ideation', projectId, taskId: null });
+        appendHistory(dir, { at: now.toISOString(), event: 'claim', leaseId: record.leaseId, agent, purpose: 'ideation', projectId, taskId: null,
+          trigger, project: entry.project.displayName });
         return record;
       });
     } catch (error) {
@@ -440,9 +539,11 @@ export function claimIdeation(database: string, agent: string, directories: stri
     }
     if (lease) return { claim: { leaseId: lease.leaseId, agent, expiresAt: lease.expiresAt, coverage: entry }, unavailable: report.unavailable };
   }
+  const reason = eligible.length ? 'Every eligible product is held by another session.' : 'No product is eligible for new ideas.';
+  appendHistory(dir, { at: now.toISOString(), event: 'no-claim', leaseId: null, agent, purpose: 'ideation', projectId: null, taskId: null, outcome: reason, trigger });
   return {
     claim: null,
-    reason: eligible.length ? 'Every eligible product is held by another session.' : 'No product is eligible for new ideas.',
+    reason,
     notEligible: report.projects.filter(p => !p.ideation.eligible).map(p => ({ project: p.project.displayName, reason: p.ideation.reason })),
     unavailable: report.unavailable,
   };
@@ -461,7 +562,7 @@ function findLease(dir: string, leaseId: string) {
 }
 
 function heldLease(dir: string, leaseId: string, agent: string) {
-  checkAgent(agent);
+  checkHolder(agent);
   const lease = findLease(dir, leaseId);
   if (!lease) throw new Error('Lease not held: it was released, or it expired and was taken over. Do not record further work for it; claim again.');
   if (lease.agent !== agent) throw new Error('Lease belongs to another agent');
@@ -487,17 +588,28 @@ export function renewLease(database: string, leaseId: string, agent: string, now
  * completed needs the task checked off, draft and handoff need a draft record saved during the lease,
  * snoozed and skipped need that disposition, and failed, ideas and none need a note.
  */
-export function releaseLease(database: string, leaseId: string, agent: string, outcome: string, note: string | undefined, now = new Date()) {
+export function releaseLease(database: string, leaseId: string, agent: string, outcome: string, note: string | undefined, now = new Date(), filed: string[] = []) {
   const { lockRoot, dir } = registry(database);
   const found = heldLease(dir, leaseId, agent);
   return withProjectLock(lockRoot, found.projectId, () => {
     const lease = heldLease(dir, leaseId, agent);
-    const allowed: readonly string[] = lease.purpose === 'task' ? taskOutcomes : ideationOutcomes;
-    if (!allowed.includes(outcome)) throw new Error(`Outcome for a ${lease.purpose} lease must be one of: ${allowed.join(', ')}`);
+    // A user-requested task the user sets aside is not a failure, so it never makes the task stuck.
+    const allowed: readonly string[] = lease.purpose === 'ideation' ? ideationOutcomes : lease.direct ? [...taskOutcomes, 'stopped'] : taskOutcomes;
+    if (!allowed.includes(outcome)) throw new Error(`Outcome for this ${lease.direct ? 'one-task' : lease.purpose} lease must be one of: ${allowed.join(', ')}`);
     const text = note?.trim() ?? '';
-    if (['failed', 'ideas', 'none'].includes(outcome) && !text) throw new Error(`Outcome ${outcome} needs --note (what happened, or the task IDs filed)`);
+    if (['failed', 'none', 'stopped'].includes(outcome) && !text) throw new Error(`Outcome ${outcome} needs --note (what happened)`);
+    if (outcome === 'ideas' && !filed.length) throw new Error('Outcome ideas needs --filed with the task IDs filed, such as T-012,T-013');
+    const ids = [...new Set(filed)];
+    const bad = ids.find(id => !filedPattern.test(id));
+    if (bad) throw new Error(`--filed takes task IDs separated by commas; ${JSON.stringify(bad)} is not one`);
+    const tasks = reviewData(lease.workspace, database).tasks;
+    for (const id of ids) {
+      const t = tasks.find(x => x.taskId === id);
+      if (!t) throw new Error(`--filed ${id} is not in ${lease.displayName}'s task list; file it before releasing`);
+      if (id === lease.taskId) throw new Error('--filed lists new tasks, not the claimed task');
+    }
     if (lease.purpose === 'task') {
-      const task = reviewData(lease.workspace, database).tasks.find(t => t.taskId === lease.taskId);
+      const task = tasks.find(t => t.taskId === lease.taskId);
       if (!task) throw new Error(`Task ${lease.taskId} is no longer in the workspace`);
       const latest = task.drafts[0];
       const since = Date.parse(lease.claimedAt);
@@ -511,8 +623,9 @@ export function releaseLease(database: string, leaseId: string, agent: string, o
     }
     unlinkSync(leaseFile(dir, lease.projectId));
     appendHistory(dir, { at: now.toISOString(), event: 'release', leaseId, agent, purpose: lease.purpose, projectId: lease.projectId,
-      taskId: lease.taskId, mode: lease.mode, outcome, ...(text ? { note: text.slice(0, 500) } : {}) });
-    return { released: true, leaseId, project: lease.displayName, taskId: lease.taskId, outcome };
+      taskId: lease.taskId, mode: lease.mode, outcome, ...(text ? { note: text.slice(0, 500) } : {}), ...(ids.length ? { filed: ids } : {}),
+      project: lease.displayName });
+    return { released: true, leaseId, project: lease.displayName, taskId: lease.taskId, outcome, filed: ids };
   });
 }
 
@@ -606,4 +719,133 @@ export function coverage(database: string, directories: string[] = [], now = new
     };
   });
   return { generatedAt: now.toISOString(), settings: showSettings(database).portfolio, projects, unavailable: board.unavailable };
+}
+
+// ---------- daily work summary ----------
+
+const labeledLine = (summary: string, label: string) =>
+  new RegExp(`^${label}:\\s*(.+)$`, 'm').exec(summary)?.[1]?.trim().slice(0, 240) ?? null;
+const firstLine = (text: string) => text.split('\n').map(l => l.trim()).find(Boolean)?.slice(0, 200) ?? '';
+
+/**
+ * Read-only account of what agent sessions did between `since` (default: 24 hours before `now`) and `now`:
+ * every run by agent name (Claude or Codex, runner, CMO or one-task session, scheduled or manual), every lease
+ * with its outcome, the records saved during it and the tasks it filed, plus records saved and tasks filed
+ * outside any lease. It reads the history beside the registry and the workspaces; it writes nothing.
+ */
+export function workSummary(database: string, directories: string[] = [], since?: string, now = new Date()) {
+  const { dir } = registry(database);
+  const from = since ? new Date(since) : new Date(now.valueOf() - day);
+  if (!Number.isFinite(from.valueOf()) || from > now) throw new Error('--since must be a past UTC timestamp');
+  const start = from.valueOf(), end = now.valueOf();
+  const inWindow = (at: string) => { const t = Date.parse(at); return t >= start && t <= end; };
+  const history = readHistory(dir);
+  const board = reviewBoard(directories, database);
+  const byId = new Map(board.projects.map(p => [p.project.id, p]));
+  const scoped = (projectId: string | null) => !directories.length || (projectId !== null && byId.has(projectId));
+
+  // Pair each claim with how its lease ended.
+  const leases = new Map<string, { claim: HistoryEvent; end: HistoryEvent | null }>();
+  for (const e of history) {
+    if (!e.leaseId) continue;
+    if (e.event === 'claim') leases.set(e.leaseId, { claim: e, end: null });
+    else if ((e.event === 'release' || e.event === 'expired') && leases.has(e.leaseId)) leases.get(e.leaseId)!.end = e;
+  }
+  const leaseDir = join(dir, 'leases');
+  const openLeases = new Map<string, Lease>();
+  if (existsSync(leaseDir))
+    for (const name of readdirSync(leaseDir).filter(n => n.endsWith('.json'))) {
+      try { const l = JSON.parse(readFileSync(join(leaseDir, name), 'utf8')) as Lease; openLeases.set(l.leaseId, l); } catch { /* torn file */ }
+    }
+
+  type Work = ReturnType<typeof workItem>;
+  const attributed = new Set<string>();
+  const filedBy = new Map<string, string>();
+  function workItem(claim: HistoryEvent, ended: HistoryEvent | null) {
+    const data = claim.projectId ? byId.get(claim.projectId) : undefined;
+    const task = claim.taskId ? data?.tasks.find(t => t.taskId === claim.taskId) : undefined;
+    const open = openLeases.get(claim.leaseId!);
+    const outcome = ended?.outcome ?? (open && Date.parse(open.expiresAt) <= end ? 'expired (not yet cleared)' : 'in progress');
+    const until = ended ? Date.parse(ended.at) : end;
+    const records = (task?.drafts ?? []).filter(r => { const t = Date.parse(r.recordedAt); return t >= Date.parse(claim.at) && t <= until; })
+      .map(r => {
+        attributed.add(`${claim.projectId}:${task!.taskId}:${r.recordedAt}`);
+        return { outcome: r.outcome, recordedAt: r.recordedAt, reference: r.reference, summary: firstLine(r.summary),
+          outputs: labeledLine(r.summary, 'Outputs'), impact: labeledLine(r.summary, 'Impact') };
+      });
+    const filed = ended?.filed ?? [];
+    for (const id of filed) filedBy.set(`${claim.projectId}:${id}`, claim.agent);
+    const parsed = parseAgent(claim.agent);
+    return {
+      agent: claim.agent, host: parsed?.host ?? null, kind: parsed?.kind ?? null, trigger: claim.trigger ?? null, direct: claim.direct === true,
+      purpose: claim.purpose, project: data?.project.displayName ?? claim.project ?? claim.projectId, projectId: claim.projectId,
+      taskId: claim.taskId, title: task?.title ?? null, mode: claim.mode ?? null,
+      claimedAt: claim.at, endedAt: ended?.at ?? null, minutes: Math.round((until - Date.parse(claim.at)) / 60_000),
+      outcome, note: ended?.note ?? null, filed, records,
+    };
+  }
+  const work: Work[] = [];
+  for (const { claim, end: ended } of leases.values()) {
+    if (!scoped(claim.projectId)) continue;
+    if (inWindow(claim.at) || (ended && inWindow(ended.at)) || (!ended && Date.parse(claim.at) <= end && openLeases.has(claim.leaseId!)))
+      work.push(workItem(claim, ended));
+  }
+  work.sort((a, b) => a.claimedAt.localeCompare(b.claimedAt));
+
+  // Runs: everything one agent name did in the window, including runs that found nothing to claim.
+  const runs = new Map<string, { agent: string; host: string | null; kind: string | null; trigger: Trigger | null; firstAt: string; lastAt: string;
+    claims: number; outcomes: Record<string, number>; filed: number; stopped: string | null }>();
+  const touch = (agent: string, at: string, trigger?: Trigger) => {
+    const parsed = parseAgent(agent);
+    const r = runs.get(agent) ?? { agent, host: parsed?.host ?? null, kind: parsed?.kind ?? null, trigger: null, firstAt: at, lastAt: at, claims: 0, outcomes: {}, filed: 0, stopped: null };
+    if (at < r.firstAt) r.firstAt = at;
+    if (at > r.lastAt) r.lastAt = at;
+    if (trigger && !r.trigger) r.trigger = trigger;
+    runs.set(agent, r);
+    return r;
+  };
+  for (const w of work) {
+    const r = touch(w.agent, w.claimedAt, w.trigger ?? undefined);
+    if (w.endedAt) touch(w.agent, w.endedAt);
+    r.claims++;
+    r.outcomes[w.outcome] = (r.outcomes[w.outcome] ?? 0) + 1;
+    r.filed += w.filed.length;
+  }
+  for (const e of history)
+    if (e.event === 'no-claim' && inWindow(e.at) && !directories.length) touch(e.agent, e.at, e.trigger).stopped = e.outcome ?? null;
+
+  // Work saved or filed outside any lease: ordinary sessions that did not claim, or the user.
+  const projects = board.projects.map(data => {
+    const id = data.project.id;
+    const fromDate = localDate(from, data.project.timezone), toDate = localDate(now, data.project.timezone);
+    const otherRecords = data.tasks.flatMap(task => task.drafts
+      .filter(r => inWindow(r.recordedAt) && !attributed.has(`${id}:${task.taskId}:${r.recordedAt}`))
+      .map(r => ({ taskId: task.taskId, title: task.title, outcome: r.outcome, recordedAt: r.recordedAt, reference: r.reference,
+        summary: firstLine(r.summary), outputs: labeledLine(r.summary, 'Outputs'), impact: labeledLine(r.summary, 'Impact') })));
+    const filed = data.tasks.filter(t => (t.filedDate >= fromDate && t.filedDate <= toDate) || filedBy.has(`${id}:${t.taskId}`))
+      .map(t => ({ taskId: t.taskId, priority: t.priority, category: t.category, title: t.title, filedDate: t.filedDate,
+        by: filedBy.get(`${id}:${t.taskId}`) ?? null, cmoIdea: cmoIdeaPattern.test(t.materials),
+        followUpTo: followUpPattern.exec(`${t.materials}\n${t.agentPrompt ?? ''}`)?.[1] ?? null }));
+    const memos = existsSync(join(data.project.root, 'marketing/cmo'))
+      ? readdirSync(join(data.project.root, 'marketing/cmo')).filter(n => /^\d{4}-\d{2}-\d{2}\.md$/.test(n) && n.slice(0, 10) >= fromDate && n.slice(0, 10) <= toDate)
+        .map(n => `marketing/cmo/${n}`)
+      : [];
+    return { project: { id, displayName: data.project.displayName, workspace: data.project.root },
+      work: work.filter(w => w.projectId === id), otherRecords, filed, memos };
+  });
+
+  const count = (o: string) => work.filter(w => w.outcome === o).length;
+  return {
+    generatedAt: now.toISOString(), since: from.toISOString(),
+    totals: {
+      runs: runs.size, claims: work.length, completed: count('completed'), drafts: count('draft'), handoffs: count('handoff'),
+      snoozed: count('snoozed'), stopped: count('stopped'), failed: count('failed'), expired: work.filter(w => w.outcome.startsWith('expired')).length,
+      inProgress: count('in progress'), ideaPasses: work.filter(w => w.purpose === 'ideation').length,
+      tasksFiled: projects.reduce((n, p) => n + p.filed.length, 0), recordsOutsideLeases: projects.reduce((n, p) => n + p.otherRecords.length, 0),
+    },
+    runs: [...runs.values()].sort((a, b) => a.firstAt.localeCompare(b.firstAt)),
+    projects: projects.filter(p => p.work.length || p.otherRecords.length || p.filed.length || p.memos.length),
+    quiet: projects.filter(p => !(p.work.length || p.otherRecords.length || p.filed.length || p.memos.length)).map(p => p.project.displayName),
+    unavailable: board.unavailable,
+  };
 }
