@@ -171,7 +171,7 @@ const CATEGORY_STEPS: Record<PromptCategory, string> = {
 2. Work from evidence: the real question this answers (with source URLs and dates) and the live top search results for its keyword. Product claims come only from the product's source or approved facts; mark unknown figures \`[[VERIFY: ...]]\`. No invented statistics, quotes or testimonials.
 3. Save the brief and answer-first draft, or for a refresh the dated refresh plan, under \`marketing/blog/<slug>/\` in the promotion workspace. For a refresh, show me the plan and wait for my approval before rewriting; keep the URL and slug.
 4. Do not publish, commit or deploy, and keep the product repository read only. Publishing is a separate \`product\` task with the destination path, internal links and validation steps.
-5. Record task-linked draft evidence and a ledger line, then queue the publish task and, once the page is live, a refresh not before about 10 weeks out.`,
+5. Record task-linked draft evidence and a ledger line, then queue an editor review to run in a new session; the publish task follows only a passing review. If this task is itself an editor review, judge only the brief, results-page notes, outline and page, never your own work, and write defects with where, problem, evidence and the smallest fix.`,
 
   'search-console': `## How to work this task
 

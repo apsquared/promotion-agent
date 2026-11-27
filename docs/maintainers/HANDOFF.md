@@ -1,5 +1,16 @@
 # Continue here
 
+## Blog stages, editor review and house rules — 2026-11-27
+
+User request: read Nicholas Dulait's X article "SEO Engineering: One Bot, Five Departments, an Entire Agency" and fold its useful lessons into the blog workflow. PLAN P19b, WORKFLOW v0.27.
+
+- **Already covered:** sourced claims, no invented "we tested" claims, reading the top results, one query per page, server-HTML checks in the site check.
+- **Added to `templates/activities/blog/WORKFLOW.md`:** `SERP.md` (Keep, Avoid, Ours) and `OUTLINE.md` as saved stages; brief states the page's job, what it proves and its real proof; tool-intent queries become a tool-page `product` proposal; draft in the product's source format; raw-HTML check before indexing; Mode 4 editor review in a new session with defect tickets and `pass` / `fix` / `back to brief`; repairs capped at two rounds; `marketing/blog/HOUSE-RULES.md` for repeated defect kinds; follow-ups reordered to review → publish → live review → refresh and a four-week Search Console look.
+- Also updated: WORKFLOW blog route and budget row, the blog task prompt in `src/core/task-prompt.ts`, the installed guide in `src/onboarding/install.ts`, README.
+- Not adopted: the ChatSEO MCP, a 14-day check, subagents, the article's traffic claims.
+
+Validation: `npm run build` then `npm test` passed **156/156**, including the new blog test; `npm run typecheck` passed. Not exercised: a real article through review and repair, existing-workspace upgrade.
+
 ## Reddit post craft and series — 2026-11-27
 
 User request: review a founder's Reddit post on getting an open-source framework seen through organic Reddit posts, and add its useful lessons to our skills. PLAN P22 follow-up.
