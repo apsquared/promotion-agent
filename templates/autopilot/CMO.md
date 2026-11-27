@@ -17,10 +17,10 @@ npm run promotion -- coverage --database ~/.local/share/promotion-agent/portfoli
 
 ## 2. Take one product at a time
 
-Give this run a unique agent name such as `cmo-2026-11-30T1300Z`. Claim a product:
+Name this run `<agent>-cmo-<UTC start time>-<two random characters>`, where `<agent>` is your own product name in lowercase: `claude-cmo-2026-11-30T1300Z-q8` in Claude, `codex-cmo-2026-11-30T1300Z-q8` in Codex. The helper rejects any other shape, and the [work summary](SUMMARY.md) reports what each name did. Pass `--trigger scheduled` when your agent's scheduler started this session; leave it out when the user asked. Claim a product:
 
 ```sh
-npm run promotion -- claim --database <registry> --agent <name> --purpose ideation
+npm run promotion -- claim --database <registry> --agent <name> --purpose ideation --trigger scheduled
 ```
 
 Add `--project <workspace>` when the user named one product. The claim returns a lease and the product's coverage. The lease keeps autopilot runners out of that workspace while you write to its task list. The helper picks the product whose last CMO pass is oldest and skips products that are not eligible: ideas set to 0, too many open tasks ("work the queue first"), or held by another session. When `claim` returns no claim, every product is done; go to [the report](#8-report).
@@ -87,10 +87,10 @@ Then run `inspect --project <workspace>`. The classification must be `valid`. If
 Save `marketing/cmo/YYYY-MM-DD.md` in the workspace: the stage assumed, what worked, what was turned down, stuck tasks, each candidate with why it was chosen or not, and the task IDs filed. Add one line to the activity log. Then release the lease:
 
 ```sh
-npm run promotion -- release --database <registry> --lease <lease-id> --agent <name> --outcome ideas --note "Filed T-012, T-013"
+npm run promotion -- release --database <registry> --lease <lease-id> --agent <name> --outcome ideas --filed T-012,T-013
 ```
 
-Use `--outcome none --note "<why>"` when no candidate was worth filing, and `--outcome failed --note "<what went wrong>"` when the pass could not finish. Claim the next product.
+`--filed` must list every task you filed; the helper checks each is in the task list. Use `--outcome none --note "<why>"` when no candidate was worth filing, and `--outcome failed --note "<what went wrong>"` when the pass could not finish. Claim the next product.
 
 ## 8. Report
 

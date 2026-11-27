@@ -3,7 +3,7 @@ description: CMO review - new marketing ideas across every product, filed as tas
 argument-hint: [product, or blank for all]
 ---
 
-Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the CMO review](../../templates/autopilot/CMO.md) in this conversation. Cover every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Run the helpers yourself and release every lease you take; do not launch another AI CLI or delegate.
+Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the CMO review](../../templates/autopilot/CMO.md) in this conversation. Cover every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Name the run `claude-cmo-<UTC time>-<two random characters>`, pass `--trigger scheduled` when the scheduler started this session, run the helpers yourself and release every lease you take with `--filed` listing the tasks filed; do not launch another AI CLI or delegate.
 
 User request: $ARGUMENTS
 

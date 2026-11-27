@@ -15,19 +15,36 @@ CMO review, weekly (for example Monday 8:00):
 
 ```text
 Run in: promotion-agent source checkout
-Run the weekly CMO review with the promotion-cmo skill (/promote-cmo in Claude Code, $promotion-cmo in Codex). Cover every product registered in ~/.local/share/promotion-agent/portfolio.sqlite. Follow templates/autopilot/CMO.md: claim one product at a time with --purpose ideation, learn from completed, skipped and stuck tasks, list at least six candidates including one activity not tried recently, and file at most the per-product idea budget as paste-ready tasks tagged "CMO idea <today>". File tasks and memos only: do not do the tasks, post, send, spend, sign in or change any product repository. Release every lease. End with the portfolio summary.
+Run the weekly CMO review with the promotion-cmo skill (/promote-cmo in Claude Code, $promotion-cmo in Codex). Cover every product registered in ~/.local/share/promotion-agent/portfolio.sqlite. Follow templates/autopilot/CMO.md: name this run <your agent>-cmo-<UTC time>-<two random characters> (claude-cmo-… or codex-cmo-…), claim one product at a time with --purpose ideation --trigger scheduled, learn from completed, skipped and stuck tasks, list at least six candidates including one activity not tried recently, and file at most the per-product idea budget as paste-ready tasks tagged "CMO idea <today>". File tasks and memos only: do not do the tasks, post, send, spend, sign in or change any product repository. Release every lease with --filed listing the tasks filed. End with the portfolio summary.
 ```
 
 Autopilot runner, every two hours during your working day (for example 9:00–19:00):
 
 ```text
 Run in: promotion-agent source checkout
-Work the promotion task queue with the promotion-autopilot skill (/promote-autopilot in Claude Code, $promotion-autopilot in Codex), using the registry ~/.local/share/promotion-agent/portfolio.sqlite. Follow templates/autopilot/RUNNER.md: use a new unique agent name for this run, claim one task at a time, stay within the level each claim returns and its neverAllowed rules, turn any step that needs me into a handoff packet under marketing/handoffs/, record evidence, release every lease with its real outcome, and stop at the run limit or when nothing is claimable. End with a one-screen report.
+Work the promotion task queue with the promotion-autopilot skill (/promote-autopilot in Claude Code, $promotion-autopilot in Codex), using the registry ~/.local/share/promotion-agent/portfolio.sqlite. Follow templates/autopilot/RUNNER.md: name this run <your agent>-run-<UTC time>-<two random characters> (claude-run-… or codex-run-…), claim one task at a time with --trigger scheduled, stay within the level each claim returns and its neverAllowed rules, turn any step that needs me into a handoff packet under marketing/handoffs/, record evidence, release every lease with its real outcome and --filed for any follow-ups, and stop at the run limit or when nothing is claimable. End with a one-screen report.
 ```
 
 Several runner tasks can be scheduled at the same time (for example three copies at the same hour): each claims a different product. You can also start either one by hand: "Run the CMO review", "Run the autopilot", or "Work the queue for TVFoodMaps only".
 
+### Claude and Codex together
+
+Both can run the routines against the same registry on the same machine: every claim goes through the same helper and the same per-product lease, so they never work one product at once. Each run's name starts with the agent's own name (`claude-run-…`, `codex-run-…`), and the helper rejects names without it, so two runs that start in the same minute never share a run limit or a lease. Codex must be allowed to write under `~/.local/share/promotion-agent/`, where the registry, the leases and the workspaces live; with Codex's default sandbox, add that folder as a writable root or the claim fails with a permission error. A cloud session of either agent has its own filesystem and cannot take part.
+
 Once both are running, the per-product scheduled tasks you had are no longer needed.
+
+## See what the agents did
+
+Ask "What did the agents do today?" in any session, or schedule a third, optional task for the evening. It follows [the work summary](../templates/autopilot/SUMMARY.md) and changes nothing.
+
+Daily work summary, for example every day at 18:00:
+
+```text
+Run in: promotion-agent source checkout
+Give me today's work summary with the promotion-brief skill (/promote-brief in Claude Code, $promotion-brief in Codex), following templates/autopilot/SUMMARY.md. Run the read-only work-summary helper on ~/.local/share/promotion-agent/portfolio.sqlite for the last 24 hours and report every run by agent (Claude or Codex) and trigger (scheduled or manual), each task worked with its outcome and artifact or URL, tasks filed, handoffs and drafts now waiting on me, failures, and work recorded outside any run. Change nothing. End with one offer.
+```
+
+The summary comes from what each session leaves behind: every claim, release and run that found nothing is logged beside the registry with the run's name and trigger, each release lists the tasks it filed, and the evidence records hold what was produced. Ordinary sessions where you ask for one task ("do T-005 for BuyerCue") claim that task too, so they appear with the scheduled runs. Work recorded without a claim, from older sessions or the review desk, is listed separately.
 
 ## Set how aggressive it is
 

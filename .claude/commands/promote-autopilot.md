@@ -3,7 +3,7 @@ description: Work the promotion task queue across every product within the auton
 argument-hint: [product, or "set level to cautious"]
 ---
 
-Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the autopilot runner](../../templates/autopilot/RUNNER.md) in this conversation. Levels and settings are in [the autopilot guide](../../docs/AUTOPILOT.md). Work every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Use a new unique agent name, run the helpers yourself and release every lease with its real outcome; do not launch another AI CLI or delegate.
+Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the autopilot runner](../../templates/autopilot/RUNNER.md) in this conversation. Levels and settings are in [the autopilot guide](../../docs/AUTOPILOT.md). Work every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Name the run `claude-run-<UTC time>-<two random characters>`, pass `--trigger scheduled` on claims when the scheduler started this session, run the helpers yourself and release every lease with its real outcome and `--filed` for tasks you filed; do not launch another AI CLI or delegate.
 
 User request: $ARGUMENTS
 

@@ -5,7 +5,7 @@ import { inspectProject, prepareTask, recordTaskEvidence, completeSelectedTask, 
 import { releaseSource } from '../src/interactive/release-source.ts';
 import { acquisitionStatus } from '../src/interactive/acquisition.ts';
 import { promotionBrief } from '../src/interactive/brief.ts';
-import { claimIdeation, claimTask, coverage, releaseLease, renewLease, showSettings, updateSettings } from '../src/interactive/autopilot.ts';
+import { claimDirect, claimIdeation, claimTask, coverage, releaseLease, renewLease, showSettings, updateSettings, workSummary } from '../src/interactive/autopilot.ts';
 
 import { requireWorkspace, observerSource, assertObserverOutput, assertObserverOutputForSetup } from '../src/onboarding/workspace.ts';
 
@@ -21,9 +21,10 @@ const help = `Local task helpers for the CURRENT interactive agent (no AI proces
   brief [--project <workspace>] [--database <registry.sqlite>] [--since <UTC timestamp>]
   autopilot-settings --database <registry.sqlite> [--project <workspace>] [--level <0-3>] [--max-tasks <n>] [--per-day <n>] [--max-priority <n>] [--ideas <n>] [--max-open <n>] [--reset yes]
   coverage --database <registry.sqlite> [--project <workspace>]
-  claim --database <registry.sqlite> --agent <unique-run-name> [--project <workspace>] [--purpose <task|ideation>]
+  claim --database <registry.sqlite> --agent <agent>-<run|cmo|task>-<unique> [--project <workspace>] [--purpose <task|ideation>] [--task <T-NNN>] [--trigger <scheduled|manual>]
   renew --database <registry.sqlite> --lease <lease-id> --agent <name>
-  release --database <registry.sqlite> --lease <lease-id> --agent <name> --outcome <completed|draft|handoff|snoozed|skipped|failed|ideas|none> [--note <text>]
+  release --database <registry.sqlite> --lease <lease-id> --agent <name> --outcome <completed|draft|handoff|snoozed|skipped|failed|stopped|ideas|none> [--note <text>] [--filed <T-NNN,T-NNN>]
+  work-summary --database <registry.sqlite> [--project <workspace>] [--since <UTC timestamp>]
   record --project <directory> --task <T-NNN> --expected-hash <sha256> --outcome <draft|verified-complete> --reference <path|https-url> --summary <text>
   state --project <directory> --database <local.sqlite>
   disposition --project <directory> --task <T-NNN> --expected-hash <sha256> --database <local.sqlite> --state <active|skipped|snoozed> [--reason <text>] [--until <UTC timestamp>]
@@ -34,6 +35,7 @@ release-source reads only the registered source's Git history: exact IDs and fil
 acquisition-status reads a saved sprint and existing tasks/dispositions; it never queues or sends, or verifies payments.
 brief reads one workspace, or with only --database every registered workspace; it never queues, completes, snoozes or posts.
 autopilot-settings, coverage, claim, renew and release coordinate scheduled CMO and runner sessions through leases beside the registry; they never post, send or edit task files.
+work-summary reads what agent sessions did since --since (default: 24 hours ago); it writes nothing.
 record stores an agent-supplied evidence account without SQLite.
 complete requires a matching reviewed verified-complete record; it does not verify an external action itself.
 Use one database for dispositions/completion to share P02 project locks.`;
@@ -53,9 +55,10 @@ try {
       brief: { required: [], optional: ['project', 'database', 'since'] },
       'autopilot-settings': { required: ['database'], optional: ['project', 'level', 'max-tasks', 'per-day', 'max-priority', 'ideas', 'max-open', 'reset'] },
       coverage: { required: ['database'], optional: ['project'] },
-      claim: { required: ['database', 'agent'], optional: ['project', 'purpose'] },
+      claim: { required: ['database', 'agent'], optional: ['project', 'purpose', 'task', 'trigger'] },
       renew: { required: ['database', 'lease', 'agent'] },
-      release: { required: ['database', 'lease', 'agent', 'outcome'], optional: ['note'] },
+      release: { required: ['database', 'lease', 'agent', 'outcome'], optional: ['note', 'filed'] },
+      'work-summary': { required: ['database'], optional: ['project', 'since'] },
       record: { required: ['project', 'task', 'expected-hash', 'outcome', 'reference', 'summary'] },
       state: { required: ['project', 'database'] },
       disposition: { required: ['project', 'task', 'expected-hash', 'database', 'state'], optional: ['reason', 'until'] },
@@ -107,14 +110,19 @@ try {
       const change = { level: number('level'), limits, reset: options.reset === 'yes' };
       const asking = change.reset || change.level !== undefined || Object.keys(limits).length;
       console.log(JSON.stringify(asking ? updateSettings(options.database, projectId, change) : showSettings(options.database), null, 2));
-    } else if (['coverage', 'claim', 'renew', 'release'].includes(command)) {
+    } else if (['coverage', 'claim', 'renew', 'release', 'work-summary'].includes(command)) {
       if (options.project) requireWorkspace(options.project);
       const dirs = options.project ? [options.project] : [];
       if (options.purpose && !['task', 'ideation'].includes(options.purpose)) throw new Error('--purpose must be task or ideation');
+      if (options.task && (!options.project || options.purpose === 'ideation')) throw new Error('--task needs --project, and claims a task, not ideation');
+      const trigger = options.trigger ?? 'manual';
+      const filed = options.filed ? options.filed.split(',').map(id => id.trim()).filter(Boolean) : [];
       const result = command === 'coverage' ? coverage(options.database, dirs)
-        : command === 'claim' ? (options.purpose === 'ideation' ? claimIdeation : claimTask)(options.database, options.agent, dirs)
+        : command === 'work-summary' ? workSummary(options.database, dirs, options.since)
+        : command === 'claim' ? (options.task ? claimDirect(options.database, options.agent, options.project, options.task, new Date(), trigger)
+          : (options.purpose === 'ideation' ? claimIdeation : claimTask)(options.database, options.agent, dirs, new Date(), trigger))
         : command === 'renew' ? renewLease(options.database, options.lease, options.agent)
-        : releaseLease(options.database, options.lease, options.agent, options.outcome, options.note);
+        : releaseLease(options.database, options.lease, options.agent, options.outcome, options.note, new Date(), filed);
       console.log(JSON.stringify(result, null, 2));
     } else if (command === 'remove') {
       requireWorkspace(options.project);

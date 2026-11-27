@@ -1,9 +1,9 @@
 ---
-description: Daily brief across every product's promotion tasks
+description: Daily brief across every product's promotion tasks, or the work summary of what the agents did
 argument-hint: [product or "since Tuesday"]
 ---
 
-Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the daily brief](../../templates/brief/WORKFLOW.md) in this conversation. Cover every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Run the read-only `brief` helper yourself; do not launch another AI CLI or delegate.
+Read [the shared workflow](../../templates/WORKFLOW.md) and follow [the daily brief](../../templates/brief/WORKFLOW.md) in this conversation; for what the agents did ("what did the agents do today?", "work summary"), follow [the work summary](../../templates/autopilot/SUMMARY.md) instead. Cover every registered promotion workspace unless the request names one product; resolve a named product using the shared workflow's discovery procedure and never ask for a filesystem path. Run the read-only `brief` or `work-summary` helper yourself; do not launch another AI CLI or delegate.
 
 User request: $ARGUMENTS
 
