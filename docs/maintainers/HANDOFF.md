@@ -1,5 +1,61 @@
 # Continue here
 
+## Autopilot run names and work summary — 2026-11-27
+
+User request: require a per-agent prefix on run names so Claude and Codex runs pointed at the same registry never collide, and make sure the data for a daily summary of all agent work (scheduled or manual) is captured. PLAN P25 follow-up.
+
+- **Names:** `parseAgent`/`checkAgent` in `src/interactive/autopilot.ts` enforce `<agent>-<run|cmo|task>-<unique>` per claim kind; `checkHolder` keeps renew/release lenient.
+- **What was missing and is now captured:** which agent and whether scheduled (`--trigger`, stored on claim and `no-claim` events); runs that found nothing (`no-claim`); tasks filed by a run (`--filed` on release); work in ordinary sessions (`claimDirect`, `claim --task`, outcome `stopped`, lease field `direct`, excluded from limits). Already captured before: claim/release/expiry times, outcomes, notes, and evidence records with their references and `Outputs:`/`Impact:` lines.
+- **Summary:** `workSummary` and CLI `work-summary`; procedure `templates/autopilot/SUMMARY.md`; route in WORKFLOW (still v0.26, unreleased) and in the `promotion-brief` skill and `/promote-brief`. RUNNER, CMO, AUTOPILOT, HELPERS, the autopilot and CMO skills and commands use the new names, `--trigger scheduled` and `--filed`.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **154/154 tests**. Read-only `work-summary --since 2026-11-20T00:00:00Z` against the real registry read all seven workspaces (53 records and 31 filed tasks, all outside any run since nothing has claimed yet) and created no autopilot directory. Not exercised: a live Codex session writing under `~/.local/share/promotion-agent/`, simultaneous claims from separate processes.
+
+## Portfolio autopilot — 2026-11-26
+
+User request: two scheduled tasks defined by the project instead of one per product: (1) a CMO pass that walks each product, considers its skills and workflow, avoids duplicates of open tasks and tries new things; (2) a runner that automates those tickets, lets multiple agents grab tickets, has an aggressiveness setting, and makes human steps easy (copyable prompts, links). PLAN P25.
+
+- **Helper:** `src/interactive/autopilot.ts`; CLI `autopilot-settings`, `coverage`, `claim [--purpose ideation]`, `renew`, `release`. Leases, history and settings live in `<registry>.autopilot/` (gitignored pattern added); locking reuses `withProjectLock` on `<registry>.locks`. No registry migration. Claims fail over to the next product when a project is leased or its lock is busy. `prepareTask` failure after a claim releases the lease as failed.
+- **Levels:** see `levels` in the module and the table in `docs/AUTOPILOT.md`. The run limit counts claims per agent name in 24 hours, so procedures require a unique name per run.
+- **Brief:** patterns exported for reuse; a draft record whose reference is under `marketing/handoffs/` shows as "Handoff ready", checked before the Human-required rule.
+- **Docs and entry points:** `templates/autopilot/CMO.md`, `templates/autopilot/RUNNER.md`, `docs/AUTOPILOT.md` (shipped via `scripts/build.mjs`), skills `promotion-cmo`/`promotion-autopilot` in `.agents/skills` (with `agents/openai.yaml`) and `.claude/skills`, commands `promote-cmo`/`promote-autopilot`. WORKFLOW v0.26.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **151/151 tests**, including eight new ones in `tests/autopilot.test.mjs`. Read-only `coverage` against the real portfolio registry read all seven workspaces and created nothing. Not exercised: scheduled sessions in a host, real concurrent runners, a level-3 product pull request. Scheduled tasks could not be created from this session (the scheduler tool was unavailable here); the prompts are in `docs/AUTOPILOT.md`.
+
+## Evergreen Reddit threads — 2026-11-26
+
+User request: after comparing a commercial Reddit marketing tool's discovery pipeline with ours, add its one legitimate advantage, a pass for older Reddit threads that rank on Google (PLAN P24). That tool watches up to 15 "… reddit" Google searches per product and reports a large share of its comments on first-page threads; our `reddit-thread-search` only searched the past week.
+
+- **Skill:** both `reddit-thread-search` copies (still identical) gain an "Evergreen Pass (Google-Ranked Threads)" section: 3–6 buying-intent queries with no `tbs` filter, first-page Reddit threads only, the organic position and date recorded as seen in that session (not a ranking and never a traffic estimate), a check that the thread is not archived or locked and that a reply would fill a gap in the top replies, an unverified list with no drafts for threads that cannot be opened, strong/medium/weak scoring, deduplication against the recent pass and earlier work, and an output block. The overview runs it on request, for evergreen/SEO/AI-citation asks or for a full search for a product.
+- **Boundaries:** one reply per thread from the user's own account with disclosure, no votes, vote requests or second accounts, and the Reddit post check on every draft. Ranking changes which threads are worth answering, not how.
+- **Reference and metadata:** `references/search-topics.md` gains "Evergreen (Google-Ranked) Queries" with placeholder patterns and Idea Launch examples; `agents/openai.yaml` short description now reads "Find timely and Google-ranked Reddit threads".
+- **Not borrowed:** posting accounts, upvotes, staged threads, logged-out polling and background monitoring.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **143/143 tests**, including three new ones in `tests/reddit-thread-search.test.mjs`. Not exercised: a live evergreen search or native invocation.
+
+## Buyer-first priorities — 2026-11-26
+
+User request: review a supplied `entrepreneur-brain` skill (`SKILL.md` plus `mistakes.md`, 100 builder mistakes beside what money-makers do) and incorporate the concepts that help this project (PLAN P23). Concepts were adapted, not copied; the source skill's personal references (its owner's memory search and a separate task-sorting skill) do not apply here.
+
+- **Guide:** `templates/activities/buyer-first.md`, a shared guide like `domain-rank.md`. Sections: the test, the product's stage (table of four stages with fitting and usually-later activities), marketing that is building in disguise (eight patterns with what to do instead), proof is behavior not opinion, judging a list of tasks (six verdicts, advice only, dispositions only after the user agrees), boundaries.
+- **Wiring:** WORKFLOW v0.25 (task-judgment route, stage-aware selection, follow-ups ranked by the buyer test, context reads the stage); `templates/marketing/AGENT.md` Stage and buyer section; brief ordering plus a one-line note when a product's open work reaches no buyer; acquisition discovery questions about past behavior; release judged by sign-ups and payments with drafted follow-ups to new sign-ups; blog prefers buyers' questions; Reddit post check asks whether the subreddit holds buyers or other builders. Installed-guide paragraph in `src/onboarding/install.ts`; README example.
+- **Already covered, so not repeated:** acquisition's distinct paying/trial/signup outcomes and its refusal to count interest as a customer; X growth's outcome-first goals; Product Hunt's goals and follow-ups; the bans on bought engagement and auto-sent outreach.
+- **Left out:** pricing, sales-call and product-building advice from the source (outside a promotion agent's scope), and its single-founder statistics, which are anecdotes.
+- **Existing workspaces:** setup preserves a customized `marketing/AGENT.md`, so older workspaces have no Stage and buyer section; the guide falls back to asking one question or labelling the stage assumed.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **140/140 tests**, including four new ones in `tests/buyer-first.test.mjs`. Not exercised: a live ranking against a real workspace or native invocation.
+
+## Reddit post check — 2026-11-26
+
+User request: build the Reddit post check suggested by a review of bookmarked X posts (PLAN P22). Source: Drake (@Copypaster3000), "The indie builder's guide to organic marketing on Reddit", X article, 2026-11-23.
+
+- **Procedure:** `templates/activities/reddit-post-check.md`, a shared check like `domain-rank.md` (no category, budget row or helper). Sections: boundaries, account readiness, rule capture, eligibility (rule table with `meets`/`fails`/`needs user`/`unknown`; verdicts `allowed`, `allowed with conditions`, `not allowed`, `unknown`), writing for Reddit, record, after posting.
+- **Wiring:** WORKFLOW v0.24 route plus a Reddit line in duplicate prevention; links from `competitor-analysis.md` (reply drafts), `acquisition/WORKFLOW.md` (community rules) and both `reddit-thread-search` skill copies; installed-guide paragraph in `src/onboarding/install.ts`; README example.
+- **Checked on 2026-11-26:** anonymous `curl` of `reddit.com/r/<sub>/about/rules.json`, `about.json` and wiki JSON returned HTTP 403; `old.reddit.com` pages redirected to a login page; Claude in Chrome refused reddit.com ("not allowed due to safety restrictions"). So the procedure asks the user to paste rules when they cannot be read, and never relies on snippets or memory.
+- **CQS facts and limits:** five tiers (lowest to highest), usable by moderators in AutoModerator (`contributor_quality`), not shown to users or moderators; an admin called moderate or above good standing (r/modnews, 2023-09-14, read through mirrors). r/WhatIsMyCQS is community-run, so its reply is labelled unofficial, and checking it is a `Human required:` post from the user's account.
+- **Deliberately left out:** drafting comments to build karma or CQS (the source says AI comments lower the score, and it would be manipulation), cross-posting one post to several subreddits, and any automated posting.
+
+Validation: `npm run build` then `npm run check` passed both typechecks and **136/136 tests**, including three new ones in `tests/reddit-post-check.test.mjs`. The install test needs a fresh build because installation copies from `dist/`. Not exercised: a live subreddit check, native invocation, existing-workspace upgrade.
+
 ## Daily brief — 2026-11-13
 
 User request: a daily brief or summary skill for checking in on tasks (PLAN P21).

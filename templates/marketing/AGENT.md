@@ -4,6 +4,15 @@
 
 Describe the product, audience, site URL, and actual capabilities. List canonical repo documents. For metrics and claims record a source and verification date; do not guess missing facts.
 
+## Stage and buyer
+
+Stage: <1 unproven | 2 committed, not shipped | 3 first customers | 4 repeatable; how many pay and roughly how much, with source and date, or unknown>
+Bottleneck: <the one thing that limits paying customers now, or unknown>
+Buyer: <who uses it, who pays, who approves, if different>
+Where buyers already talk: <communities, searches, marketplaces, with evidence; not other builders unless they are the buyers>
+Buyer's words: <short quotes from calls, reviews or threads, each with its source>
+See .promotion-agent/templates/activities/buyer-first.md for how the stage ranks work.
+
 ## Audience and voice
 
 Audience: <who benefits>
